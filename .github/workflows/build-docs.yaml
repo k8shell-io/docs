@@ -36,6 +36,10 @@ jobs:
           pip install sphinx myst_parser sphinx_copybutton furo setuptools_scm
           rm -fr _build
           make html
+          rm -fr docker/docs/files
+          mkdir docker/docs/files
+          cp -r _build/html/* docker/docs/files
+
           # Set environment variables
           echo "REPO_NAME=$(cat docker/docs/BUILD)" >> $GITHUB_ENV
           echo "IMAGE_TAG=$(make version)" >> $GITHUB_ENV
