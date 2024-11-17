@@ -2,9 +2,9 @@
 
 K8shell services run in Kubernetes cluster and utilize standard components provided by Kubernetes. The following diagram illustrates high-level architecture with key components.
 
-<p align="center">
-  <img src="https://docs.google.com/drawings/export/svg?id=1Fjifn_MpS4K9ptmEHAEOE8bTkiIHPI__tKzhOrsmB-k" />
-</p>
+```{eval-rst}
+.. gdrawing:: 1Fjifn_MpS4K9ptmEHAEOE8bTkiIHPI__tKzhOrsmB-k
+```
 
 ## Core Components
 

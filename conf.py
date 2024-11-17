@@ -9,11 +9,23 @@
 import os
 import re
 import sys
+from typing import Any, Dict
+import setuptools_scm
+
+try:
+    version = setuptools_scm.get_version().split("+")[0]
+except Exception:
+    version = "0.0"
+
+# Add version info to HTML context for templates
+html_context = {
+    "version": version,
+}
 
 project = "k8shell.io"
 copyright = "2024, k8shell.io"
 author = "bruckins"
-release = "1.0"
+release = version
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -17,13 +17,9 @@ Beyond its core capabilities, k8shell offers a range of benefits that can signif
 :hidden:
 
 architecture
-configuration/index
-installation
-usage
 ```
 
 ```{toctree}
 :caption: Links
 :hidden:
-
 ```

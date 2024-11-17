@@ -31,3 +31,7 @@ run:
 	@-docker rm -f k8shell-docs &>/dev/null
 	@sleep 1
 	@docker run -d --name k8shell-docs -p 8080:80 docs:latest
+	@docker image prune -f
+
+version:
+	@python -c 'import setuptools_scm; print(setuptools_scm.get_version().split("+")[0])'

@@ -36,6 +36,9 @@ jobs:
           pip install sphinx-build sphinx myst_parser sphinx_copybutton furo directive
           rm -fr _build
           make html
+          # Set environment variables
+          echo "REPO_NAME=$(cat docker/docs/BUILD)" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$(make version)" >> $GITHUB_ENV
 
       - name: Login to registry
         uses: docker/login-action@v3
@@ -50,19 +53,3 @@ jobs:
           context: "docker/docs"
           tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
           push: true
-
-      - name: Build and push chart
-        run: |
-          export VERSION=$(make version 2>/dev/null)
-          sed -i "s/^\([[:space:]]*\)tag:.*/\1tag: \"${VERSION}\"/" helm/k8shell-proxy/values.yaml
-          export BUILD_SUFFIX=$(echo ${VERSION} | grep -o "dev.*")
-          if [ -n "$BUILD_SUFFIX" ]; then
-            sed -i "s/^version: \([0-9.]*\)$/version: \1-$BUILD_SUFFIX/" helm/k8shell-proxy/Chart.yaml
-          fi          
-          echo "Building chart version $VERSION"
-          make package
-          echo "Logging in to ${{ env.REGISTRY }}"
-          helm registry login ${{ env.REGISTRY }} --username "${{ env.HARBOR_USER }}" \
-            --password "${{ env.HARBOR_PASSWORD }}"
-          echo "Pushing chart to ${{ env.REGISTRY }}"
-          helm push dist/$(ls dist | grep tgz) oci://${{ env.REGISTRY }}/charts
