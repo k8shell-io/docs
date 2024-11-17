@@ -35,11 +35,3 @@ In order to enable external access to the cluster, the following components are 
 * **MetalLB** allows for the allocation of external IP addresses to services running in the cluster and enables access to these services from outside the cluster. MetalLB is only used in on-premises deployments. Read more about MetalLB configuration in [MetalLB Configuration]().
 
 * **Load Balancer** is a cloud provider-specific component that provides access to services running in the cluster from outside the cluster. Read more about Load Balancer configuration in [Load Balancer Configuration]().
-
-<!-- * Harbor registry stores container images and provides access to container images for user workspaces.
-* Vault manages secrets and provides access to secrets for user workspaces.
-* Monitoring collects and stores monitoring data and provides access to monitoring data for user workspaces.
-* DevOps services provide access to DevOps tools and services for user workspaces.
-* MetalLB provides load balancing for user workspaces.
-* Ingress controller provides access to user workspaces using standard HTTP and HTTPS protocols.
- -->
