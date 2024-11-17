@@ -1,1 +1,1 @@
-k8shell-system/docs:1.0
+k8shell-system/docs
