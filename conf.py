@@ -17,9 +17,13 @@ try:
 except Exception:
     version = "0.0"
 
-# Add version info to HTML context for templates
 html_context = {
     "version": version,
+    "display_github": True,
+    "github_user": "k8shell-io",
+    "github_repo": "docs",
+    "github_version": "main",
+    "conf_py_path": "/",
 }
 
 project = "k8shell.io"
