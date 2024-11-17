@@ -10,30 +10,33 @@ import os
 import re
 import sys
 
-#from directives import GDriveDrawing
-
-project = 'k8shell.io'
-copyright = '2024, k8shell.io'
-author = 'bruckins'
-release = '1.0'
+project = "k8shell.io"
+copyright = "2024, k8shell.io"
+author = "bruckins"
+release = "1.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-sys.path.append(os.path.abspath('_exts'))
+sys.path.append(os.path.abspath("_exts"))
 
-extensions = ['myst_parser',  'sphinx.ext.autosectionlabel',  'sphinx_copybutton', 'gdrawing']
+extensions = [
+    "myst_parser",
+    "sphinx.ext.autosectionlabel",
+    "sphinx_copybutton",
+    "gdrawing",
+]
 
 copybutton_only_copy_prompt_lines = True
 copybutton_prompt_text = "$ "
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 myst_heading_anchors = 2
 autosectionlabel_prefix_document = True
 
-highlight_language = 'jinja'
+highlight_language = "jinja"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
