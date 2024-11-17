@@ -1,7 +1,7 @@
 # workflow to build proxy image in the k8shell repository.
 
-name: Build proxy image and chart
-description: Build proxy image and chart and push them to the registry 
+name: Build docs image
+description: Build docs image and push it to the registry
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
         run: |
           # Install dependencies
           python -m pip install --upgrade pip
-          pip install sphinx-build sphinx myst_parser sphinx_copybutton furo directive
+          pip install sphinx myst_parser sphinx_copybutton furo
           rm -fr _build
           make html
           # Set environment variables
