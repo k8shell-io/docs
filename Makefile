@@ -18,3 +18,16 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+image:
+	$(MAKE) html
+	rm -fr docker/docs/files
+	mkdir -p docker/docs/files
+	cp -r _build/html/* docker/docs/files
+	cd docker/docs && docker build -t docs:latest .
+
+run:
+	$(MAKE) image
+	@-docker rm -f k8shell-docs &>/dev/null
+	@sleep 1
+	@docker run -d --name k8shell-docs -p 8080:80 docs:latest
