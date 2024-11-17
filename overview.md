@@ -1,6 +1,9 @@
-## Benefits of K8shell
 
-K8shell offers a range of benefits that can significantly enhance your Kubernetes adoption and improve your application development, security, and IT operations. Here are some key benefits of using k8shell services:
+# Overview
+
+K8shell is your streamlined entry point to Kubernetes, offering standard access interfaces through established protocols. With K8shell, you do not need to install or configure extra tools or plugins on your machines. Whether you are using familiar IDEs such as VSCode or IntelliJ, command-line utilities, or other standard tools, K8shell provides seamless access to your Kubernetes resources. This is possible because K8shell implements the access just by using standard OpenSSH protocol—a widely used standard for accessing remote environments. K8shell also provides full control over dynamic resource provisioning, managing computing resources, and efficient storage allocation within your Kubernetes cluster. Additionally, K8shell allows you to control who, where, how, and when resources are accessed: all without requiring extra tools or specialized knowledge from your team—end-users of your Kubernetes resources.
+
+Beyond its core capabilities, k8shell offers a range of benefits that can significantly enhance your Kubernetes adoption and improve your application development, security, and IT operations. 
 
 ### Development Acceleration
 
@@ -26,3 +29,5 @@ K8shell can be configured as a honeypot, designed to detect and analyze potentia
 ### Training
 
 K8shell is an excellent tool for training, allowing you to provision workspaces with pre-configured software that trainees can use to complete their tasks. These workspaces run on standard Linux distributions, enabling trainees to develop and run applications, perform command-line activities, or perform testing in a sandboxed environment. Additionally, they can seamlessly integrate their work with backend services available within the Kubernetes cluster, gaining hands-on experience in a controlled, secure environment. This approach ensures that trainees can effectively learn and apply new skills without the need for complex setup or additional configuration.
+
+

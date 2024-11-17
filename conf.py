@@ -78,6 +78,6 @@ html_theme_options: Dict[str, Any] = {
         },
     ],
     "source_repository": "https://github.com/k8shell-io/docs",
-    "source_branch": "master",
-    "source_directory": "docs/",
+    "source_branch": "main",
+    "source_directory": "/",
 }
