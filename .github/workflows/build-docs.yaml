@@ -33,7 +33,7 @@ jobs:
         run: |
           # Install dependencies
           python -m pip install --upgrade pip
-          pip install sphinx myst_parser sphinx_copybutton furo
+          pip install sphinx myst_parser sphinx_copybutton furo setuptools_scm
           rm -fr _build
           make html
           # Set environment variables
