@@ -10,7 +10,7 @@ k8shell is a service that provides dynamically provisioned workspaces in Kuberne
 ## Contents
 
 * [Overview](overview): Learn about k8shell and its benefits.
-* [Architecture](architecture): Learn about the architecture of k8shell and how it works.
+* [Architecture](architecture/index.md): Learn about the architecture of k8shell and how it works.
 
 
 ```{toctree}
