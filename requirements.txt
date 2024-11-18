@@ -1,0 +1,5 @@
+sphinx
+myst_parser
+sphinx_copybutton
+sphinxcontrib.mermaid
+furo
