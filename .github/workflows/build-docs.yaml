@@ -35,7 +35,7 @@ jobs:
         run: |
           # Install dependencies
           python -m pip install --upgrade pip
-          pip install sphinx myst_parser sphinx_copybutton furo setuptools_scm
+          pip install sphinx myst_parser sphinx_copybutton furo setuptools_scm sphinxcontrib.mermaid
           rm -fr _build
           make html
           rm -fr docker/docs/files
