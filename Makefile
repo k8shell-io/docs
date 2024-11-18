@@ -28,11 +28,9 @@ image:
 	cd docker/docs && docker build -t docs:latest .
 
 run:
-	$(MAKE) image
 	@-docker rm -f k8shell-docs &>/dev/null
 	@sleep 1
-	@docker run -d --name k8shell-docs -p 8080:80 docs:latest
-	@docker image prune -f
+	@docker run -d -v $$(realpath $$(pwd)/_build/html):/usr/share/nginx/html --name k8shell-docs -p 8080:80 docs:latest
 
 # Increment the version
 # args: the part to increment (minor or patch)
