@@ -4,6 +4,7 @@
 :hidden:
 
 k8shell-proxy
+communication
 ```
 
 K8shell services run in Kubernetes cluster and utilize standard components provided by Kubernetes. The following diagram illustrates high-level architecture with key components.

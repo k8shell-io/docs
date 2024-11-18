@@ -36,12 +36,7 @@ release = version
 
 sys.path.append(os.path.abspath("_exts"))
 
-extensions = [
-    "myst_parser",
-    "sphinx.ext.autosectionlabel",
-    "sphinx_copybutton",
-    "gdrawing",
-]
+extensions = ["myst_parser", "sphinx.ext.autosectionlabel", "sphinx_copybutton", "gdrawing", "sphinxcontrib.mermaid"]
 
 copybutton_only_copy_prompt_lines = True
 copybutton_prompt_text = "$ "
