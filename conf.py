@@ -57,7 +57,7 @@ html_title = f"k8shell.io v{release}"
 language = "en"
 
 html_static_path = ["_static"]
-html_css_files = ["pied-piper-admonition.css", "css/custom.css"]
+html_css_files = ["css/custom.css"]
 
 html_theme_options: Dict[str, Any] = {
     "footer_icons": [
