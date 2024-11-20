@@ -172,3 +172,5 @@ sequenceDiagram
 * In steps &#x2779;, &#x277A; and &#x277B;, the git requests key details with the SSH agent running on Charles' host via the Agent Forwarder.
 
 * In step &#x277C;, the SSH agent provides the necessary key details for authentication with GitHub.
+
+END.
