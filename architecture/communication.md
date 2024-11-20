@@ -12,7 +12,7 @@ The client initiates the connection using the user’s identity and the remote a
 
 ## Authentication and Authorization
 
-The following diagram illustrates the user authentication and authorization process using defined interfaces. These interfaces, established by the K8shell proxy, enable seamless integration with third-party services like LDAP, GitHub or proprietary solutions.
+The following diagram illustrates the user authentication and authorization process using defined interfaces. These interfaces, established by the k8shell-proxy, enable seamless integration with third-party services like LDAP, GitHub or proprietary solutions.
 
 ```{mermaid}
 :config: { "theme": "neutral", "mirrorActors": false, "height": 50, "showSequenceNumbers": true, "width": 150, "fontSize": 22 }
@@ -43,11 +43,11 @@ sequenceDiagram
 
 * n step &#x2777;, the k8shell-proxy extracts the user identity (username and workspace blueprint) from the SSH connection and validates it with the Auth service. This ensures the user is authorized and permitted to access the specified blueprint. If the user fails validation or lacks the necessary permissions, the connection is rejected as shown in step &#x2779;.
 
-* In steps &#x277A;, &#x277B;, &#x277C; the k8shell proxy verifies the user's provided credentials such as a password or a key. The key may be retrieved from an external authentication service where the user stores a public key. If the user's provided key and the public key stored in the system do not match, the k8shell-proxy responds to the client with an authentication failure. 
+* In steps &#x277A;, &#x277B;, &#x277C; the k8shell-proxy verifies the user's provided credentials such as a password or a key. The key may be retrieved from an external authentication service where the user stores a public key. If the user's provided key and the public key stored in the system do not match, the k8shell-proxy responds to the client with an authentication failure. 
 
 ## SSH Channel Flow
 
-SSH provides various capabilities via channels. There are four channel types that ssh proxy supports, namely interactive login sessions, remote execution of commands, forwarded TCP/IP connections and SFTP subsystem. There may be multiple channels of different types multiplexed into a single connection. This section describes the general flow how ssh proxy handles a channel and activities it performs.
+SSH provides various capabilities via channels. There are four channel types that the k8shell-proxy supports, namely interactive login sessions, remote execution of commands, forwarded TCP/IP connections and SFTP subsystem. There may be multiple channels of different types multiplexed into a single connection. This section describes the general flow how k8shell-proxy handles a channel and activities it performs.
 
 ```{mermaid}
 :config: { "theme": "neutral", "mirrorActors": false, "height": 50, "showSequenceNumbers": true, "width": 150, "fontSize": 22 }
@@ -77,26 +77,26 @@ sequenceDiagram
     deactivate S
 ```
 
-* In steps &#x2776;, &#x2777; and &#x2778; the client opens a channel of a specific type with the server. The proxy verifies that the user has permissions to use the channel type and sends back the response.
+* In steps &#x2776;, &#x2777; and &#x2778; the client opens a channel of a specific type with the server. The k8shell-proxy verifies that the user has permissions to use the channel type and sends back the response.
 
-* In steps &#x2779; and &#x277A;, the proxy checks whether a workspace for the requested blueprint already exists. If it does not, the proxy creates the workspace using the Helm chart defined in the blueprint and additional parameters. During this process, Kubernetes provisions the necessary persistent volumes via the specified storage class and driver. This results in the creation of several Kubernetes resources, including the workspace pod with defined container images and mounted volumes, access keys for workspace utilities to interact with the proxy API, installation scripts, and more.
+* In steps &#x2779; and &#x277A;, the k8shell-proxy checks whether a workspace for the requested blueprint already exists. If it does not, the k8shell-proxy creates the workspace using the Helm chart defined in the blueprint and additional parameters. During this process, Kubernetes provisions the necessary persistent volumes via the specified storage class and driver. This results in the creation of several Kubernetes resources, including the workspace pod with defined container images and mounted volumes, access keys for workspace utilities to interact with the k8shell-proxy API, installation scripts, and more.
 
-* In steps &#x277B;, &#x277C; and &#x277D;, the proxy initializes a channel handler for a specific channel type, facilitating communication between the client and the workspace. The handler first establishes a WebSocket stream with the workspace pod through the Kubernetes API. While each of the four channel handler types has unique internal handling processes, they all share the core functionality of performing read and write operations on both the SSH channel and the WebSocket stream. This process transforms SSH channel communication into WebSocket stream communication and vice versa. 
+* In steps &#x277B;, &#x277C; and &#x277D;, the k8shell-proxy initializes a channel handler for a specific channel type, facilitating communication between the client and the workspace. The handler first establishes a WebSocket stream with the workspace pod through the Kubernetes API. While each of the four channel handler types has unique internal handling processes, they all share the core functionality of performing read and write operations on both the SSH channel and the WebSocket stream. This process transforms SSH channel communication into WebSocket stream communication and vice versa. 
 
 ```{note}
-The implementation of the channel handler is a critical component of the proxy, directly influencing SSH communication performance and client-perceived latency. To enhance efficiency, we optimized key handler parameters, including buffer sizes, thread types and counts, and the transformation protocol. These adjustments were tailored to meet the performance requirements of commonly used clients and IDEs, ensuring smooth and responsive interactions.
+The implementation of the channel handler is a critical component of the k8shell-proxy, directly influencing SSH communication performance and client-perceived latency. To enhance efficiency, we optimized key handler parameters, including buffer sizes, thread types and counts, and the transformation protocol. These adjustments were tailored to meet the performance requirements of commonly used clients and IDEs, ensuring smooth and responsive interactions.
 ```
 
 ### Port Forwarding
 
-Port forwarding is a feature provided by the SSH protocol that allows the SSH client to forward TCP/IP connections from a local port to a remote host. The ssh-proxy supports port forwarding for local ports. 
+Port forwarding is a feature provided by the SSH protocol that allows the SSH client to forward TCP/IP connections from a local port to a remote host. The k8shell-proxy supports port forwarding for local ports. 
 
 ```{mermaid}
 :config: { "theme": "neutral", "mirrorActors": false, "height": 50, "showSequenceNumbers": true, "width": 150, "fontSize": 22 }
 sequenceDiagram
     participant LP as Local Process
     participant C as Client
-    participant P as Proxy
+    participant P as k8shell-proxy
     participant PF as Port Forwarder
     participant W as Workspace Pod<br/>(remote process)
 
@@ -120,29 +120,33 @@ sequenceDiagram
     deactivate PF
 ```
 
-* In step &#x2776;, the client opens an SSH connection with the `-L` or `-D` option to enable port forwarding. The client specifies the local port to forward to the remote host. This creates an SSH tunnel between the client and the proxy.
+* In step &#x2776;, the client opens an SSH connection with the `-L` or `-D` option to enable port forwarding. The client specifies the local port to forward to the remote host. This creates an SSH tunnel between the client and the k8shell-proxy.
 
-* In step &#x2777;, the local process opens an HTTP connection on port 8080. In step &#x2778;, the proxy creates a port forwarder channel handler to handle the port forwarding request.
+* In step &#x2777;, the local process opens an HTTP connection on tcp port `8080`. In step &#x2778;, the k8shell-proxy creates a port forwarder channel handler to handle the port forwarding request.
 
 * In steps &#x2779;, the local process sends a request to the local port. The port forwarder receives the request and forwards it to the remote process running in the workspace pod (step &#x277A;). The remote process processes the request and sends a response back (step &#x277B;, &#x277C;).
 
 * The steps &#x2779; to &#x277C; are repeated for each request sent by the local process until the connection is closed either by the local process or the remote process (steps &#x277D;, &#x277E;).
 
-The port forward algorithm handles all port forward channels in a single SSH connection, which can be shared by all clients running on the user host. For example, if a user starts a HTTP/1.1 web server in the workspace listening on `127.0.0.1:9090`, creates a port forwarding using `ssh -L 8080::9090 acme.k8shell.io`, and points a browser to `http://localhost:8080`, the browser may create up to 6 sockets that correspond to 6 channels in the proxy. When the user opens another browser session on the same address, the new session opens an additional 6 channels/sockets. In a typical scenario, users would only open a single browser session. 
+The port forward algorithm handles all port forward channels in a single SSH connection, which can be shared by all clients running on the user host. For example, if a user starts a HTTP/1.1 web server in the workspace listening on `127.0.0.1:9090`, creates a port forwarding using `ssh -L 8080::9090 acme.k8shell.io`, and points a browser to `http://localhost:8080`, the browser may create up to 6 sockets that correspond to 6 channels in the k8shell-proxy. When the user opens another browser session on the same address, the new session opens an additional 6 channels/sockets. In a typical scenario, users would only open a single browser session. 
 
 ```{note}
-We designed the port forwarding algorithm to handle large number of channels, however, there is an upper limit of the number of port forwarding threads that the proxy can create for a single SSH connection. When the number of channels exceeds the limit, the requests are queued and processed in a FIFO manner. This ensures that the system remains responsive and performs well under various conditions.
+We designed the port forwarding algorithm to handle large number of channels, however, there is an upper limit of the number of port forwarding threads that the k8shell-proxy can create for a single SSH connection. When the number of channels exceeds the limit, the requests are queued and processed in a FIFO manner. This ensures that the system remains responsive and performs well under various conditions.
 ```
 
 ### Agent Forwarding
 
-SSH agent forwarding is a feature provided by the SSH protocol that allows the SSH agent running on the user’s machine to connect with the SSH client running on a remote machine. It is used primarily during interactive login sessions. When the user requests SSH agent forwarding (e.g., using the -A option on the SSH CLI), the ssh-proxy, after verifying the user’s permissions, starts the Agent Forwarder in a dedicated thread within the proxy. Its primary function is to serve as a proxy between a Unix socket in the workspace pod and the SSH agent running on the client host. The SSH client in the workspace pod then communicates with the SSH agent via the Unix socket, enabling it to request key authentication with remote hosts.
+SSH agent forwarding is a feature provided by the SSH protocol that allows the SSH agent running on the user’s machine to connect with the SSH client running on a remote machine. It is used primarily during interactive login sessions. When the user requests SSH agent forwarding (by using the `-A` option on the SSH CLI), the k8shell-proxy, after verifying the user’s permissions, starts the Agent Forwarder in a dedicated thread within the k8shell-proxy. Its primary function is to serve as a reverse proxy between a Unix socket in the workspace pod and the SSH agent running on the client host. The SSH client in the workspace pod then communicates with the SSH agent via the Unix socket, enabling it to request key authentication with remote hosts.
+
+```{warning}
+SSH agent forwarding is a standard SSH feature that the k8shell-proxy implements at the protocol level. If users have security concerns, they can disable SSH agent forwarding on client side or implement additional security measures, such as requiring explicit approval requests on the SSH agent host before providing the respective key. 
+```
 
 ```{mermaid}
 :config: { "theme": "neutral", "mirrorActors": false, "height": 50, "showSequenceNumbers": true, "width": 150, "fontSize": 22 }
 sequenceDiagram
     participant C as Client (Charles)
-    participant P as Proxy
+    participant P as k8shell-proxy
     participant AF as Agent<br/>Forwarder
     participant W as Workspace Pod
     participant G as GitHub
@@ -150,6 +154,7 @@ sequenceDiagram
     C->>P: open connection<br/>ssh -A
     note right of C: ↓ shell handler
     P->>AF: start agent forwarder<br>thread
+    AF->>W: create Unix socket
     W->>G: clone repository 
     G->>W: connection request
     W->>AF: request authentication 
@@ -160,14 +165,10 @@ sequenceDiagram
     G-->>W: repository data
 ```
 
-* In step &#x2776;, user Charles opens ssh connection with `-A` option. The proxy creates the handler for the shell channel and starts the Agent Forwarder thread (step &#x2777;).
+* In step &#x2776;, user Charles opens a remote shell by initiating an SSH connection with the command `ssh -A charles~am1@acme.k8shell.io`. The k8shell-proxy processes this request by creating a handler for the shell channel, verifying Charles’ permissions for agent forwarding, and starting an Agent Forwarder thread (step &#x2777;). This thread sets up a Unix socket within the workspace pod and listens for incoming connections, facilitating communication securely.
 
-* In step &#x2778;, user Charles clones a github repository (e.g. `git@github.com:charles/repo.git`) from the workspace pod. 
+* In step &#x2778;, user Charles in the workspace pod has `SSH_AUTH_SOCK` environment variable set to the location of the unix socket. The user then clones a github repository by running `git clone git@github.com:charles/repo.git`. 
 
 * In steps &#x2779;, &#x277A; and &#x277B;, the git requests key details with the SSH agent running on Charles' host via the Agent Forwarder.
 
 * In step &#x277C;, the SSH agent provides the necessary key details for authentication with GitHub.
-
-```{note}
-It’s important to note that SSH agent forwarding is a standard SSH feature that our ssh-proxy implements at the protocol level. When users utilize this feature, they do not need to copy their private keys to the workspace pod to access remote systems, such as cloning git repositories. If users have security concerns, they can disable SSH agent forwarding or implement additional security measures, such as requiring explicit approval requests on the SSH agent host before providing the respective key. 
-```
