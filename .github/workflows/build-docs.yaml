@@ -59,3 +59,10 @@ jobs:
           context: "docker/docs"
           tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
           push: true
+
+      - name: Patch the docs bundle tag
+        run: |
+          kubectl patch application k8shell-docs-bundle \
+            --namespace k8shell-docs \
+            --type merge \
+            --patch '{"spec":{"source":{"helm":{"valuesObject":{"tag":"${{ env.IMAGE_TAG }}"}}}}}'
