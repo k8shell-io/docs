@@ -173,4 +173,3 @@ sequenceDiagram
 
 * In step &#x277C;, the SSH agent provides the necessary key details for authentication with GitHub.
 
-END.
