@@ -18,6 +18,7 @@ k8shell is a service that provides dynamically provisioned workspaces in Kuberne
 
 overview
 architecture/index
+usage/index
 ```
 
 
