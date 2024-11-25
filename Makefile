@@ -20,11 +20,6 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 image:
-	rm -fr _build
-	$(MAKE) html
-	rm -fr docker/docs/files
-	mkdir -p docker/docs/files
-	cp -r _build/html/* docker/docs/files
 	cd docker/docs && docker build -t docs:latest .
 
 run:
