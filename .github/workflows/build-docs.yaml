@@ -49,15 +49,15 @@ jobs:
       - name: Login to registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.HARBOR_USER }}
-          password: ${{ env.HARBOR_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.HARBOR_USER }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: "docker/docs"
-          tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
           push: true
 
       - name: Patch the docs bundle tag
