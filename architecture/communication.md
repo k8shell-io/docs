@@ -165,11 +165,9 @@ sequenceDiagram
     G-->>W: repository data
 ```
 
-* In step &#x2776;, user Charles opens a remote shell by initiating an SSH connection with the command `ssh -A charles~am1@acme.k8shell.io`. The k8shell-proxy processes this request by creating a handler for the shell channel, verifying Charles’ permissions for agent forwarding, and starting an Agent Forwarder thread (step &#x2777;). This thread sets up a Unix socket within the workspace pod and listens for incoming connections, facilitating communication securely.
+* In step &#x2776;, user Charles opens a remote shell by initiating an SSH connection with the command `ssh -A charles~am1@acme.k8shell.io`. The k8shell-proxy processes this request by creating a handler for the shell channel, verifying Charles’ permissions for agent forwarding, and starting an Agent Forwarder thread (step &#x2777;). In step &#x2778;, the thread creates a Unix socket within the workspace, begins listening for incoming connections, and facilitates secure communication.
 
-* In step &#x2778;, user Charles in the workspace pod has `SSH_AUTH_SOCK` environment variable set to the location of the unix socket. The user then clones a github repository by running `git clone git@github.com:charles/repo.git`. 
+* In step &#x2779;, user Charles in the workspace pod has `SSH_AUTH_SOCK` environment variable set to the location of the unix socket. The user then clones a github repository by running `git clone git@github.com:charles/repo.git`. In steps &#x277A;, &#x277B; and &#x277C;, the git CLI that requires an access to the user's key, requests the key details from the SSH agent running on Charles' host via the Agent Forwarder. 
 
-* In steps &#x2779;, &#x277A; and &#x277B;, the git requests key details with the SSH agent running on Charles' host via the Agent Forwarder.
-
-* In step &#x277C;, the SSH agent provides the necessary key details for authentication with GitHub.
+* In step &#x277D;, the SSH agent provides the necessary key details for authentication with GitHub.
 
