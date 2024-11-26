@@ -7,7 +7,11 @@ k8shell-proxy
 communication
 ```
 
-K8shell services run in Kubernetes cluster and utilize standard components provided by Kubernetes. The following diagram illustrates high-level architecture with key components.
+```{abstract}
+K8shell services run in Kubernetes cluster and utilize standard components provided by Kubernetes. There are several services that are essential for the operation of K8shell, such as Ingress Controller, Harbor registry, HashiCorp Vault, and monitoring. In addition, external access to the cluster is enabled by MetalLB or Load Balancer components.
+```
+
+The following diagram illustrates high-level architecture with key components.
 
 ```{eval-rst}
 .. gdrawing:: 1Fjifn_MpS4K9ptmEHAEOE8bTkiIHPI__tKzhOrsmB-k

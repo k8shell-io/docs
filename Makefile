@@ -22,6 +22,11 @@ help:
 image:
 	cd docker/docs && docker build -t docs:latest .
 
+build:
+	@-rm -rf _build
+	@$(MAKE) html
+	@$(MAKE) run
+
 run:
 	@-docker rm -f k8shell-docs &>/dev/null
 	@sleep 1

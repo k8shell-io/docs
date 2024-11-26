@@ -36,7 +36,13 @@ release = version
 
 sys.path.append(os.path.abspath("_exts"))
 
-extensions = ["myst_parser", "sphinx.ext.autosectionlabel", "sphinx_copybutton", "gdrawing", "sphinxcontrib.mermaid"]
+extensions = [
+    "myst_parser",
+    "sphinx.ext.autosectionlabel",
+    "sphinx_copybutton",
+    "directives",
+    "sphinxcontrib.mermaid",
+]
 
 copybutton_only_copy_prompt_lines = True
 copybutton_prompt_text = "$ "
@@ -54,6 +60,7 @@ highlight_language = "jinja"
 
 html_theme = "furo"
 html_title = f"k8shell.io v{release}"
+html_permalinks_icon = "#"
 language = "en"
 
 html_static_path = ["_static"]

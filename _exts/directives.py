@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # @author: Tomas Vitvar, https://vitvar.com, tomas@vitvar.com
 
+from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst import directives
 import datetime
@@ -23,5 +24,17 @@ class GDrawing(Directive):
         return [raw("", '<img src="{}"></img>'.format(web_path), format="html")]
 
 
+class AbstractDirective(Directive):
+    has_content = True
+
+    def run(self):
+        self.assert_has_content()
+        text = "\n".join(self.content)
+        node = nodes.container(text, classes=["abstract"])
+        self.state.nested_parse(self.content, self.content_offset, node)
+        return [node]
+
+
 def setup(app):
     app.add_directive("gdrawing", GDrawing)
+    app.add_directive("abstract", AbstractDirective)
