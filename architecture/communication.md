@@ -1,7 +1,7 @@
 # Communication
 
 ```{abstract}
-A standard SSH client connects to k8shell services via the k8shell-proxy, which manages authentication, workspace provisioning, and communication with workspace and storage services. The k8shell-proxy translates SSH capabilities—interactive login, remote commands, port forwarding, and SFTP—into Kubernetes streaming API calls over WebSockets.
+K8shell services are accessed through the k8shell-proxy, which manages authentication, workspace provisioning, and communication using the standard secure shell protocol.
 ```
 
 The following diagrams show interactions between the **client**, **k8shell-proxy**, **authentication services**, **workspace**, and **storage services**. For brevity, we omit the Kubernetes system services used to manage the Kubernetes resources, such as pods, services, and deployments.
