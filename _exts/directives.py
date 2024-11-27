@@ -9,6 +9,9 @@ from docutils.nodes import raw
 import requests
 import os
 
+from sphinx.builders.html import StandaloneHTMLBuilder
+from sphinx.util.nodes import split_explicit_title
+
 
 class GDrawing(Directive):
     required_arguments = 1

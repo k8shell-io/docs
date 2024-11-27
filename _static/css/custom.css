@@ -45,6 +45,46 @@ h1:visited a {
     font-size: 25px;
 }
 
+/* Custom numbering */
+
+ol.arabic.simple {
+    counter-reset: list-counter;
+    padding-left: 30px;
+}
+
+ol.arabic.simple>li {
+    list-style-type: none;
+    counter-increment: list-counter;
+    position: relative;
+}
+
+ol.arabic.simple>li::before {
+    content: counter(list-counter);
+    position: absolute;
+    left: -30px;
+    top: 4px;
+    float: left;
+    font: bold 12px sans-serif;
+    text-align: center;
+    color: #fdfdfd;
+    line-height: 18px;
+    width: 18px;
+    height: 18px;
+    background: #1d1d1d;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* ol.arabic.simple>li:nth-child(2)::before {
+    content: "❷";
+}
+
+ol.arabic.simple>li:nth-child(3)::before {
+    content: "❸";
+} */
+
+/* Custom numbering end */
+
 .highlight button {
     display: none !important;
 }
