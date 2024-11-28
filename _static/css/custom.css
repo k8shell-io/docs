@@ -4,7 +4,7 @@ h1 {
 }
 
 h2 {
-    font-size: var(--h1-size, 24px);
+    font-size: var(--h1-size, 22px);
     border-bottom: 1px solid black;
     border-radius: 0px;
     border-color: #9c9c9c;
@@ -75,15 +75,21 @@ ol.arabic.simple>li::before {
     border-radius: 10px;
 }
 
-/* ol.arabic.simple>li:nth-child(2)::before {
-    content: "❷";
+/* sequence numbers */
+
+span.black-circle-number {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    border-radius: 100%;
+    display: inline-block;
+    text-align: center;
+    width: 1.5em;
+    height: 1.5em;
+    background: #1d1d1d;
+    -moz-border-radius: 10px;
 }
-
-ol.arabic.simple>li:nth-child(3)::before {
-    content: "❸";
-} */
-
-/* Custom numbering end */
 
 .highlight button {
     display: none !important;

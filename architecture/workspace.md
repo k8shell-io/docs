@@ -13,11 +13,11 @@ Workspace provisioning is initiated by the k8shell proxy based on the user reque
 
 The workspace provisioning process involves the following steps:
 
-1. **Instantiation of the Workspace Blueprint:** The k8shell proxy processes the workspace blueprint for the user requesting access. This step generates user-specific values such as username, read/write permissions, and workspace name. The k8shell proxy uses a templating mechanism with CEL expressions to dynamically generate these values based on user data.
+1. **Instantiation of the workspace blueprint:** The k8shell proxy processes the workspace blueprint for the user requesting access. This step generates user-specific values such as username, read/write permissions, and workspace name. The k8shell proxy uses a templating mechanism with CEL expressions to dynamically generate these values based on user data.
 
-2. **Helm Chart Installation:** The Helm chart, containing the Kubernetes resources that define the workspace, is installed in the specified Kubernetes namespace. These resources include the workspace pod with requested container definitions, service account, persistent volume claims, initialization scripts, access token for the k8shell proxy API, and other necessary components. The Helm client communicates with the Kubernetes API server to deploy the chart and create the required resources, including storage, networking, and containers.
+2. **Helm chart installation:** The Helm chart, containing the Kubernetes resources that define the workspace, is installed in the specified Kubernetes namespace. These resources include the workspace pod with requested container definitions, service account, persistent volume claims, initialization scripts, access token for the k8shell proxy API, and other necessary components. The Helm client communicates with the Kubernetes API server to deploy the chart and create the required resources, including storage, networking, and containers.
 
-3. **Initilization of containers:** When the workspace pod is created, the containers are initialized. There two main initialization processes, k8shell-main initialization and k8shell-dind initialization. See [Workspace containers](#workspace-containers) for more details.
+3. **Initilization of containers:** When the workspace pod is created, the containers are initialized. There are two main initialization processes, k8shell-main initialization and k8shell-dind initialization. See [Workspace containers](#workspace-containers) for more details.
 
 ```{note}
 Workspace blueprints allow you to define any storage class available in the cluster. However, k8shell services provide a CSI storage driver for creating persistent volumes on a ZFS storage server. See [Storage architecture](storage.md) for more details.
@@ -25,14 +25,13 @@ Workspace blueprints allow you to define any storage class available in the clus
 
 ## Workspace containers 
 
-The provisioning process creates one to three of containers within the workspace pod, each serving a specific purpose. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers are interconnected through shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
+The provisioning process creates one to three containers within the workspace pod, each serving a specific purpose. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers are interconnected through shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
 
 The diagram below shows the containers and their integration. 
 
 ```{eval-rst}
 .. gdrawing:: 1l46s0YZWikxWQoM0UYQaDV3e2zGQYFiOoeKlbKemz6I
 ```
-
 
 ### k8shell-main
 
@@ -48,34 +47,82 @@ The main container provides the following functions:
 
 5. **Persistent storage**: Users can store data on the persistent volumes. These volumes can include shared storage accessible to other workspaces.
 
-The k8shell-main container also may use logging service provided by k8shell-admin container and local DNS provided by k8shell-dind container. See [k8shell-admin](#k8shell-admin) and [k8shell-dind](#k8shell-dind) for more details. 
+The k8shell-main container also uses logging service provided by k8shell-admin container and may use local DNS provided by k8shell-dind container (if configured). See [k8shell-admin](#k8shell-admin) and [k8shell-dind](#k8shell-dind) for more details. 
 
 ### k8shell-admin
 
-The container is used for administration purposes. The init process of the admin container is the logger that provides a logging service that redirects the log to stdout which in turn appears in the admin container log. 
+The k8shell-admin container is a sidecar in the workspace pod that provides logging services and, if configured, an agent forwarding Unix socket. It runs the same container image and shares the network namespace with the main container.
 
-The k8shell-proxy also uses the admin container to create the agent forwarding stream to a unix socket. The unix socket is shared with the main container via `emptyDir` and is used for ssh agent forwarding when host keys are required for authentication with a third-party remote system (such as git or remote ssh server). 
+The admin container provides the following functions:
+
+1. **Logging service:** The admin container uses an `emptyDir` volume shared with the main and dind containers. Log messages written to a file on this shared volume by the main or dind containers are read by the logging service and output to stdout. This ensures that the logs are included in the Kubernetes admin container logs, accessible through standard tools. The k8shell API also provides logging functions for information, debug, warning, and error messages, used by workspace components to log their operations.
+
+2. **Agent forwarding Unix socket:** The admin container manages a Unix socket file shared with the main container via the `emptyDir` volume. When agent forwarding is requested by the main container, the k8shell proxy forwards the agent stream to this Unix socket. The main container accesses the socket through the `SSH_AUTH_SOCK` environment variable, enabling clients in the main container to authenticate with third-party services requiring host keys. For additional details, see [Agent Forwarding](communication.md#agent-forwarding).
 
 ### k8shell-dind
 
-The docker container that runs `dockerd` from the dind image (docker-in-docker). It uses the unix socket that is shared with the main container and that the docker cli uses to connect to. 
+The k8shell-dind container is a sidecar in the workspace pod that provides Docker support and local DNS resolution services. It runs a Docker-in-Docker (dind) container image and shares the network namespace with the main container.
 
-There is `localdns` service that does the following (see #10 for more details.)
-- It modifies the `/etc/resolv.conf` file by changing the `nameserver` to `127.0.0.53`,
-- It runs `dnsmasq` service listening on `127.0.0.53` address. 
-- It uses the original nameserver as the upstream server where unresolvable queries are redirected to. 
-- It listens on events from docker daemon and adds all DNS names from each container to the DNS. The DNS names are retrieved from `NetworkSettings.Networks.<network_name>.DNSNames` field of the container manifest.
+The dind container provides the following functions. 
 
-## Networking
+1. **Docker daemon:** The dind container runs a Docker daemon, allowing users to build, run, and manage containers within the workspace. The main container communicates with the Docker daemon via a Unix socket shared between the containers on an `emptyDir` volume. 
 
-All containers in the workspace share the same network namespace, but they have separated PID namespaces. It is thus possible that `k8shell-dind` container starts a process in its own PID namespace, for example `dnsmasq`, and processes running in `k8shell-main` container's PID namespace can connect to it, for example, by resolving names to IPs on `127.0.0.53:53`. 
+2. **Local DNS service:** The dind container runs a local DNS service that provides name resolution for Docker containers within the workspace. The local DNS service is optional and can be disabled in the workspace blueprint. The local DNS peforms the following activities:
 
-Docker daemon running in `dind-container` by default creates a bridge network in which it starts docker containers. The bridge network is available to all workspace containers so they can access their IPs. The `localdns` service maps names from the container manifest to their IPs so that they are directly accessible from `k8shell-main` container. 
+    * It starts the `dnsmasq` process and modifies the `/etc/resolv.conf` file in the workspace to point to the local DNS at `127.0.0.53`. It forwards unresolved queries to the upstream `coreDNS` server.
+    * It listens for events from the Docker daemon and adds DNS entries for newly created containers. The entries are removed automatically on container deletion.
 
-## Docker support
+For more details on how the workspace user interacts with the Docker daemon and utilizes the local DNS service, refer to the [Docker sequence diagram](communication.md#docker) in the communication section.
 
-TODO
+## Network access
 
-## K8shell services
+All containers in the workspace share the same network namespace. The following network interfaces are available in the workspace pod:
+
+1. **eth0:** The primary network interface of the workspace pod, assigned an IP address from the cluster’s IP pool. Communication with other pods and services within or outside the cluster can be controlled using network policies configured in the workspace blueprint. See [network policy](#network-policy) for more details.
+
+2. **docker0** or **veth(n):** Bridge network interfaces created by the Docker daemon in the dind container. These are used for communication between the main container and Docker containers within the workspace. The Docker daemon assigns IP addresses to containers from the bridge network. Additional bridge network interfaces may be created by the Docker daemon in the dind container, for example, when the user defines a custom Docker network or uses Docker Compose.
+
+### Network policy
+
+The network policy allows to control how the workspace pod communicates with other pods and services within or outside the cluster. The network policy is defined in the workspace blueprint and can be configured at the following levels. Please note that by default, egress to public IPs is always allowed, and egress to system pods is blocked.
+
+| Level | Igress/egress traffic rule |
+|-------|-------------|
+| `isolated` | **not allowed** to/from any workspaces, pods or networks |
+| `user` | allowed to/from workspaces of the **same user** in the same organization |
+| `workspace` | allowed to/from workspaces of the **same blueprint** in the same organization |
+| `organization` | allowed to/from **all workspaces** of the same organization |
+| `system` | allowed to/from **all networks**, including system pods and private IPs |
+| `none` | no policy applied; ingress and egress are **not restricted** |
+
+In addition, it is possible to specify a set of labels that the target pod must have to allow the traffic. The labels are defined in the workspace blueprint and can be used to restrict the traffic to specific pods or services.
+
+```{note}
+The network policy is enforced by the Kubernetes network plugin. The levels outlined in the table above correspond to the `spec.ingress` and `spec.egress` fields in the `NetworkPolicy` resource.
+```
+
+## Workspace Lifecycle
+
+The k8shell proxy manages the workspace lifecycle, handling creation, updates, and deletion based on user requests. The lifecycle consists of the following stages:
+
+1. **Create:** The k8shell proxy provisions a workspace using the workspace blueprint. The workspace pod is scheduled on a cluster node, and the containers are initialized according to the blueprint's configuration. See [Workspace provisioning](#workspace-provisioning) for details.
+
+2. **Operate:** Users interact with the workspace by executing commands, editing files, and managing Docker containers. The k8shell proxy facilitates the SSH connection, ensuring input and output streams are seamlessly forwarded between the user and the workspace.
+
+3. **Restart:** The main container in the workspace can be restarted if needed. This process is managed by Kubernetes, and users can trigger it by running the `shutdown` or `kill 1` commands within the workspace. See [K8shell proxy API](#k8shell-proxy-api) for more details.
+
+4. **Delete:** Workspaces can be deleted either automatically when the user disconnects (if configured in the blueprint) or manually. The deletion process, managed by Helm, removes all associated resources, including stopping containers and deleting the pod from the cluster. Persistent volumes may either be deleted or retained, depending on the storage class configuration. If the ZFS CSI storage driver is used and volumes are retained, they can be reused when the workspace is recreated. See [Storage architecture](storage.md) for additional information.
+
+5. **Update:** When a workspace blueprint changes, the k8shell proxy enforces the update policy specified in the blueprint. The policy defines how and when updates occur, with the following options:
+
+| Policy       | Description                                              |
+|--------------|----------------------------------------------------------|
+| `onconnect`  | Updates are applied when the user reconnects to the workspace. |
+| `immediate`  | Updates are applied as soon as the blueprint is modified. |
+| `manual`     | Updates are applied only when explicitly requested.       |
+
+During an update, the k8shell proxy uses Helm to reconfigure the workspace with the new blueprint values. Depending on the changes, the update may or may not restart the containers. In some cases, the update might require recreating the workspace.
+
+## k8shell-proxy API 
 
 TODO: API

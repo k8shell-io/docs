@@ -2,10 +2,10 @@
 
 ```{toctree}
 :hidden:
-communication
 k8shell-proxy
 workspace
 storage
+communication
 ```
 
 ```{abstract}
@@ -22,7 +22,7 @@ K8shell services are built on a microservices architecture, following Kubernetes
 
 The core components of k8shell architecture are:
 
-* **K8shell Proxy** provides the secure shell (ssh) protocol interface, enabling clients to connect using standard SSH-based tools. It translates the ssh protocol into Kubernetes streaming API calls using WebSockets. It handles user authentication and authorization by using built-in or third-party authorization mechanisms and it dynamically provisions **K8shell Workspaces** according to defined resource requirements and access management configurations. For more details, explore the [Communication](communication.md) and [K8shell Proxy Architecture](k8shell-proxy.md).
+* **K8shell Proxy** provides the secure shell (ssh) protocol interface, enabling clients to connect using standard SSH-based tools. It translates the ssh protocol into Kubernetes streaming API calls using WebSockets. It handles user authentication and authorization by using built-in or third-party authorization mechanisms and it dynamically provisions **K8shell Workspaces** according to defined resource requirements and access management configurations. For more details, explore the [K8shell Proxy](k8shell-proxy.md), [K8shell Workspace](workspace.md) architectures and the end-to-end SSH communication flows](communication.md).
 
 * **CSI Storage Driver** is a component that implements the standard CSI interface, enabling seamless access to the **Storage Server** based on ZFS file system. It supports the dynamic provisioning of persistent volumes for K8shell Workspaces according to configuration requirements such as storage size and access permission. It allows for the reuse of already provisioned workspaces' volumes that need to be recreated and supports provisioning of shared volumes. Read more about storage in [Storage Architecture](storage.md).
 

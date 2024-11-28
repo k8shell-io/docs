@@ -38,6 +38,19 @@ class AbstractDirective(Directive):
         return [node]
 
 
+def black_circle_number_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+    try:
+        _ = int(text)
+    except ValueError:
+        raise inliner.reporter.error(
+            f"Invalid number for black circle: {text}. Must be an integer.",
+            line=lineno,
+        )
+    node = nodes.inline(text=text, classes=["black-circle-number"])
+    return [node], []
+
+
 def setup(app):
     app.add_directive("gdrawing", GDrawing)
     app.add_directive("abstract", AbstractDirective)
+    app.add_role("c", black_circle_number_role)
