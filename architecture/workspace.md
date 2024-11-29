@@ -67,12 +67,9 @@ The dind container provides the following functions.
 
 1. **Docker daemon:** The dind container runs a Docker daemon, allowing users to build, run, and manage containers within the workspace. The main container communicates with the Docker daemon via a Unix socket shared between the containers on an `emptyDir` volume. 
 
-2. **Local DNS service:** The dind container runs a local DNS service that provides name resolution for Docker containers within the workspace. The local DNS service is optional and can be disabled in the workspace blueprint. The local DNS peforms the following activities:
+2. **Local DNS service:** The dind container runs a local DNS service that provides name resolution for Docker containers within the workspace. The local DNS service is optional and can be disabled in the workspace blueprint. 
 
-    * It starts the `dnsmasq` process and modifies the `/etc/resolv.conf` file in the workspace to point to the local DNS at `127.0.0.53`. It forwards unresolved queries to the upstream `coreDNS` server.
-    * It listens for events from the Docker daemon and adds DNS entries for newly created containers. The entries are removed automatically on container deletion.
-
-For more details on how the workspace user interacts with the Docker daemon and utilizes the local DNS service, refer to the [Docker sequence diagram](communication.md#docker) in the communication section.
+For more details on how the workspace user interacts with the Docker daemon and utilizes the local DNS service, refer to the [Docker Support](#docker-support) section.
 
 ## Network access
 
@@ -100,6 +97,85 @@ In addition, it is possible to specify a set of labels that the target pod must 
 ```{note}
 The network policy is enforced by the Kubernetes network plugin. The levels outlined in the table above correspond to the `spec.ingress` and `spec.egress` fields in the `NetworkPolicy` resource.
 ```
+
+## Docker support 
+
+The k8shell-proxy supports Docker in the workspace by enabling k8shell-dind container (Docker in Docker). It comes with a Docker daemon, the local DNS service and docker credential helper to access private container registries. 
+
+### Local DNS
+
+The local DNS provides name resolution for Docker containers and enables the override of Kubernetes service names. This feature supports the development of application components within the workspace that need to be “isolated” from existing Kubernetes services. The local DNS is optional and can be disabled via the workspace blueprint. The local DNS service is provided by the k8shell-dind container. When the container starts, the following components are initialized:
+
+1. **dnsmasq:** The local DNS starts the dnsmasq process and updates the /etc/resolv.conf file in the workspace to point to the local DNS at 127.0.0.53. Unresolved queries are forwarded to the upstream coreDNS server. The modified resolv.conf file is shared across all containers in the workspace pod.
+
+2. **Event Listener:** This listener monitors events from the Docker daemon, adding DNS entries for newly created containers. These entries are automatically removed when containers are deleted.
+
+The workspace blueprint can be configured to specify which entries are added to the DNS. The following options are available with their default values:
+
+| Option | Default|Description |
+|--------|-|-------------|
+| `container_name` |`false`| Adds the container’s name to the DNS (can be generated). |
+| `container_id` |`false`| Adds the container’s ID to the DNS (first 12 characters). |
+| `dns_names` |`true`| Adds the container’s DNS names to the DNS (see note below). |
+| `cluster_fqdn` |`true`| Appends the cluster's FQDN to all DNS entries. |
+
+```{note}
+The DNS names are typically available when the container is started using Docker Compose. The entries can be found in the container manifest under `NetworkSettings.Networks.DNSNames`
+```
+
+### Credential helper
+
+TODO
+
+### Docker workflow
+
+The following diagram shows components involved in the Docker workflow in the workspace. Please note that registry is an external container registry service. 
+
+```{mermaid}
+:config: { "theme": "neutral", "mirrorActors": false, "height": 50, "showSequenceNumbers": true, "width": 150, "fontSize": 22 }
+sequenceDiagram
+    participant P as k8shell-proxy
+    participant M as k8shell-main
+    participant D as k8shell-dind
+    participant N as local DNS
+    participant R as Registry
+
+    M->>M: docker pull
+    activate M
+        M->>P: get credentials
+        P-->>M: username,password
+        M->>D: authenticate, docker pull
+        D->>R: authenticate, image pull
+        R-->>D: image content, store image in filesystem
+        D-->>M: image available
+    deactivate M
+    M->>D: docker run
+    activate M
+    activate D
+        note right of D: container running
+        D->>N: add entry to local DNS
+        D-->>M: container running
+    deactivate M
+        M->>N: resolve container name
+        activate M
+            note left of M: access container<br/>process on container<br/>name and port
+            N-->>M: container IP
+            M->>D: access process
+        deactivate M
+    deactivate D
+```
+
+* In steps {c}`1`, {c}`2`, {c}`3`, and {c}`4`, the user in the workspace runs the docker pull command to fetch an image from the registry. The Docker CLI uses the credential helper configured in the workspace, which retrieves credentials via an API call to the k8shell proxy. In steps {c}`5`, {c}`6`, and {c}`7`, the Docker daemon authenticates the user with the registry and pulls the image, storing it in the workspace filesystem.
+
+* In steps {c}`8`, {c}`9`, and {c}`10`, the user executes the docker run command to start a container. The Docker daemon creates the container, and the local DNS service retrieves the associated event, creating a DNS entry for the new container.
+
+* In step {c}`11`, the user starts a local process in the workspace that connects to a container process by resolving its name and accessing a specific TCP port where the container process is listening. In step {c}`12`, the local DNS (`dnsmasq` service) resolves the container name to its IP address, enabling the local process to communicate with the container.
+
+```{note}
+The local DNS allows direct access to container processes from the workspace network. This works because the container IP is part of a subnet attached to the bridge interface accessible from the workspace network. The IP address is routable within the workspace network, enabling direct communication with container processes without exposing ports using Docker's `-P` option.
+```
+
+Users can access all Docker features within the workspace, including running containers, building images, and pushing them to a registry. While the k8shell proxy provides access to the system’s registered container registry, users can also configure the Docker CLI with their own credentials to use a custom registry.
 
 ## Workspace Lifecycle
 
