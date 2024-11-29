@@ -123,6 +123,6 @@ The k8shell proxy manages the workspace lifecycle, handling creation, updates, a
 
 During an update, the k8shell proxy uses Helm to reconfigure the workspace with the new blueprint values. Depending on the changes, the update may or may not restart the containers. In some cases, the update might require recreating the workspace.
 
-## k8shell-proxy API 
+## K8shell API 
 
 TODO: API
