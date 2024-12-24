@@ -17,7 +17,9 @@ The workspace provisioning process involves the following steps:
 
 2. **Helm chart installation:** The Helm chart, containing the Kubernetes resources that define the workspace, is installed in the specified Kubernetes namespace. These resources include the workspace pod with requested container definitions, service account, persistent volume claims, initialization scripts, access token for the k8shell proxy API, and other necessary components. The Helm client communicates with the Kubernetes API server to deploy the chart and create the required resources, including storage, networking, and containers.
 
-3. **Initilization of containers:** When the workspace pod is created, the containers are initialized. There are two main initialization processes, k8shell-main initialization and k8shell-dind initialization. See [Workspace containers](#workspace-containers) for more details.
+3. **Running init containers:** The workspace pod uses two init containers: init-base and init-user. The init-base container copies essential workspace base tool binaries and scripts to the workspace filesystem. These binaries include k8shell-init and kbox, which provide various tools for interacting with the k8shell system. The init-user container sets up the user environment by creating the user account (including the username, UID, and GID) and initializing the user’s home directory.
+
+4. **Running main and dind containers:** After init containers finish the work, the main and dind containers are started. See [Workspace containers](#workspace-containers) for more details.
 
 ```{note}
 Workspace blueprints allow you to define any storage class available in the cluster. However, k8shell services provide a CSI storage driver for creating persistent volumes on a ZFS storage server. See [Storage architecture](storage.md) for more details.
@@ -25,7 +27,7 @@ Workspace blueprints allow you to define any storage class available in the clus
 
 ## Workspace containers 
 
-The provisioning process creates one to three containers within the workspace pod, each serving a specific purpose. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers are interconnected through shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
+The provisioning process creates main and dind containers (if configured) within the workspace pod. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers are interconnected through shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
 
 The diagram below shows the containers and their integration. 
 
@@ -37,11 +39,13 @@ The diagram below shows the containers and their integration.
 
 The k8shell-main container serves as the primary component of the workspace pod, facilitating shell access, port forwarding, and SFTP streams. It uses a specialized container image tailored to the tasks users perform within the workspace. When the workspace is provisioned, the k8shell-main container executes initialization scripts defined in the workspace blueprint. These scripts run during the Pod’s start lifecycle event and can include tasks such as configuring the user environment (e.g., Git settings, shell aliases) and installing packages for specific programming environments. To optimize provisioning time, scripts can also be configured to run in the background, ensuring they don’t delay workspace readiness.
 
+The k8shell-init is the init process of the main container (PID 1), responsible for reaping zombie processes, killing orphaned processes, managing the workspace logger, providing a Unix socket-to-TCP bridge for SSH agent forwarding, and enabling TCP port forwarding to various services. 
+
 The main container provides the following functions:
 
 1. **SSH channels**: Users can connect to the workspace via various SSH channels. The k8shell-proxy manages the SSH connection, forwarding input and output streams between the user and the container within the channel. There are [shell](communication.md), [exec](communication.md), and [port-forwarding](communication.md#port-forwarding) channels supported by k8shell-proxy. 
 
-2. **SSH agent forwarding:** When the agent-forwarding is requested on the SSH connection, the k8shell proxy forwards the agent stream to the unix socket shared with the k8shell-admin container. The main container uses the agent stream to authenticate with third-party services that require host keys. See [Agent forwarding](communication.md#agent-forwarding) for more details.
+2. **SSH agent forwarding:** When SSH agent forwarding is requested, the k8shell proxy initiates the process by sending a request to the k8shell-init process running in the workspace's main container. The k8shell-init process then establishes a bridge, which consists of both a TCP listener and a Unix socket listener. The k8shell proxy connects to the TCP listener by creating a TCP socket. When a client running inside the workspace container needs access to the SSH agent, it connects to the Unix socket. The bridge transforms the communication between the Unix socket and the TCP socket. The transformed communication is then received by the k8shell proxy, which forwards the request to the SSH agent running on the user's host, enabling seamless agent forwarding. See [Agent forwarding](communication.md#agent-forwarding) for more details. 
 
 4. **SFTP subsystem**: Enables the file transfer via SFTP server. When the SFTP subsystem is requested by the client on the SSH connection, the k8shell proxy forwards input and output streams to the sftp server. The server is either provided by the k8shell-main container or k8shell-proxy uses internal server implementation if the container image lacks an SFTP server. See [SFTP subsystem](communication.md) for more details.
 
@@ -49,7 +53,7 @@ The main container provides the following functions:
 
 The k8shell-main container also uses logging service provided by k8shell-admin container and may use local DNS provided by k8shell-dind container (if configured). See [k8shell-admin](#k8shell-admin) and [k8shell-dind](#k8shell-dind) for more details. 
 
-### k8shell-admin
+<!-- ### k8shell-admin
 
 The k8shell-admin container is a sidecar in the workspace pod that provides logging services and, if configured, an agent forwarding Unix socket. It runs the same container image and shares the network namespace with the main container.
 
@@ -57,7 +61,7 @@ The admin container provides the following functions:
 
 1. **Logging service:** The admin container uses an `emptyDir` volume shared with the main and dind containers. Log messages written to a file on this shared volume by the main or dind containers are read by the logging service and output to stdout. This ensures that the logs are included in the Kubernetes admin container logs, accessible through standard tools. The k8shell API also provides logging functions for information, debug, warning, and error messages, used by workspace components to log their operations.
 
-2. **Agent forwarding Unix socket:** The admin container manages a Unix socket file shared with the main container via the `emptyDir` volume. When agent forwarding is requested by the main container, the k8shell proxy forwards the agent stream to this Unix socket. The main container accesses the socket through the `SSH_AUTH_SOCK` environment variable, enabling clients in the main container to authenticate with third-party services requiring host keys. For additional details, see [Agent Forwarding](communication.md#agent-forwarding).
+2. **Agent forwarding Unix socket:** The admin container manages a Unix socket file shared with the main container via the `emptyDir` volume. When agent forwarding is requested by the main container, the k8shell proxy forwards the agent stream to this Unix socket. The main container accesses the socket through the `SSH_AUTH_SOCK` environment variable, enabling clients in the main container to authenticate with third-party services requiring host keys. For additional details, see [Agent Forwarding](communication.md#agent-forwarding). -->
 
 ### k8shell-dind
 
