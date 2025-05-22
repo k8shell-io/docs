@@ -31,7 +31,7 @@ build:
 run:
 	@-docker rm -f k8shell-docs &>/dev/null
 	@sleep 1
-	@docker run -d -v $$(realpath $$(pwd)/_build/html):/usr/share/nginx/html --name k8shell-docs -p 8080:80 docs:latest
+	docker run -d -v $$(realpath $$(pwd)/_build/html):/usr/share/nginx/html --name k8shell-docs -p 8080:80 docs:latest
 
 # Increment the version
 # args: the part to increment (minor or patch)
