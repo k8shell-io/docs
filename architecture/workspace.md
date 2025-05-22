@@ -7,6 +7,8 @@ A K8shell workspace is a Kubernetes Pod offering you a development environment w
 
 A workspace is a dedicated resource for a single user. It is dynamically created by the k8shell proxy when the user connects to the system. It is based on a blueprint defining access and resource requirements and may consist of one or more containers. The workspace provides shell, SFTP, port-forwarding, and agent-forwarding capabilities while remaining isolated with its own network namespace, filesystem, and process space. It can also enable Docker functionality and access to private registries. Depending on the configuration, the workspace can be ephemeral, automatically destroyed upon disconnection, or preserved for an extended period. 
 
+![Diagram](../drawings/workspace.excalidraw.svg)
+
 ## Workspace provisioning
 
 Workspace provisioning is initiated by the k8shell proxy based on the user requesting an access to the workspace (see [SSH Channel Flow](communication.md#ssh-channel-flow) for more details). K8shell proxy uses the workspace blueprint that the user requests access to. The blueprint defines the Helm chart and configuration values needed to deploy the workspace, including container images, resource requirements, initialization scripts, storage, middleware (e.g., VSCode or IntelliJ detection plugins), and access permissions. Workspaces can also be configured to support Docker, allowing users to build, run, and manage containers while accessing private container registries. Provisioning typically takes 4-6 seconds, depending on the container image size and initialization script complexity.
@@ -27,7 +29,7 @@ Workspace blueprints allow you to define any storage class available in the clus
 
 ## Workspace containers 
 
-The provisioning process creates main and dind containers (if configured) within the workspace pod. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers are interconnected through shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
+The provisioning process creates main and dind containers (if configured) within the workspace pod. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers use shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
 
 The diagram below shows the containers and their integration. 
 
@@ -52,16 +54,6 @@ The main container provides the following functions:
 5. **Persistent storage**: Users can store data on the persistent volumes. These volumes can include shared storage accessible to other workspaces.
 
 The k8shell-main container also uses logging service provided by k8shell-admin container and may use local DNS provided by k8shell-dind container (if configured). See [k8shell-admin](#k8shell-admin) and [k8shell-dind](#k8shell-dind) for more details. 
-
-<!-- ### k8shell-admin
-
-The k8shell-admin container is a sidecar in the workspace pod that provides logging services and, if configured, an agent forwarding Unix socket. It runs the same container image and shares the network namespace with the main container.
-
-The admin container provides the following functions:
-
-1. **Logging service:** The admin container uses an `emptyDir` volume shared with the main and dind containers. Log messages written to a file on this shared volume by the main or dind containers are read by the logging service and output to stdout. This ensures that the logs are included in the Kubernetes admin container logs, accessible through standard tools. The k8shell API also provides logging functions for information, debug, warning, and error messages, used by workspace components to log their operations.
-
-2. **Agent forwarding Unix socket:** The admin container manages a Unix socket file shared with the main container via the `emptyDir` volume. When agent forwarding is requested by the main container, the k8shell proxy forwards the agent stream to this Unix socket. The main container accesses the socket through the `SSH_AUTH_SOCK` environment variable, enabling clients in the main container to authenticate with third-party services requiring host keys. For additional details, see [Agent Forwarding](communication.md#agent-forwarding). -->
 
 ### k8shell-dind
 
