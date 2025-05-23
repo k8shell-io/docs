@@ -2,31 +2,45 @@
 
 ```{toctree}
 :hidden:
-k8shell-proxy
-workspace
+operator
+ssh-proxy
+k8shelld
 storage
 communication
 ```
 
 ```{abstract}
-K8shell services run within a Kubernetes cluster, supported by industry-standard components such as Harbor registry, ArgoCD, and HashiCorp Vault.
+K8shell is a platform that allows users to create, access and manage workspaces in a Kubernetes cluster using standard protocols. 
 ```
 
-K8shell services are built on a microservices architecture, following Kubernetes deployment best practices. Key services include the Nginx ingress controller, Harbor registry, HashiCorp Vault, and OpenTelemetry for observability and monitoring. The following diagram illustrates high-level architecture with key components.
+K8shell services are built on a microservices architecture, following Kubernetes deployment best practices. The following diagram illustrates the architecture of K8shell with its core components.
 
-```{eval-rst}
-.. gdrawing:: 1Fjifn_MpS4K9ptmEHAEOE8bTkiIHPI__tKzhOrsmB-k
+```{image} ../images/architecture.png
+:width: 700px
+:align: center
+:alt: Diagram
 ```
+The components of k8shell architecture are:
 
-## Core Components
+* **SSH Proxy** provides the secure shell (ssh) protocol interface, enabling clients to connect using standard SSH-based tools. It translates the ssh protocol into K8shell streaming API calls using GRPC provided by the **k8shelld**. It integrates with **k8shell Auth Services** and **k8shell operator** to manage the lifecycle of workspaces and their resources.
 
-The core components of k8shell architecture are:
+* **Auth Services** provide authentication and authorization services for K8shell. It integrates with external identity providers such as GitHub, GitLab, and OIDC to authenticate users and manage their access to workspaces. 
 
-* **K8shell Proxy** provides the secure shell (ssh) protocol interface, enabling clients to connect using standard SSH-based tools. It translates the ssh protocol into Kubernetes streaming API calls using WebSockets. It handles user authentication and authorization by using built-in or third-party authorization mechanisms and it dynamically provisions **K8shell Workspaces** according to defined resource requirements and access management configurations. For more details, explore the [K8shell Proxy](k8shell-proxy.md), [K8shell Workspace](workspace.md) architectures and the end-to-end SSH communication flows](communication.md).
+* **k8shelld** is the core component of the workspace running as PID 1 (init process). It provides the K8shell streaming API using GRPC for SSH channels and the SFTP subsystem. It initializes the workspace environment, including the creation of the workspace user and their permissions and provides internal interface for workspace operations via unix socket. 
 
-* **CSI Storage Driver** is a component that implements the standard CSI interface, enabling seamless access to the **Storage Server** based on ZFS file system. It supports the dynamic provisioning of persistent volumes for K8shell Workspaces according to configuration requirements such as storage size and access permission. It allows for the reuse of already provisioned workspaces' volumes that need to be recreated and supports provisioning of shared volumes. Read more about storage in [Storage Architecture](storage.md).
+* **API Server** is the REST API server that provides access to K8shell services. It allows users to create, manage, and access workspaces using standard HTTP/HTTPS protocols. 
 
-## Standard Components
+* **Dashboard** is a web-based user interface that provides access to K8shell services. It integrates with the **API server** to provide a user-friendly interface for managing workspaces.
+
+* **zfs-csi** is the container storage interface (CSI) driver for ZFS, which provides persistent storage for workspaces. The persistent volumes are seamlessly provisioned and managed by the **zfs-csi** driver, which allows for dynamic provisioning of ZFS datasets and snapshots. It integrates with the **ZFS API server** to manage the lifecycle of workspaces and their resources.
+
+* **ZFS API Server** is a REST API server that provides access to ZFS datasets and snapshot on a host with ZFS storage. It is used to manage the lifecycle of workspaces and their resources, including the creation, deletion, and management of ZFS datasets and snapshot
+
+* **Operator** is the K8shell Kubernetes operator that manages the lifecycle of workspaces and their resources. It monitors the state of workspaces and their resources and takes action to ensure that they are in the desired state. It integrates with the **State Manager** to manage the persistent state of workspaces. 
+
+* **State Manager** is a component that manages the persistent state of workspaces. It provides services to save and restore the state of workspaces filesystem (upper dir) which allows to suspend, resume and move workspaces between nodes. It uses Harbor registry to store images of the workspace filesystem states.
+
+<!-- ## Standard Components
 
 The architecture uses the following standard components:
 
@@ -46,4 +60,4 @@ In order to enable external access to the cluster, the following components are 
 
 * **MetalLB** allows for the allocation of external IP addresses to services running in the cluster and enables access to these services from outside the cluster. MetalLB is only used in on-premises deployments. Read more about MetalLB configuration in [MetalLB Configuration]().
 
-* **Load Balancer** is a cloud provider-specific component that provides access to services running in the cluster from outside the cluster. Read more about Load Balancer configuration in [Load Balancer Configuration]().
+* **Load Balancer** is a cloud provider-specific component that provides access to services running in the cluster from outside the cluster. Read more about Load Balancer configuration in [Load Balancer Configuration](). -->

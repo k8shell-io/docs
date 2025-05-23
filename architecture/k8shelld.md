@@ -9,24 +9,6 @@ A workspace is a dedicated resource for a single user. It is dynamically created
 
 ![Diagram](../drawings/workspace.excalidraw.svg)
 
-## Workspace provisioning
-
-Workspace provisioning is initiated by the k8shell proxy based on the user requesting an access to the workspace (see [SSH Channel Flow](communication.md#ssh-channel-flow) for more details). K8shell proxy uses the workspace blueprint that the user requests access to. The blueprint defines the Helm chart and configuration values needed to deploy the workspace, including container images, resource requirements, initialization scripts, storage, middleware (e.g., VSCode or IntelliJ detection plugins), and access permissions. Workspaces can also be configured to support Docker, allowing users to build, run, and manage containers while accessing private container registries. Provisioning typically takes 4-6 seconds, depending on the container image size and initialization script complexity.
-
-The workspace provisioning process involves the following steps:
-
-1. **Instantiation of the workspace blueprint:** The k8shell proxy processes the workspace blueprint for the user requesting access. This step generates user-specific values such as username, read/write permissions, and workspace name. The k8shell proxy uses a templating mechanism with CEL expressions to dynamically generate these values based on user data.
-
-2. **Helm chart installation:** The Helm chart, containing the Kubernetes resources that define the workspace, is installed in the specified Kubernetes namespace. These resources include the workspace pod with requested container definitions, service account, persistent volume claims, initialization scripts, access token for the k8shell proxy API, and other necessary components. The Helm client communicates with the Kubernetes API server to deploy the chart and create the required resources, including storage, networking, and containers.
-
-3. **Running init containers:** The workspace pod uses two init containers: init-base and init-user. The init-base container copies essential workspace base tool binaries and scripts to the workspace filesystem. These binaries include k8shell-init and kbox, which provide various tools for interacting with the k8shell system. The init-user container sets up the user environment by creating the user account (including the username, UID, and GID) and initializing the user’s home directory.
-
-4. **Running main and dind containers:** After init containers finish the work, the main and dind containers are started. See [Workspace containers](#workspace-containers) for more details.
-
-```{note}
-Workspace blueprints allow you to define any storage class available in the cluster. However, k8shell services provide a CSI storage driver for creating persistent volumes on a ZFS storage server. See [Storage architecture](storage.md) for more details.
-```
-
 ## Workspace containers 
 
 The provisioning process creates main and dind containers (if configured) within the workspace pod. They support various K8shell operations, they share a network namespace but have separate process namespaces. The containers use shared `emptyDir` volume, shared network namespace, unix socket, and persistent storage.
