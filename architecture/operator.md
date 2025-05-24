@@ -1,4 +1,4 @@
-# k8shell Operator
+# Operator
 
 ```{abstract}
 k8shell Operator is a Kubernetes operator that manages the lifecycle of workspaces and their resources. 

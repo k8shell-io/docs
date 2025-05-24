@@ -1,5 +1,5 @@
 
-# k8shell workspace
+# Workspace
 
 ```{abstract}
 A K8shell workspace is a Kubernetes Pod offering you a development environment with standard tools and protocols.
