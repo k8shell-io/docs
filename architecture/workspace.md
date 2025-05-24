@@ -2,10 +2,10 @@
 # Workspace
 
 ```{abstract}
-A K8shell workspace is a Kubernetes Pod offering you a development environment with standard tools and protocols.
+A K8shell workspace provides a development environment inside the Kubernetes cluster.
 ```
 
-A workspace is a dedicated resource for a single user. It is dynamically created by the k8shell proxy when the user connects to the system. It is based on a blueprint defining access and resource requirements and may consist of one or more containers. The workspace provides shell, SFTP, port-forwarding, and agent-forwarding capabilities while remaining isolated with its own network namespace, filesystem, and process space. It can also enable Docker functionality and access to private registries. Depending on the configuration, the workspace can be ephemeral, automatically destroyed upon disconnection, or preserved for an extended period. 
+A workspace is a dedicated environment for a single user. It is dynamically created by the k8shell proxy when the user connects to the system. It is based on a blueprint defining access and resource requirements and may consist of one or more containers. The workspace provides shell, SFTP, port-forwarding, and agent-forwarding capabilities while remaining isolated with its own network namespace, filesystem, and process space. It can also enable Docker functionality and access to private registries. Depending on the configuration, the workspace can be ephemeral, automatically destroyed upon disconnection, or preserved for an extended period. 
 
 ![Diagram](../drawings/workspace.excalidraw.svg)
 
