@@ -66,7 +66,7 @@ h4 {
 /* Light blue background on hover for sidebar items */
 .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
 .menu__link:hover:not(.menu__link--active) {
-    background-color: #e3f2fd !important;
+    background-color: #eeeded !important;
     /* Light blue background */
     color: inherit !important;
 }
@@ -188,4 +188,8 @@ h4 {
 .theme-doc-sidebar hr,
 .menu hr {
     display: none !important;
+}
+
+.menu__list {
+    padding-left: 0px !important;
 }

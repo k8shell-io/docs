@@ -3,7 +3,7 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-    title: 'k8shell.io Docs',
+    title: 'k8shell Docs',
     tagline: 'Cloud-Native Development Environment',
     favicon: 'img/favicon.ico',
 
@@ -49,7 +49,7 @@ const config: Config = {
 
     themeConfig: {
         navbar: {
-            title: 'k8shell.io Docs',
+            title: 'k8shell Docs',
             hideOnScroll: false,
             items: [
                 {
