@@ -1,3 +1,5 @@
 *.pyc
 _build
 docker/docs/files
+node_modules
+.docusaurus

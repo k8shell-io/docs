@@ -1,0 +1,191 @@
+@media (min-width: 1416px) {
+    .main-wrapper {
+        align-self: center;
+        max-width: 1600px;
+        width: 1600px;
+    }
+}
+
+.navbar .navbar__inner {
+    margin: 0 auto;
+    max-width: 1560px;
+}
+
+
+h1 {
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    margin-bottom: 1rem !important;
+    /* border-bottom: 1px solid var(--ifm-color-emphasis-300) !important;
+    padding-bottom: 0.3rem !important; */
+}
+
+h2 {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.75rem !important;
+    /* border-bottom: 1px solid var(--ifm-color-emphasis-200) !important;
+    padding-bottom: 0.2rem !important; */
+}
+
+h3 {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+}
+
+h4 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+}
+
+/* Make selected sidebar item text blue with no background */
+.theme-doc-sidebar-item-link--active,
+.theme-doc-sidebar-item-link--active:hover,
+.menu__link--active,
+.menu__link--active:hover {
+    color: #007bff !important;
+    /* Blue text */
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Also handle dark mode */
+[data-theme='dark'] .theme-doc-sidebar-item-link--active,
+[data-theme='dark'] .theme-doc-sidebar-item-link--active:hover,
+[data-theme='dark'] .menu__link--active,
+[data-theme='dark'] .menu__link--active:hover {
+    color: #4db8ff !important;
+    /* Lighter blue for dark mode */
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Light blue background on hover for sidebar items */
+.theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
+.menu__link:hover:not(.menu__link--active) {
+    background-color: #e3f2fd !important;
+    /* Light blue background */
+    color: inherit !important;
+}
+
+/* Dark mode hover background */
+[data-theme='dark'] .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
+[data-theme='dark'] .menu__link:hover:not(.menu__link--active) {
+    background-color: rgba(77, 184, 255, 0.1) !important;
+    /* Light blue with transparency for dark mode */
+    color: inherit !important;
+}
+
+/* Style sidebar category labels (group items) */
+.theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
+.menu__list-item-collapsible>.menu__link {
+    color: #000000 !important;
+    /* Black text for group items */
+    font-weight: 600 !important;
+    padding-top: 1rem !important;
+    /* Add top padding to group items */
+    padding-bottom: 0.5rem !important;
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Dark mode group items */
+[data-theme='dark'] .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
+[data-theme='dark'] .menu__list-item-collapsible>.menu__link {
+    color: #ffffff !important;
+    /* White text for dark mode */
+}
+
+/* Remove padding from first level items under group items */
+.theme-doc-sidebar-item-category .menu__list .menu__list-item,
+.menu__list-item-collapsible .menu__list .menu__list-item {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+/* Style first level links under group items */
+.theme-doc-sidebar-item-category .menu__list .menu__link,
+.menu__list-item-collapsible .menu__list .menu__link {
+    padding-left: 0.75rem !important;
+    /* Minimal left padding for readability */
+}
+
+/* Remove top padding from first group item */
+.theme-doc-sidebar-item-category:first-of-type>.menu__list-item-collapsible>.menu__link {
+    padding-top: 0.5rem !important;
+}
+
+/* Remove background from breadcrumb links */
+.breadcrumbs__link,
+.breadcrumbs__link:hover,
+.breadcrumbs__link:focus,
+.breadcrumbs__item--active .breadcrumbs__link {
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Also target any specific breadcrumb styling */
+.theme-doc-breadcrumbs .breadcrumbs__link,
+.theme-doc-breadcrumbs .breadcrumbs__link:hover {
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Make navbar link text grey */
+.navbar__item .navbar__link {
+    color: #7f838b !important;
+    /* Grey color */
+}
+
+/* Grey color on hover */
+.navbar__item .navbar__link:hover {
+    color: #7f838b !important;
+    /* Darker grey on hover */
+}
+
+/* Dark mode navbar link colors */
+[data-theme='dark'] .navbar__item .navbar__link {
+    color: #7f838b !important;
+    /* Light grey for dark mode */
+}
+
+[data-theme='dark'] .navbar__item .navbar__link:hover {
+    color: #d1d5db !important;
+    /* Lighter grey on hover in dark mode */
+}
+
+/* Remove border lines from sidebar */
+.theme-doc-sidebar-container,
+.theme-doc-sidebar,
+.menu,
+.menu__list,
+.menu__list-item,
+.menu__link {
+    border: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+/* Remove any separator lines between sidebar items */
+.theme-doc-sidebar-item-category,
+.theme-doc-sidebar-item-link {
+    border: none !important;
+}
+
+/* Remove border from sidebar container */
+.docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocRoot-Layout-Sidebar-styles-module,
+.sidebar_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar-Desktop-styles-module {
+    border: none !important;
+    border-right: none !important;
+}
+
+/* Remove any divider lines */
+.theme-doc-sidebar hr,
+.menu hr {
+    display: none !important;
+}
