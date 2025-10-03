@@ -1,3 +1,6 @@
+/* =========================================
+   Layout & Navbar
+   ========================================= */
 @media (min-width: 1416px) {
     .main-wrapper {
         max-width: 1600px;
@@ -6,6 +9,7 @@
     }
 }
 
+/* Cap navbar and make padding collapse smoothly below 1600px */
 .navbar .navbar__inner {
     box-sizing: border-box;
     max-width: 1600px;
@@ -14,10 +18,14 @@
     padding-inline: clamp(0px, (100vw - 1600px) / 2, var(--ifm-navbar-padding-horizontal));
 }
 
+/* Sidebar top spacing */
 .theme-doc-sidebar-menu {
     padding-top: 10px;
 }
 
+/* =========================================
+   Typography
+   ========================================= */
 h1 {
     font-size: 2rem !important;
     font-weight: 600 !important;
@@ -43,141 +51,112 @@ h4 {
     font-weight: 600 !important;
 }
 
-.theme-doc-sidebar-item-link--active,
-.theme-doc-sidebar-item-link--active:hover,
-.menu__link--active,
-.menu__link--active:hover {
-    color: #007bff !important;
-    background: none !important;
-    background-color: transparent !important;
-}
+/* =========================================
+   Sidebar – Hover & Active Behavior
+   ========================================= */
 
-[data-theme='dark'] .theme-doc-sidebar-item-link--active,
-[data-theme='dark'] .theme-doc-sidebar-item-link--active:hover,
-[data-theme='dark'] .menu__link--active,
-[data-theme='dark'] .menu__link--active:hover {
-    color: #4db8ff !important;
-    background: none !important;
-    background-color: transparent !important;
-}
-
+/* No hover background on CATEGORY (collapsible) items */
 .theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
     background: none !important;
     background-color: transparent !important;
     border-radius: 0 !important;
 }
 
-/* Light blue background on hover for sidebar items */
+/* Hover background ONLY for LEAF items (exclude categories) */
 .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
-.menu__link:hover:not(.menu__link--active) {
+.theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
     background-color: #eeeded !important;
     color: inherit !important;
     border-radius: 6px !important;
 }
 
-/* Dark mode hover background */
+/* Active state ONLY for LEAF items (blue text, no bg) */
+.menu__link--active:not(.menu__link--sublist):not(.menu__link--sublist-caret),
+.menu__link--active:not(.menu__link--sublist):not(.menu__link--sublist-caret):hover {
+    color: #007bff !important;
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Keep CATEGORY headers neutral when ONLY a child is active
+   (header has no aria-current="page" in that case) */
+.theme-doc-sidebar-menu .menu__list-item--active>.menu__link--sublist:not([aria-current="page"]),
+.theme-doc-sidebar-menu .menu__list-item--active>.menu__link--sublist-caret:not([aria-current="page"]) {
+    color: inherit !important;
+    /* or #000 if you prefer a fixed color */
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Make CATEGORY header blue (like leaf) when the CATEGORY PAGE itself is active */
+.theme-doc-sidebar-menu .menu__link--sublist[aria-current="page"],
+.theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
+    color: #007bff !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* =========================================
+   Dark Mode variants (only where needed)
+   ========================================= */
 [data-theme='dark'] .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
-[data-theme='dark'] .menu__link:hover:not(.menu__link--active) {
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
     background-color: rgba(77, 184, 255, 0.1) !important;
     color: inherit !important;
     border-radius: 6px !important;
 }
 
-/* Style sidebar category labels (group items) */
-.theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
-.menu__list-item-collapsible>.menu__link {
-    color: #000000 !important;
-    font-weight: 600 !important;
-    padding-top: 1rem !important;
-    padding-bottom: 0.5rem !important;
+/* Optional: lighter blue for active LEAF items in dark mode */
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist):not(.menu__link--sublist-caret),
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist):not(.menu__link--sublist-caret):hover {
+    color: #4db8ff !important;
     background: none !important;
     background-color: transparent !important;
-    text-transform: uppercase !important;
-    font-size: 0.85rem !important;
-    letter-spacing: 0.5px !important;
 }
 
-/* Dark mode group items */
-[data-theme='dark'] .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
-[data-theme='dark'] .menu__list-item-collapsible>.menu__link {
-    color: #ffffff !important;
-    text-transform: uppercase !important;
+/* Dark mode: category header blue only when the CATEGORY PAGE is active */
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist[aria-current="page"],
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
+    color: #4db8ff !important;
 }
 
-/* Prevent hover background on group items */
-.theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link:hover,
-.menu__list-item-collapsible>.menu__link:hover {
-    background: none !important;
-    background-color: transparent !important;
-    border-radius: 0 !important;
+/* =========================================
+   Navbar link colors
+   ========================================= */
+.navbar__item .navbar__link {
+    color: #7f838b !important;
 }
 
-/* Prevent hover background on group items in dark mode */
-[data-theme='dark'] .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link:hover,
-[data-theme='dark'] .menu__list-item-collapsible>.menu__link:hover {
-    background: none !important;
-    background-color: transparent !important;
-    border-radius: 0 !important;
+.navbar__item .navbar__link:hover {
+    color: #7f838b !important;
 }
 
-/* Remove padding from first level items under group items */
-.theme-doc-sidebar-item-category .menu__list .menu__list-item,
-.menu__list-item-collapsible .menu__list .menu__list-item {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
+[data-theme='dark'] .navbar__item .navbar__link {
+    color: #7f838b !important;
 }
 
-/* Style first level links under group items */
-.theme-doc-sidebar-item-category .menu__list .menu__link,
-.menu__list-item-collapsible .menu__list .menu__link {
-    padding-left: 0.75rem !important;
+[data-theme='dark'] .navbar__item .navbar__link:hover {
+    color: #d1d5db !important;
 }
 
-/* Remove top padding from first group item */
-.theme-doc-sidebar-item-category:first-of-type>.menu__list-item-collapsible>.menu__link {
-    padding-top: 0.5rem !important;
-}
-
-/* Remove background from breadcrumb links */
+/* =========================================
+   Breadcrumbs – no backgrounds
+   ========================================= */
 .breadcrumbs__link,
 .breadcrumbs__link:hover,
 .breadcrumbs__link:focus,
-.breadcrumbs__item--active .breadcrumbs__link {
-    background: none !important;
-    background-color: transparent !important;
-}
-
-/* Also target any specific breadcrumb styling */
+.breadcrumbs__item--active .breadcrumbs__link,
 .theme-doc-breadcrumbs .breadcrumbs__link,
 .theme-doc-breadcrumbs .breadcrumbs__link:hover {
     background: none !important;
     background-color: transparent !important;
 }
 
-/* Make navbar link text grey */
-.navbar__item .navbar__link {
-    color: #7f838b !important;
-    /* Grey color */
-}
-
-/* Grey color on hover */
-.navbar__item .navbar__link:hover {
-    color: #7f838b !important;
-    /* Darker grey on hover */
-}
-
-/* Dark mode navbar link colors */
-[data-theme='dark'] .navbar__item .navbar__link {
-    color: #7f838b !important;
-    /* Light grey for dark mode */
-}
-
-[data-theme='dark'] .navbar__item .navbar__link:hover {
-    color: #d1d5db !important;
-    /* Lighter grey on hover in dark mode */
-}
-
-/* Remove border lines from sidebar */
+/* =========================================
+   Sidebar borders – remove any lines
+   ========================================= */
 .theme-doc-sidebar-container,
 .theme-doc-sidebar,
 .menu,
@@ -191,29 +170,9 @@ h4 {
     border-bottom: none !important;
 }
 
-/* Remove any separator lines between sidebar items */
-.theme-doc-sidebar-item-category,
-.theme-doc-sidebar-item-link {
-    border: none !important;
-}
-
-/* Remove border from sidebar container */
-.docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocRoot-Layout-Sidebar-styles-module,
-.sidebar_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar-Desktop-styles-module {
-    border: none !important;
-    border-right: none !important;
-}
-
-/* Remove any divider lines */
-.theme-doc-sidebar hr,
-.menu hr {
-    display: none !important;
-}
-
-.menu__list {
-    padding-left: 0px !important;
-}
-
+/* =========================================
+   SVG helpers (centered diagrams)
+   ========================================= */
 .centered-svg-container {
     text-align: center;
     margin: 0;
@@ -229,7 +188,6 @@ h4 {
     width: 100%;
 }
 
-/* Variations for different sizes */
 .centered-svg--small {
     max-width: 60%;
 }
@@ -244,4 +202,34 @@ h4 {
 
 .centered-svg--full {
     max-width: 100%;
+}
+
+/* === Fix: keep parent category neutral when a child is active === */
+/* Docusaurus paints .menu__link--sublist.menu__link--active blue via a CSS var.
+   Reset it for category headers unless THEIR OWN page is active. */
+.theme-doc-sidebar-menu .menu__link--sublist.menu__link--active:not([aria-current="page"]),
+.theme-doc-sidebar-menu .menu__link--sublist-caret.menu__link--active:not([aria-current="page"]),
+.theme-doc-sidebar-menu button.menu__link.menu__link--sublist.menu__link--active:not([aria-current="page"]) {
+    --ifm-menu-color-active: var(--ifm-menu-color);
+    /* neutralize theme active color */
+    color: var(--ifm-menu-color) !important;
+    /* or #000 if you prefer */
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* When the CATEGORY PAGE itself is active, make the header blue (no bg) */
+.theme-doc-sidebar-menu .menu__link--sublist[aria-current="page"],
+.theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
+    --ifm-menu-color-active: #007bff;
+    color: #007bff !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Dark mode variant for the category page active */
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist[aria-current="page"],
+[data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
+    --ifm-menu-color-active: #4db8ff;
+    color: #4db8ff !important;
 }
