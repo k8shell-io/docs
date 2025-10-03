@@ -48,7 +48,6 @@ h4 {
 .menu__link--active,
 .menu__link--active:hover {
     color: #007bff !important;
-    /* Blue text */
     background: none !important;
     background-color: transparent !important;
 }
@@ -58,9 +57,14 @@ h4 {
 [data-theme='dark'] .menu__link--active,
 [data-theme='dark'] .menu__link--active:hover {
     color: #4db8ff !important;
-    /* Lighter blue for dark mode */
     background: none !important;
     background-color: transparent !important;
+}
+
+.theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
+    background: none !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
 }
 
 /* Light blue background on hover for sidebar items */
