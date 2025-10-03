@@ -1,28 +1,28 @@
 @media (min-width: 1416px) {
     .main-wrapper {
-        align-self: center;
         max-width: 1600px;
-        width: 1600px;
+        width: 100%;
+        margin: 0 auto;
     }
 }
 
 .navbar .navbar__inner {
+    box-sizing: border-box;
+    max-width: 1600px;
+    width: 100%;
     margin: 0 auto;
-    max-width: 1560px;
+    padding-inline: clamp(0px, (100vw - 1600px) / 2, var(--ifm-navbar-padding-horizontal));
 }
 
 .theme-doc-sidebar-menu {
     padding-top: 10px;
 }
 
-
 h1 {
     font-size: 2rem !important;
     font-weight: 600 !important;
     line-height: 1.25 !important;
     margin-bottom: 1rem !important;
-    /* border-bottom: 1px solid var(--ifm-color-emphasis-300) !important;
-    padding-bottom: 0.3rem !important; */
 }
 
 h2 {
@@ -30,8 +30,6 @@ h2 {
     font-weight: 600 !important;
     line-height: 1.25 !important;
     margin-bottom: 0.75rem !important;
-    /* border-bottom: 1px solid var(--ifm-color-emphasis-200) !important;
-    padding-bottom: 0.2rem !important; */
 }
 
 h3 {
