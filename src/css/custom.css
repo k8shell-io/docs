@@ -56,14 +56,15 @@ h4 {
    ========================================= */
 
 /* No hover background on CATEGORY (collapsible) items */
-.theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
+/* .theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
     background: none !important;
     background-color: transparent !important;
     border-radius: 0 !important;
-}
+} */
 
 /* Hover background ONLY for LEAF items (exclude categories) */
 .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
+.theme-doc-sidebar-menu .menu__list-item-collapsible:hover,
 .theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
     background-color: #eeeded !important;
     color: inherit !important;
@@ -232,4 +233,8 @@ h4 {
 [data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
     --ifm-menu-color-active: #4db8ff;
     color: #4db8ff !important;
+}
+
+.menu__list-item-collapsible--active {
+    background: transparent !important;
 }
