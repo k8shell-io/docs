@@ -7,69 +7,23 @@ hide_title: true
 
 # Welcome
 
-**K8Shell** is a powerful Kubernetes shell and CLI toolkit that simplifies cluster management and operations.
+K8shell is a cloud-native development environment that dynamically provisions workspaces in Kubernetes, accessible through the standard SSH protocol.
 
-## What is K8Shell?
+We believe K8shell should be the platform for developing modern microservice architectures. It doesn’t matter which programming languages your team uses or which IDE they prefer—any IDE with built-in SSH support works seamlessly with K8shell, with no plugins or local setup required.
 
-K8Shell provides an intuitive command-line interface that makes working with Kubernetes clusters straightforward and efficient. Whether you're a developer, DevOps engineer, or platform administrator, K8Shell streamlines your Kubernetes workflow.
+## 10,000 foot view
 
-## Key Features
+* **Workspaces on demand:** Provision secure, ephemeral or persistent developer workspaces inside Kubernetes.  
+* **Access via SSH:** No custom protocols, no plugins—just plain SSH. Works with any IDE, CLI, or terminal.  
+* **Universal language & tool support:** Polyglot ready: Go, Python, Java, Node.js, Rust… anything that runs in a container.  
+* **Blueprint-driven provisioning:** Reproducible workspaces: base images, packages, volumes, networks, init scripts.  
+* **Integration with Kubernetes:** Native scheduling, affinity, and resource isolation. Compatible with your existing cluster.  
+* **Persistence and storage:** Ephemeral or long-lived workspaces. Attach PVCs, object storage, or config-driven volumes.  
+* **Security:**  TLS, SSH certs, vault-based secret injection, session auditing with eBPF, zero-trust ready.  
+* **Observability:**  Logs, metrics, traces (OpenTelemetry).  
+* **Scaling & multi-tenancy:** Multi-user, multi-team, resource quotas.
+* **Extensible architecture:** REST and gRPC APIs, works with CI/CD pipelines.  
 
-### 🚀 **Simplified Commands**
-Transform complex Kubernetes operations into simple, memorable commands.
+All of this packaged as a Kubernetes-native platform. 
 
-### 🔄 **Interactive Mode**
-Explore your cluster with an interactive shell environment that provides context-aware suggestions.
-
-### 📋 **Multi-Cluster Support**
-Seamlessly switch between and manage multiple Kubernetes clusters from a single interface.
-
-### ⚡ **Automation Ready**
-Script complex workflows with ease using K8Shell's automation-friendly command structure.
-
-### 🔍 **Smart Resource Discovery**
-Intelligent resource discovery and navigation helps you find what you need quickly.
-
-## Quick Start
-
-Get up and running with K8Shell in minutes:
-
-```bash
-# Install K8Shell
-curl -LO https://github.com/k8shell-io/k8shell/releases/latest/download/k8shell-linux-amd64
-chmod +x k8shell-linux-amd64
-sudo mv k8shell-linux-amd64 /usr/local/bin/k8shell
-
-# Initialize your environment
-k8shell init
-
-# Start exploring your cluster
-k8shell
-```
-
-## Documentation Sections
-
-### [Installation Guide](./installation)
-Step-by-step installation instructions for all major platforms.
-
-### [Getting Started](./getting-started)
-Your first steps with K8Shell - from installation to your first commands.
-
-### [CLI Reference](./cli-reference)
-Complete command reference and usage examples.
-
-### [Configuration](./configuration)
-Customize K8Shell to fit your workflow and environment.
-
-### [Examples](./examples)
-Real-world examples and common use cases.
-
-## Community & Support
-
-- **GitHub**: [k8shell-io/k8shell](https://github.com/k8shell-io/k8shell)
-- **Slack**: Join our [community slack](https://slack.k8shell.io)
-- **Twitter**: Follow [@k8shell](https://twitter.com/k8shell) for updates
-
----
-
-Ready to get started? Check out the [Installation Guide](./installation) or jump straight into our [Getting Started](./getting-started) tutorial.
+Deploy via Helm/ArgoCD, integrate with your cluster, and you’re ready to go.

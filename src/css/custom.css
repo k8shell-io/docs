@@ -11,6 +11,10 @@
     max-width: 1560px;
 }
 
+.theme-doc-sidebar-menu {
+    padding-top: 10px;
+}
+
 
 h1 {
     font-size: 2rem !important;
@@ -41,7 +45,6 @@ h4 {
     font-weight: 600 !important;
 }
 
-/* Make selected sidebar item text blue with no background */
 .theme-doc-sidebar-item-link--active,
 .theme-doc-sidebar-item-link--active:hover,
 .menu__link--active,
@@ -52,7 +55,6 @@ h4 {
     background-color: transparent !important;
 }
 
-/* Also handle dark mode */
 [data-theme='dark'] .theme-doc-sidebar-item-link--active,
 [data-theme='dark'] .theme-doc-sidebar-item-link--active:hover,
 [data-theme='dark'] .menu__link--active,
@@ -67,36 +69,53 @@ h4 {
 .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
 .menu__link:hover:not(.menu__link--active) {
     background-color: #eeeded !important;
-    /* Light blue background */
     color: inherit !important;
+    border-radius: 6px !important;
 }
 
 /* Dark mode hover background */
 [data-theme='dark'] .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
 [data-theme='dark'] .menu__link:hover:not(.menu__link--active) {
     background-color: rgba(77, 184, 255, 0.1) !important;
-    /* Light blue with transparency for dark mode */
     color: inherit !important;
+    border-radius: 6px !important;
 }
 
 /* Style sidebar category labels (group items) */
 .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
 .menu__list-item-collapsible>.menu__link {
     color: #000000 !important;
-    /* Black text for group items */
     font-weight: 600 !important;
     padding-top: 1rem !important;
-    /* Add top padding to group items */
     padding-bottom: 0.5rem !important;
     background: none !important;
     background-color: transparent !important;
+    text-transform: uppercase !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.5px !important;
 }
 
 /* Dark mode group items */
 [data-theme='dark'] .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link,
 [data-theme='dark'] .menu__list-item-collapsible>.menu__link {
     color: #ffffff !important;
-    /* White text for dark mode */
+    text-transform: uppercase !important;
+}
+
+/* Prevent hover background on group items */
+.theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link:hover,
+.menu__list-item-collapsible>.menu__link:hover {
+    background: none !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+
+/* Prevent hover background on group items in dark mode */
+[data-theme='dark'] .theme-doc-sidebar-item-category>.menu__list-item-collapsible>.menu__link:hover,
+[data-theme='dark'] .menu__list-item-collapsible>.menu__link:hover {
+    background: none !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
 }
 
 /* Remove padding from first level items under group items */
@@ -110,7 +129,6 @@ h4 {
 .theme-doc-sidebar-item-category .menu__list .menu__link,
 .menu__list-item-collapsible .menu__list .menu__link {
     padding-left: 0.75rem !important;
-    /* Minimal left padding for readability */
 }
 
 /* Remove top padding from first group item */
@@ -192,4 +210,36 @@ h4 {
 
 .menu__list {
     padding-left: 0px !important;
+}
+
+.centered-svg-container {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+}
+
+.centered-svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 90%;
+    height: auto;
+    width: 100%;
+}
+
+/* Variations for different sizes */
+.centered-svg--small {
+    max-width: 60%;
+}
+
+.centered-svg--medium {
+    max-width: 75%;
+}
+
+.centered-svg--large {
+    max-width: 95%;
+}
+
+.centered-svg--full {
+    max-width: 100%;
 }

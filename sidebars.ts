@@ -15,11 +15,11 @@ const sidebars: SidebarsConfig = {
         'index',
         {
             type: 'category',
-            label: 'Getting Started',
+            label: 'Architecture',
             collapsible: false,
             items: [
-                'getting-started',
-                'installation',
+                'ssh-proxy',
+                'incoming-connections',
             ],
         },
         {

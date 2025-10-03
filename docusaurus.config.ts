@@ -3,27 +3,15 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-    title: 'k8shell Docs',
-    tagline: 'Cloud-Native Development Environment',
+    title: 'K8Shell Documentation',
+    tagline: 'Cloud-native development environment for Kubernetes',
     favicon: 'img/favicon.ico',
-
-    // Set the production url of your site here
-    url: 'https://k8shell-io',
-    // Set the /<baseUrl>/ pathname under which your site is served
-    // For GitHub pages deployment, it is often '/<projectName>/'
+    url: 'https://docs.k8shell.io',
     baseUrl: '/docs/',
-
-    // GitHub pages deployment config.
-    // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'k8shell-io', // Usually your GitHub org/user name.
-    projectName: 'docs', // Usually your repo name.
-
+    organizationName: 'k8shell-io',
+    projectName: 'k8shell',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
-
-    // Even if you don't use internationalization, you can use this field to set
-    // useful metadata like html lang. For example, if your site is Chinese, you
-    // may want to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'en',
         locales: ['en'],
@@ -34,8 +22,8 @@ const config: Config = {
             'classic',
             {
                 docs: {
-                    sidebarPath: './sidebars.ts',
                     routeBasePath: '/',
+                    sidebarPath: './sidebars.ts',
                     editUrl:
                         'https://github.com/k8shell-io/docs/tree/main/',
                 },
@@ -46,6 +34,14 @@ const config: Config = {
             } satisfies Preset.Options,
         ],
     ],
+
+    // Add Mermaid theme
+    themes: ['@docusaurus/theme-mermaid'],
+
+    // Configure Mermaid
+    markdown: {
+        mermaid: true,
+    },
 
     themeConfig: {
         navbar: {
@@ -86,6 +82,13 @@ const config: Config = {
         prism: {
             theme: prismThemes.github,
             darkTheme: prismThemes.dracula,
+        },
+        // Optional: Configure Mermaid theme
+        mermaid: {
+            theme: {
+                light: 'neutral',
+                dark: 'dark',
+            },
         },
     } satisfies Preset.ThemeConfig,
 };
