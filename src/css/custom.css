@@ -9,13 +9,23 @@
     }
 }
 
+.navbar {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.container {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
 /* Cap navbar and make padding collapse smoothly below 1600px */
 .navbar .navbar__inner {
     box-sizing: border-box;
     max-width: 1600px;
     width: 100%;
     margin: 0 auto;
-    padding-inline: clamp(0px, (100vw - 1600px) / 2, var(--ifm-navbar-padding-horizontal));
+    padding-inline: clamp(0px, (100vw - 1600px) / 2, 30px);
 }
 
 /* Sidebar top spacing */
@@ -55,14 +65,96 @@ h4 {
    Sidebar – Hover & Active Behavior
    ========================================= */
 
-/* Hover background ONLY for LEAF items (exclude categories) */
-.theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
-.theme-doc-sidebar-menu .menu__list-item-collapsible:hover,
-.theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
-    background-color: #eeeded !important;
+/* Base font and spacing for all sidebar links (categories + pages) */
+.theme-doc-sidebar-menu .menu__link {
+    font-size: 15px !important;
+    font-weight: 400;
+    /* line-height: 1 !important; */
+    /* padding: 0.35rem 0.75rem !important;
+    font-weight: 500;
+    color: var(--ifm-font-color-base) !important; */
+}
+
+/* first level category headers */
+
+.theme-doc-sidebar-menu>li.theme-doc-sidebar-item-category-level-1>.menu__list-item-collapsible>.menu__link {
+    text-transform: uppercase !important;
+    color: black !important;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1 .menu__list-item-collapsible:hover {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.theme-doc-sidebar-menu>li.theme-doc-sidebar-item-category-level-1 {
+    margin-top: 0.8rem !important;
+}
+
+/* align items under first level category to be aligned with their parent */
+
+/* Align 2nd-level (and deeper) sidebar lists flush with their parent category label */
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1>ul.menu__list {
+    margin-left: 0 !important;
+    padding-left: 2px !important;
+}
+
+/* If Docusaurus adds margin on nested li elements too */
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1>ul.menu__list>li.menu__list-item {
+    margin-left: 0 !important;
+}
+
+/* Optional: fine-tune deeper levels (level-2 → level-3, etc.) */
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-2>ul.menu__list {
+    margin-left: 0 !important;
+    padding-left: 1.25rem !important;
+}
+
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-2 .menu__list-item-collapsible:hover,
+.theme-doc-sidebar-item-link:hover,
+.theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
+    background-color: rgba(219, 219, 219, 0.303) !important;
     color: inherit !important;
     border-radius: 6px !important;
 }
+
+.menu__list-item-collapsible {
+    transition: none !important;
+}
+
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-2 .menu__list-item-collapsible--active:hover,
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-link:has(> a.menu__link--active):hover {
+    background-color: #c6e3ffa5 !important;
+}
+
+.menu__link:hover {
+    transition: none !important;
+}
+
+.menu__link:hover,
+.menu__caret:hover {
+    background: none !important;
+}
+
+.menu__list {
+    padding-left: 10px;
+}
+
+/* .theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1 .menu__list-item-collapsible:hover {
+    background-color: rgba(193, 193, 193, 0.161) !important;
+    color: inherit !important;
+    border-radius: 6px !important;
+} */
+
+/* .theme-doc-sidebar-item-link--active:hover,
+.theme-doc-sidebar-menu .menu__list-item-collapsible:hover,
+.theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
+    background-color: rgba(214, 210, 255, 0.1) !important;
+    color: inherit !important;
+    border-radius: 6px !important;
+} */
 
 /* Active state ONLY for LEAF items (blue text, no bg) */
 .menu__link--active:not(.menu__link--sublist):not(.menu__link--sublist-caret),
@@ -70,17 +162,6 @@ h4 {
     color: #007bff !important;
     background: none !important;
     background-color: transparent !important;
-}
-
-/* Keep CATEGORY headers neutral when ONLY a child is active
-   (header has no aria-current="page" in that case) */
-.theme-doc-sidebar-menu .menu__list-item--active>.menu__link--sublist:not([aria-current="page"]),
-.theme-doc-sidebar-menu .menu__list-item--active>.menu__link--sublist-caret:not([aria-current="page"]) {
-    color: inherit !important;
-    /* or #000 if you prefer a fixed color */
-    background: transparent !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
 }
 
 /* Make CATEGORY header blue (like leaf) when the CATEGORY PAGE itself is active */
@@ -230,4 +311,37 @@ h4 {
 [data-theme='dark'] .theme-doc-sidebar-menu .menu__link--sublist-caret[aria-current="page"] {
     --ifm-menu-color-active: #4db8ff;
     color: #4db8ff !important;
+}
+
+/* Override default caret style */
+.menu__caret {
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: currentColor;
+    /* Use your custom chevron icon */
+    mask-image: url("https://ka-p.fontawesome.com/releases/v6.6.0/svgs/regular/chevron-right.svg?v=2&token=a463935e93");
+    -webkit-mask-image: url("https://ka-p.fontawesome.com/releases/v6.6.0/svgs/regular/chevron-right.svg?v=2&token=a463935e93");
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0.6;
+    margin-top: 8px;
+}
+
+/* On hover, make it more visible */
+.menu__caret:hover,
+.menu__list-item-collapsible:hover .menu__caret {
+    opacity: 1 !important;
+    background: currentColor !important;
+}
+
+/* When expanded, rotate 90° */
+.menu__caret[aria-expanded="true"],
+.menu__caret[aria-expanded="true"]:hover {
+    transform: rotate(90deg);
+    opacity: 1;
 }

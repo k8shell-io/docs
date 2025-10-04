@@ -1,0 +1,8 @@
+{
+  "label": "SSH Shield",
+  "position": 7,
+  "link": {
+    "type": "doc",
+    "id": "concepts/ssh-shield/index"
+  }
+}
