@@ -17,12 +17,10 @@ import SSHArchitecture from '@site/static/img/diagrams/ssh-architecture.excalidr
 The following sequence outlines the high-level operations handled by the SSH Proxy during an SSH session.
 
 :::NumberedList
-* **SSH Connection.** The user connects to K8shell using a standard SSH client (e.g., ssh, VS Code, IntelliJ). The SSH Proxy accepts the incoming SSH session request. See [Incoming Connections](incoming-connections) for more details. 
-* **User Authentication.** The SSH Proxy authenticates the user by calling the Identity Service over REST. The Identity Service integrates with GitHub, OIDC, or LDAP to verify the user.  
-* **Workspace Provisioning.** Once authenticated, the SSH Proxy requests the Provisioner to find or start a workspace in Kubernetes. The Provisioner uses Kubernetes APIs for pods, volumes, and networking.  
-* **Interaction.** The SSH Proxy forwards the request to the workspace’s `k8shelld` gRPC API to handle interactive channels such as shell, PTY, port forwarding, and Unix sockets.  
-* **Workspace Operations.** Within the workspace, the user can invoke tools and APIs to retrieve session history, restart or stop the workspace, or obtain credentials for external systems such as Git or Docker registries.  
-* **Event Subscriptions.** The `k8shelld` service listens for platform events like token rotation or account locking to apply real-time updates and enforce security policies.  
+* **SSH Connection.** The user connects to K8shell using a standard SSH client (e.g., ssh, VS Code, IntelliJ). The SSH Proxy accepts the incoming SSH session request. 
+* **User Authentication.** The SSH Proxy authenticates the user by calling the Identity Service over REST. The Identity Service integrates with GitHub, OIDC, or LDAP to verify the user. See [User Discovery and Onboarding](communication-flows#user-discovery-and-onboarding) for more details. 
+* **Workspace Provisioning.** Once authenticated, the SSH Proxy requests the Provisioner to find or start a workspace in Kubernetes. The Provisioner uses Kubernetes APIs for pods, volumes, and networking. See [Workspace Provisioning](communication-flows#workspace-provisioning) for more details. 
+* **Interaction.** The SSH Proxy forwards the request to the workspace’s `k8shelld` gRPC API to handle interactive channels such as shell, PTY, port forwarding, and Unix sockets. See [SSH Channels Communication](communication-flows#ssh-channels-communication) for more details. 
 :::
 
 

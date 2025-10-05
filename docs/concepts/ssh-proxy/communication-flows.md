@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Comminication Flows 
@@ -16,7 +16,8 @@ The flow is divided into three phases:
 
 Users connect to SSH Proxy using a *user string* that contains their username and configuration parameters like blueprint name or repository details (see [User string specification](user-string) for details). SSH Proxy parses this user string to extract the username and parameters, then looks up the corresponding internal user identity. 
 
-When no user identity is found, SSH Proxy checks whether the user can be onboarded through available identity providers. If onboarding is supported, it automatically initiates the onboarding process.
+When no user identity is found, SSH Proxy checks whether the user can be onboarded through available identity providers. If onboarding is supported, it automatically initiates the onboarding process. When authentication fails, SSH proxy publishes the failed authentication attempt via NATS messaging middleware. See [IP Address Protection](ip-protection) for more details.
+
 
 The following diagram shows the communication flow for user discovery and onboarding.
 
@@ -60,15 +61,6 @@ sequenceDiagram
     P-->>C: Access granted / denied
 ```
 
-SSH Proxy calls the following **Identity Service APIs**.
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/users/{username}` | Finds the internal user identity for the given username |
-| `GET` | `/users/{username}/onboardcap` | Retrieves the onboarding capabilities for the user |
-| `POST` | `/users/{username}/onboard` | Starts the onboarding process for the user |
-| `GET` | `/users/{username}/authpublickey` | Checks if the provided SSH public key is authorized for the user |
-
 ## Workspace Provisioning 
 
 Users can request workspace access through the user string in two ways: by specifying a blueprint name, or by specifying a Git repository name (for users onboarded via identity providers like GitHub). The Provisioner service manages workspace blueprints and retrieves blueprint definitions from Git repositories. SSH Proxy uses the user string to check if the requested workspace is running and requests to provision it when necessary.
@@ -103,14 +95,6 @@ sequenceDiagram
         R-->>P: Workspace status {ip, tlsCert}
     end
 ```
-
-SSH Proxy calls the following **Provisioner Service APIs**.
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/workspaces?username={user}&blueprint={bp}` | Finds a workspace |
-| `GET` | `/workspaces/{workspace}/status` | Retrieves the workspace status |
-| `POST` | `/workspaces?userStr={userStr}` | Provisions the workspace for the given user string |
 
 ## SSH Channels Communication
 
