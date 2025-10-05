@@ -16,22 +16,39 @@ import SSHArchitecture from '@site/static/img/diagrams/k8shell-architecture.exca
   <SSHArchitecture className="centered-svg" />
 </div>
 
-The components of k8shell architecture are:
+:::note
+Components shown in yellow are part of the K8shell.io ecosystem — purpose-built services developed specifically for K8shell.
+Components shown in blue represent standard infrastructure services that K8shell integrates with.
+:::
 
-* **SSH Proxy** provides the secure shell (ssh) protocol interface, enabling clients to connect using standard SSH-based tools. It translates the ssh protocol into K8shell streaming API calls using GRPC provided by the *k8shelld*. It integrates with *k8shell Auth Services* and *k8shell operator* to manage the lifecycle of workspaces and their resources.
+## Clients
 
-* **Auth Services** provide authentication and authorization services for K8shell. It integrates with external identity providers such as GitHub, GitLab, and OIDC to authenticate users and manage their access to workspaces. 
+* **SSH Client** – Any client that supports the SSH protocol, such as the SSH CLI or an IDE with SSH remote development.
+* **kbox CLI** – The kbox command-line tool used to operate and manage the K8shell platform directly from the terminal.
+* **Browser** – Web browser for accessing the K8shell Dashboard and managing workspaces through a graphical interface.
 
-* **k8shelld** is the core component of the workspace running as PID 1 (init process). It provides the K8shell streaming API using GRPC for SSH channels and the SFTP subsystem. It initializes the workspace environment, including the creation of the workspace user and their permissions and provides internal interface for workspace operations via unix socket. 
+## Access 
 
-* **API Server** is the REST API server that provides access to K8shell services. It allows users to create, manage, and access workspaces using standard HTTP/HTTPS protocols. 
+* **SSH Proxy** – The entry point for SSH traffic. It authenticates users, translates SSH protocol streams into internal gRPC calls, and securely forwards them to the workspace processes managed by K8shelld.
+* **API Server** – Unified API gateway that exposes REST endpoints for clients (CLI, dashboard, automation tools) and routes requests to backend services like Identity, Provisioner, and others.
+* **Dashboard** – Web-based interface that provides visibility into users, workspaces, and platform activity. Enables non-technical and technical users to manage sessions and monitor resource usage.
 
-* **Dashboard** is a web-based user interface that provides access to K8shell services. It integrates with the *API server* to provide a user-friendly interface for managing workspaces.
+## Core Platform Services 
 
-* **zfs-csi** is the container storage interface (CSI) driver for ZFS, which provides persistent storage for workspaces. The persistent volumes are seamlessly provisioned and managed by the *zfs-csi driver*, which allows for dynamic provisioning of ZFS datasets and snapshots. It integrates with the *ZFS API server* to manage the lifecycle of workspaces and their resources.
+* **Identity** – Handles user authentication, authorization, and mapping between external identity providers (OAuth, OIDC, LDAP) and K8shell accounts.
+* **Provisioner** – Creates and managing user workspaces within the Kubernetes cluster based on defined blueprints.
+* **k8shelld** – The in-workspace daemon that exposes gRPC-based services to handle shell sessions, port-forwards, file transfers, and SSH agent communication within each workspace.
 
-* **ZFS API Server** is a REST API server that provides access to ZFS datasets and snapshot on a host with ZFS storage. It is used to manage the lifecycle of workspaces and their resources, including the creation, deletion, and management of ZFS datasets and snapshot
+## Security
 
-* **Operator** is the K8shell Kubernetes operator that manages the lifecycle of workspaces and their resources. It monitors the state of workspaces and their resources and takes action to ensure that they are in the desired state. It integrates with the *State Manager* to manage the persistent state of workspaces. 
+* **SSH Shield** – A security enforcement component that integrates with the SSH Proxy via NATS. It dynamically creates firewall rules to block IP addresses associated with failed authentication attempts.
+* **Worktrace** - An observability and analytics service that captures and analyzes runtime activities inside user workspaces using eBPF.
 
-* **State Manager** is a component that manages the persistent state of workspaces. It provides services to save and restore the state of workspaces filesystem (upper dir) which allows to suspend, resume and move workspaces between nodes. It uses Harbor registry to store images of the workspace filesystem states.
+## Infrastructure
+
+* **zfs-csi** – CSI driver providing dynamic provisioning for ZFS-backed storage volumes used by workspaces.
+* **ZFS API Server** – Management interface for ZFS volumes, providing REST APIs to handle dataset management.
+* **NATS** – Messaging middleware enabling asynchronous communication and event propagation across K8shell services.
+* **Postgres** – Relational database used to persist configuration, user data, and workspace metadata.
+* **Harbor Registry** – Stores container images for workspaces, system services, and user-defined blueprints.
+* **Docker** – Runs as Docker-in-Docker providing an isolated container runtime for containerized applications in workspaces.
