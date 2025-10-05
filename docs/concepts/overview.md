@@ -32,6 +32,7 @@ Components shown in blue represent standard infrastructure services that K8shell
 * **SSH Proxy** – The entry point for SSH traffic. It authenticates users, translates SSH protocol streams into internal gRPC calls, and securely forwards them to the workspace processes managed by K8shelld.
 * **API Server** – Unified API gateway that exposes REST endpoints for clients (CLI, dashboard, automation tools) and routes requests to backend services like Identity, Provisioner, and others.
 * **Dashboard** – Web-based interface that provides visibility into users, workspaces, and platform activity. Enables non-technical and technical users to manage sessions and monitor resource usage.
+* **CloudShell** – A browser-based terminal that provides direct access to K8shell workspaces through the web interface.
 
 ## Core Platform Services 
 
@@ -48,7 +49,8 @@ Components shown in blue represent standard infrastructure services that K8shell
 
 * **zfs-csi** – CSI driver providing dynamic provisioning for ZFS-backed storage volumes used by workspaces.
 * **ZFS API Server** – Management interface for ZFS volumes, providing REST APIs to handle dataset management.
+* **Image Builder** - A service that builds workspace container images. 
 * **NATS** – Messaging middleware enabling asynchronous communication and event propagation across K8shell services.
 * **Postgres** – Relational database used to persist configuration, user data, and workspace metadata.
-* **Harbor Registry** – Stores container images for workspaces, system services, and user-defined blueprints.
-* **Docker** – Runs as Docker-in-Docker providing an isolated container runtime for containerized applications in workspaces.
+* **Harbor** – A private container registry that stores workspace images.
+* **Memcached** – In-memory caching layer used to speed up frequent lookups and reduce load on backend services.

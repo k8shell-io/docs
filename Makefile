@@ -10,10 +10,9 @@ BUILD_CONTEXT ?= docker/docs
 FILES_DIR := $(BUILD_CONTEXT)/files
 
 # Tagging
-GIT_HASH   := $(shell git rev-parse --short HEAD)
-TAG        ?= $(GIT_HASH)
-FULL_IMAGE := $(IMAGE_REPO):$(TAG)
-LATEST     := $(IMAGE_REPO):latest
+TAG := $(shell git describe --tags --match "v*" 2>/dev/null | sed -E 's/-g[0-9a-f]{7,}$$//')
+FULL_IMAGE   := $(IMAGE_REPO):$(TAG)
+LATEST       := $(IMAGE_REPO):latest
 
 # ------------------------------------------------------------------------------
 # Targets
@@ -38,6 +37,7 @@ prepare:
 	cp docusaurus.config.* $(FILES_DIR)/ 2>/dev/null || true
 	cp sidebars.ts $(FILES_DIR)/ 2>/dev/null || true
 	cp README.md $(FILES_DIR)/ 2>/dev/null || true
+        echo "TAG: $$TAG"
 
 	@echo "Build context ready."
 

@@ -345,3 +345,52 @@ h4 {
     transform: rotate(90deg);
     opacity: 1;
 }
+
+/* === Numbered List Style === */
+.numbered-list ul {
+    counter-reset: numbered;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.numbered-list li {
+    counter-increment: numbered;
+    position: relative;
+    margin: 0.5rem 0 0.5rem 2.5rem;
+    /* Indent to make space for number */
+    line-height: 1.6;
+}
+
+/* Number circle */
+.numbered-list li::before {
+    content: counter(numbered);
+    position: absolute;
+    left: -35px;
+    top: 0.15rem;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Inline bold label */
+.numbered-list li strong {
+    display: inline;
+    /* Keep on same line */
+    margin-right: 0.25rem;
+    /* small gap between title and text */
+    font-weight: 600;
+}
+
+/* Optional: dark mode */
+[data-theme='dark'] .numbered-list li::before {
+    background: #4db8ff;
+    color: #000;
+}
