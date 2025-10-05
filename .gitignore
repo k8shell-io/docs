@@ -3,3 +3,5 @@ _build
 docker/docs/files
 node_modules
 .docusaurus
+docker/docs/files
+

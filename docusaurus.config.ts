@@ -7,10 +7,10 @@ const config: Config = {
     tagline: 'Cloud-native development environment for Kubernetes',
     favicon: 'img/favicon.ico',
     url: 'https://docs.k8shell.io',
-    baseUrl: '/docs/',
+    baseUrl: '/',
     organizationName: 'k8shell-io',
     projectName: 'k8shell',
-    onBrokenLinks: 'throw',
+    onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
     i18n: {
         defaultLocale: 'en',
