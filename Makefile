@@ -29,6 +29,7 @@ prepare:
 	cp -r docs $(FILES_DIR)/
 	cp -r src $(FILES_DIR)/
 	cp -r static $(FILES_DIR)/
+	cp -r plugins $(FILES_DIR)/
 	cp -r drawings $(FILES_DIR)/ 2>/dev/null || true
 	cp -r bin $(FILES_DIR)/ 2>/dev/null || true
 

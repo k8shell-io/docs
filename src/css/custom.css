@@ -265,8 +265,10 @@ h4 {
     max-width: 90%;
     height: auto;
     width: 100%;
+    transition: background-color 0.3s ease;
 }
 
+/* Optional size variations */
 .centered-svg--small {
     max-width: 60%;
 }
@@ -281,6 +283,32 @@ h4 {
 
 .centered-svg--full {
     max-width: 100%;
+}
+
+/* =========================================
+   Dark Mode Adaptation for Excalidraw SVGs
+   ========================================= */
+
+/* Light mode: ensure white background */
+.centered-svg rect[fill="#ffffff"],
+.centered-svg rect[fill="#fff"] {
+    fill: #ffffff !important;
+}
+
+/* Dark mode: change white background to dark gray */
+[data-theme='dark'] .centered-svg path[fill="#ffffff"],
+[data-theme='dark'] .centered-svg path[fill="#fff"] {
+    fill: #1b1b1d !important;
+}
+
+/* Optional: slightly brighten text/lines in dark mode */
+[data-theme='dark'] .centered-svg [stroke="#1e1e1e"],
+[data-theme='dark'] .centered-svg [stroke="#000"] {
+    stroke: #f2f2f2 !important;
+}
+
+[data-theme='dark'] .centered-svg [fill="#1e1e1e"] {
+    fill: #f2f2f2 !important;
 }
 
 /* === Fix: keep parent category neutral when a child is active === */
@@ -393,4 +421,21 @@ h4 {
 [data-theme='dark'] .numbered-list li::before {
     background: #4db8ff;
     color: #000;
+}
+
+/* Equal column width for all SSH tables */
+.ssh-table table {
+    width: 100%;
+    table-layout: fixed;
+    /* makes columns equal width */
+}
+
+.ssh-table th:first-child,
+.ssh-table td:first-child {
+    width: 20%;
+}
+
+.ssh-table th:last-child,
+.ssh-table td:last-child {
+    width: 80%;
 }

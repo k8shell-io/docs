@@ -1,0 +1,8 @@
+{
+  "label": "User Workspace",
+  "position": 5,
+  "link": {
+    "type": "doc",
+    "id": "concepts/workspace/index"
+  }
+}
