@@ -42,7 +42,7 @@ prepare:
 
 	@echo "Build context ready."
 
-build: prepare
+image: prepare
 	@echo "Building Docker image $(FULL_IMAGE)"
 	docker build -t $(FULL_IMAGE) -f $(DOCKERFILE) $(BUILD_CONTEXT)
 	@echo "Image built: $(FULL_IMAGE)"
