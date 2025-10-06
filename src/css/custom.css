@@ -285,32 +285,6 @@ h4 {
     max-width: 100%;
 }
 
-/* =========================================
-   Dark Mode Adaptation for Excalidraw SVGs
-   ========================================= */
-
-/* Light mode: ensure white background */
-.centered-svg rect[fill="#ffffff"],
-.centered-svg rect[fill="#fff"] {
-    fill: #ffffff !important;
-}
-
-/* Dark mode: change white background to dark gray */
-[data-theme='dark'] .centered-svg path[fill="#ffffff"],
-[data-theme='dark'] .centered-svg path[fill="#fff"] {
-    fill: #1b1b1d !important;
-}
-
-/* Optional: slightly brighten text/lines in dark mode */
-[data-theme='dark'] .centered-svg [stroke="#1e1e1e"],
-[data-theme='dark'] .centered-svg [stroke="#000"] {
-    stroke: #f2f2f2 !important;
-}
-
-[data-theme='dark'] .centered-svg [fill="#1e1e1e"] {
-    fill: #f2f2f2 !important;
-}
-
 /* === Fix: keep parent category neutral when a child is active === */
 /* Docusaurus paints .menu__link--sublist.menu__link--active blue via a CSS var.
    Reset it for category headers unless THEIR OWN page is active. */
