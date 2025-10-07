@@ -4,7 +4,7 @@
 
 # Image configuration
 IMAGE_NAME ?= k8shell-docs
-IMAGE_REPO ?= fitcr.ksi.in/fit.cvut.cz/k8shell-system/$(IMAGE_NAME)
+IMAGE_REPO ?= fitcr.ksi.in.fit.cvut.cz/k8shell-system/$(IMAGE_NAME)
 DOCKERFILE ?= docker/docs/Dockerfile
 BUILD_CONTEXT ?= docker/docs
 FILES_DIR := $(BUILD_CONTEXT)/files

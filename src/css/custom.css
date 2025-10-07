@@ -401,7 +401,6 @@ h4 {
 .ssh-table table {
     width: 100%;
     table-layout: fixed;
-    /* makes columns equal width */
 }
 
 .ssh-table th:first-child,
