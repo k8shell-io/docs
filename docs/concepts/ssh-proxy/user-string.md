@@ -51,7 +51,7 @@ For example, Visual Studio Code’s code CLI and the scp command may require the
 
 The following are valid examples of user string.
 
-* User `alice` without workspace spec. 
+* User `alice` without workspace spec. When blueprint (`BP_NAME`) is blank, the provisioner service will determine the default blueprint from the user settings.
 
    ```
    alice

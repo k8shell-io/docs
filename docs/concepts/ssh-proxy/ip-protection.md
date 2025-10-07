@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # IP Address Protection 
 
-The SSH Proxy runs as multiple instances within the Kubernetes cluster. Each instance listens on a TCP port (default is `tcp/2022`), which is exposed externally as `tcp/22` through a LoadBalancer service. When SSH Proxy receives a new connection, it spawns a child process to handle the connection.
+The SSH Proxy runs as multiple instances within the Kubernetes cluster. Each instance listens on a TCP port exposed externally as `tcp/22` through a LoadBalancer service. When SSH Proxy receives a new connection, it spawns a child process to handle the connection.
 
 Because of how Kubernetes handles internal networking, the SSH Proxy cannot determine the actual client IP directly from the TCP socket. Instead, it relies on the PROXY protocol, which carries the client’s IP address. This protocol must be injected into the TCP connection by the external load balancer at the entrypoint.
 
