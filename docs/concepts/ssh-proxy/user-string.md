@@ -23,7 +23,6 @@ REPO_OWNER   ::= 1*( ALPHA / DIGIT / "_" / "-" )
 REPO_NAME    ::= 1*( ALPHA / DIGIT / "_" / "-" )
 REF_VALUE    ::= 1*( ALPHA / DIGIT / "_" / "-" / "." )
 
-CHAR         ::= any printable Unicode character except delimiters
 DELIMS       ::= "~" | "+" | "="
 ```
 
