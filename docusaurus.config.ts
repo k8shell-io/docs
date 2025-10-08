@@ -2,7 +2,8 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import remarkDirective from 'remark-directive';
-import numberedList from './plugins/remark-numberedlist.mjs'; // <— ESM plugin
+import numberedList from './plugins/remark-numberedlist.mjs';
+import excalidrawGen from './plugins/remark-excalidraw-gen.mjs';
 
 const config: Config = {
     title: 'K8Shell Documentation',
@@ -27,6 +28,15 @@ const config: Config = {
                     remarkPlugins: [
                         remarkDirective,   // must come first
                         numberedList,      // your transformer
+                        [excalidrawGen, {
+                            // optional overrides:
+                            // srcDir: 'drawings',
+                            // outDir: 'static/img/gen-svg',
+                            // extractScript: 'extract-by-boundary.js',
+                            // color: '#ff0000',
+                            // pad: 0,
+                            // prefer: 'stroke',
+                        }],
                     ],
                     routeBasePath: '/',
                     sidebarPath: './sidebars.ts',

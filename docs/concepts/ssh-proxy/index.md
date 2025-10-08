@@ -8,11 +8,7 @@ SSH Proxy provides an SSH protocol interface for SSH-compliant clients, authenti
 
 The below diagram shows a high-level architecture with SSH proxy as the core component.
 
-import SSHArchitecture from '@site/static/img/diagrams/ssh-architecture.excalidraw.svg';
-
-<div className="centered-svg-container">
-  <SSHArchitecture className="centered-svg" />
-</div>
+![SSH Architecture](idraw:ssh-architecture.excalidraw.svg)
 
 The following sequence outlines the high-level operations handled by the SSH Proxy during an SSH session.
 

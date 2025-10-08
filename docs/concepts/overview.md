@@ -10,11 +10,7 @@ The system is composed of independent microservices responsible for identity man
 
 The following figure shows the k8shell components.
 
-import SSHArchitecture from '@site/static/img/diagrams/k8shell-architecture.excalidraw.svg';
-
-<div className="centered-svg-container">
-  <SSHArchitecture className="centered-svg" />
-</div>
+![Architecture](idraw:k8shell-architecture.excalidraw.svg)
 
 :::note
 Components shown in yellow are part of the K8shell.io ecosystem — purpose-built services developed specifically for K8shell.
