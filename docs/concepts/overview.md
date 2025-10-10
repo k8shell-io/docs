@@ -10,7 +10,7 @@ The system is composed of independent microservices responsible for identity man
 
 The following figure shows the k8shell components.
 
-![Architecture](idraw:k8shell-architecture.excalidraw.svg)
+![Architecture](svg-gen:drawings/k8shell-architecture.excalidraw.svg)
 
 :::note
 Components shown in yellow are part of the K8shell.io ecosystem — purpose-built services developed specifically for K8shell.
