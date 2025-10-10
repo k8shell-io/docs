@@ -13,8 +13,7 @@ The following figure shows the k8shell components.
 ![Architecture](svg-gen:drawings/k8shell-architecture.excalidraw.svg)
 
 :::note
-Components shown in yellow are part of the K8shell.io ecosystem — purpose-built services developed specifically for K8shell.
-Components shown in blue represent standard infrastructure services that K8shell integrates with.
+Components shown in yellow are part of the K8shell.io ecosystem — purpose-built services developed specifically for K8shell. Components shown in blue represent standard infrastructure services that K8shell integrates with.
 :::
 
 ## Clients
