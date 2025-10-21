@@ -50,9 +50,6 @@ jobs:
             - ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:latest
           push: true
 
-      - name: Patch the docs bundle tag
+      - name: Restart the docs server
         run: |
-          kubectl patch application k8shell-docs-bundle \
-            --namespace k8shell-docs \
-            --type merge \
-            --patch '{"spec":{"source":{"helm":{"valuesObject":{"tag":"${{ env.IMAGE_TAG }}"}}}}}'
+          kubectl rollout restart deployment docs-server -n k8shell-docs
