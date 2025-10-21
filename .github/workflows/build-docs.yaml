@@ -52,4 +52,4 @@ jobs:
 
       - name: Restart the docs server
         run: |
-          kubectl rollout restart deployment docs-server -n k8shell-docs
+          kubectl delete deployment docs-server -n k8shell-docs
