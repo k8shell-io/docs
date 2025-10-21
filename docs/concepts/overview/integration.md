@@ -11,7 +11,7 @@ Internally, service-to-service communication within the K8shell system uses gRPC
 
 All gRPC traffic is secured with TLS. Certificates and private keys are automatically provisioned and rotated through cert-manager integrated with an external PKI provider such as HashiCorp Vault. Rotation occurs by default every 30 days. When new certificates are issued, services automatically reload them and re-establish their gRPC listeners without downtime, ensuring continuous secure communication inside the K8shell platform.
 
-The following diagram illustrates the high-level communication flow. For simplicity, it shows only the API server and provisioner integration. The same integration pattern applies to other services, including chained service-to-service calls.
+The following diagram illustrates the high-level communication flow. For brevity, it shows only the API server and provisioner integration. The same integration pattern applies to other services, including chained service-to-service calls.
 
 ```mermaid
 %%{init:{ "theme": "base", "fontSize": 26 }}%%
