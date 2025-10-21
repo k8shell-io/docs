@@ -46,7 +46,7 @@ jobs:
         with:
           context: "docker/docs"
           tags: |
-            # ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
             ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:latest
           push: true
 
