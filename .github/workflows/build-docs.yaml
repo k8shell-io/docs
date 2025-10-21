@@ -26,21 +26,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.11"
-
-      - name: Build Python package
+      - name: Build docs image
         run: |
-          # Install dependencies
-          python -m pip install --upgrade pip
-          pip install sphinx myst_parser sphinx_copybutton furo setuptools_scm sphinxcontrib.mermaid
-          rm -fr _build
-          make html
-          rm -fr docker/docs/files
-          mkdir docker/docs/files
-          cp -r _build/html/* docker/docs/files
+          make prepare
 
           # Set environment variables
           echo "REPO_NAME=$(cat docker/docs/BUILD)" >> $GITHUB_ENV
@@ -57,7 +45,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "docker/docs"
-          tags: ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+          tags: 
+            - ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+            - ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:latest
           push: true
 
       - name: Patch the docs bundle tag

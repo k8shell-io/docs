@@ -23,23 +23,11 @@ sequenceDiagram
     participant PKI as cert-manager<br/>Vault PKI
     participant K8S as Kubernetes<br/>Token Issuer
 
-    note over API,PROV: certs & tokens are provisioned asynchronously
-
     %% External access via REST
     EC->>API: REST request<br/>user JWT (Authorization: Bearer)
     API->>API: Validate JWT & authorize
     API-->>EC: (optional) 401/403 on failure
 
-    %% SA JWT & cert availability (asynchronous, no direct calls)
-    par Async provisioning
-        K8S-->>API: Projected SA JWT (aud=provisioner, sa/ns from pod)
-        PKI-->>API: Client cert/key available (controller)
-    and
-        K8S-->>PROV: Projected SA JWT (aud=k8shelld, sa/ns from pod)
-        PKI-->>PROV: Server cert/key available
-    end
-
-    %% Internal call uses gRPC + projected SA JWT + mTLS
     rect rgb(245,245,245)
         note over API,PROV: Internal service-to-service call (gRPC)
         API->>PROV: gRPC request<br/>Authorization: Bearer <projected SA JWT>
@@ -55,10 +43,13 @@ sequenceDiagram
     API-->>EC: REST response (result / error)
 
     %% Rotation events (asynchronous)
-    alt Cert/key rotated
+    par Async cert/key and JWT rotation
         PKI-->>API: New cert/key available
         API->>API: Hot-reload TLS (no downtime)
         PKI-->>PROV: New cert/key available
         PROV->>PROV: Hot-reload TLS (no downtime)
+    and
+        K8S-->>PROV: Projected SA JWT (aud=provisioner)
+        PKI-->>PROV: cert/key
     end
 ```
