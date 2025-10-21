@@ -31,7 +31,9 @@ Components shown in yellow are part of the K8shell.io ecosystem — purpose-buil
 
 ## Core Platform Services 
 
+* **Operator** - Controls the lifecycle of workspaces and their underlying Kubernetes resources. It watches for custom Workspaces resources, applies the desired state, and ensures consistency across provisioning, updates, and teardown. 
 * **Identity** – Handles user authentication, authorization, and mapping between external identity providers (OAuth, OIDC, LDAP) and K8shell accounts.
+* **Session** - Manages user access sessions, including session creation, tracking, and expiration. It coordinates with the Identity service to validate active sessions, and records activity metadata for audit and observability purposes. 
 * **Provisioner** – Creates and managing user workspaces within the Kubernetes cluster based on defined blueprints.
 * **k8shelld** – The in-workspace daemon that exposes gRPC-based services to handle shell sessions, port-forwards, file transfers, and SSH agent communication within each workspace.
 
