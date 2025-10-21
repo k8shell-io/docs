@@ -55,6 +55,9 @@ push: build
 	docker push $(LATEST)
 	@echo "Pushed: $(FULL_IMAGE) and $(LATEST)"
 
+make tag:
+	@echo "$(TAG)"
+
 clean:
 	@echo "Cleaning up..."
 	rm -rf $(FILES_DIR)
