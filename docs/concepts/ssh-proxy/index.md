@@ -16,7 +16,7 @@ The following sequence outlines the high-level operations handled by the SSH Pro
 * **SSH Connection.** The user connects to K8shell using a standard SSH client (e.g., ssh, VS Code, IntelliJ). The SSH Proxy accepts the incoming SSH session request. 
 * **User Authentication.** The SSH Proxy authenticates the user by calling the Identity Service over REST. The Identity Service integrates with GitHub, OIDC, or LDAP to verify the user. See [User Discovery and Onboarding](communication-flows#user-discovery-and-onboarding) for more details. 
 * **Failed Authentication Event Publishing.** The SSH Proxy publishes information about failed authentication attempts to the NATS middleware for further analysis and automated IP blocking. See [IP Address Protection](ip-protection) for more details.   
-* **Session Management.** The SSH Proxy creates a session with the Session service. 
+* **Session Management.** The SSH Proxy stores information about a session in the NATS KV store. The session service subscribes to the KV's events and persists  session details in the DB. 
 * **Workspace Provisioning.** The SSH Proxy requests the Provisioner to find or start a workspace in Kubernetes. The Provisioner uses Kubernetes APIs for pods, volumes, and networking. See [Workspace Provisioning](communication-flows#workspace-provisioning) for more details. 
 * **Interaction.** The SSH Proxy forwards the request to the workspace’s `k8shelld` gRPC API to handle interactive channels such as shell, PTY, port forwarding, and Unix sockets. See [SSH Channels Communication](communication-flows#ssh-channels-communication) for more details. 
 :::
@@ -33,6 +33,8 @@ The K8shell SSH Proxy implements the core channel types and request classes defi
 |---------------|-------------|
 | **`session`** | Provides an interactive environment for users. Supports PTY allocation, shell execution, environment variable configuration, agent forwarding, and subsystem operations (SFTP). |
 | **`direct-tcpip`** | Enables client-initiated TCP/IP forwarding (local port forwarding), allowing the user to tunnel connections through the SSH session to internal network services. |
+| **`direct-streamlocal@openssh.com`** | Enables client-initiated unix socket forwarding, allowing the user to tunnel connections through the SSH session to internal services using unix socket. |
+
 </div>
 
 ### Supported Channel Requests
