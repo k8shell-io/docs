@@ -8,7 +8,7 @@ blueprint:
     memory: 16Gi
   network:
     networkPolicy: system
-  apps:
+  apps2:
     jupyter:
       enabled: true
     vscode:
