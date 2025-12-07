@@ -8,4 +8,8 @@ blueprint:
     memory: 16Gi
   network:
     networkPolicy: system
-
+  apps:
+    jupyter:
+      enabled: true
+    vscode:
+      autoStart: true
