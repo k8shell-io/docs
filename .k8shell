@@ -1,6 +1,6 @@
 blueprint:
   template: development
-  shell: /bin/zsh
+  shell2: /bin/zsh
   image: workspaces/dev:1.10
   sudo: true
   resources:
