@@ -12,4 +12,5 @@ blueprint:
     jupyter:
       enabled: true
     vscode:
+      enabled: true
       autoStart: true
