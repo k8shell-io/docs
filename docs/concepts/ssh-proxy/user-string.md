@@ -4,82 +4,176 @@ sidebar_position: 2
 
 # User String
 
-The **User String** (`USERSTR`) is a compact, human-readable identifier that represents a user together with an optional workspace definition. The workspace definition can be specidied either as a reference to an existing workspace blueprint, or by using parameters referencing a **Git repository** that contains a K8shell blueprint file.
+The **User String** (`USERSTR`) is a compact identifier that represents a user together with an optional workspace specification. The workspace can be specified either as:
 
-## Grammar and Encoding Rules
+- an **explicit blueprint name** (`bp-name`), or
+- a **parameter list** (currently: `repo`, `ref`, `pr`) that describes a git-based blueprint.
 
+## Grammar (v1.0)
+
+```ebnf
+USERSTR        ::= USER [ "~" WS_SPEC ]
+
+WS_SPEC        ::= BP_NAME | PARAM_LIST
+BP_NAME        ::= <url-path-escaped string>      ; decoded with url.PathUnescape
+
+PARAM_LIST     ::= KV *( "+" KV )
+KV             ::= KEY "=" VALUE
+
+KEY            ::= "repo" | "ref" | "pr"
+VALUE          ::= <url-path-escaped string>      ; decoded with url.PathUnescape
+
+USER           ::= 1*( ALPHA / DIGIT / "_" / "-" )
+
+DELIMS         ::= "@" | "~" | "+" | "="
 ```
-USERSTR      ::= USER [ "~" WS_SPEC ]
-WS_SPEC      ::= BP_NAME | PARAMS
-PARAMS       ::= REPO [ "+" REF ]        
-REPO         ::= "repo" "=" REPOVAL
-REF          ::= "ref"  "=" REF_VALUE
 
-REPOVAL      ::= REPO_NAME | REPO_OWNER "/" REPO_NAME
+### Special (optional) input form: base64-wrapped user strings
 
-USER         ::= 1*( ALPHA / DIGIT / "_" / "-" )
-BP_NAME      ::= 1*( ALPHA / DIGIT / "_" / "-" )
-REPO_OWNER   ::= 1*( ALPHA / DIGIT / "_" / "-" )
-REPO_NAME    ::= 1*( ALPHA / DIGIT / "_" / "-" )
-REF_VALUE    ::= 1*( ALPHA / DIGIT / "_" / "-" / "." )
+A whole `USERSTR` may be provided as a raw base64url token:
 
-DELIMS       ::= "~" | "+" | "="
+```ebnf
+USERSTR ::= ( "b64-" | "base64-" ) b64url-raw
 ```
 
-## Encoding Rules
+This token is decoded (base64url **raw**, **no padding**) into a plain `USERSTR`, which is then parsed normally.
+
+## Parsing, decoding, and normalization rules
 
 <div class="ssh-table">
 
 | Rule | Description |
-|------|--------------|
-| Percent-decoding | Apply only to **blueprint names** and **values** (not keys). |
+|------|-------------|
+| Whitespace | Leading/trailing whitespace is trimmed before parsing. |
+| Case: username | Usernames are normalized to lowercase. |
+| Workspace spec selection | If the part after `~` contains **no** `=`, it is treated as a blueprint name (`bp-name`). Otherwise it is treated as a parameter list. |
+| Percent-decoding | Apply **url.PathUnescape** to **blueprint names** and **values** (not keys). |
 | Key normalization | Keys are converted to lowercase. |
-| Slash `/` | Allowed inside values. When encoded as `%2F`, it is decoded back to `/`. |
-| Reserved delimiters | `~`, `+`, `=` — must be percent-encoded if used literally. |
-| Maximum length | Username ≤ 64 chars; total string ≤ 128 chars. |
-| Whitespace | Leading/trailing whitespace is trimmed. |
-| Case sensitivity | Usernames and keys are normalized to lowercase. Two user strings with combination of upper case and lowe case are identical. |
+| Allowed keys | Only `repo`, `ref`, `pr` are allowed. Any other key is an error. |
+| Slash `/` in values | `/` is allowed inside values. When encoded as `%2F`, it is decoded back to `/`. |
+| Reserved delimiters | `@`, `~`, `+`, `=` are delimiters in the syntax. If you need them literally **inside a value**, percent-encode them (e.g. `%40`, `%7E`, `%2B`, `%3D`). |
+| Mutual exclusion | `ref` and `pr` cannot both be specified. |
+| `pr` validation | If present, `pr` must be a base-10 integer (> 0). |
+| Maximum length | Total user string length ≤ 128 characters. |
 
 </div>
 
 :::info
 Some clients require certain characters in the user string to be URL-encoded.
-For example, Visual Studio Code’s code CLI and the scp command may require the slash (/) character to be percent-encoded, whereas the standard ssh CLI accepts it without encoding.
+For example, Visual Studio Code’s `code` CLI and `scp` may require the slash (`/`) character to be percent-encoded, whereas the standard `ssh` CLI often accepts it without encoding.
+:::
+
+## Semantics
+
+### Blueprint form (`user~bp-name`)
+
+If `WS_SPEC` is a blueprint name (no `=` present), it is decoded with `url.PathUnescape` and used as an **explicit** blueprint.
+
+### Parameter-list form (`user~k=v+...`)
+
+- Parameters are parsed as `key=value` pairs separated by `+`.
+- Values are decoded using `url.PathUnescape`.
+- Only keys `repo`, `ref`, `pr` are accepted.
+- `repo` determines the git blueprint source and therefore the computed blueprint name.
+
+#### `repo` value format
+
+`repo` may be either:
+
+- `repo=<name>`  
+  In this case, the repository owner defaults to the **username**.
+- `repo=<owner>/<name>`
+
+When `repo` is present and parsed successfully, the computed blueprint name becomes:
+
+- `repo-<repoOwner>-<repoName>`
+
+#### `ref` and `pr`
+
+- `ref` is a branch/tag ref string.
+- `pr` is a pull request number.
+
+You may specify **at most one** of `ref` and `pr`.
+
+:::note
+Pull request resolution is performed internally by the identity provider: when a pull request number (`pr`) is specified (and `ref` is not), it may be resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
+:::
+
+:::note
+In canonicalization (outside of pure parsing), a `pr` may be resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
 :::
 
 ## Examples
 
-The following are valid examples of user string.
+### 1) User only (implicit blueprint)
 
-* User `alice` without workspace spec. When blueprint (`BP_NAME`) is blank, the provisioner service will determine the default blueprint from the user settings.
+```text
+alice
+```
 
-   ```
-   alice
-   ```
+- `USER=alice`
+- No workspace spec → implicit blueprint (default from user settings).
 
-   PARAMS: `USER=alice`, all remaining parameters are blank.
+### 2) Explicit blueprint name
 
-* User `bob` with blueprint `dev`.
+```text
+bob~dev
+```
 
-   ```
-   bob~dev
-   ```
+- `USER=bob`
+- `BP_NAME=dev` (decoded via `url.PathUnescape`)
 
-   PARAMS: `USER=bob`, `BP_NAME=dev`, all remaining parameters are blank.
+### 3) Git-based blueprint (repo), URL-encoded slash
 
-* User `carol` with git-based blueprint on the default branch with URL encoded slash.
+```text
+carol~repo=myorg%2Fproject1
+```
 
-   ```
-   carol~repo=myorg%2Fproject1
-   ```
+After decoding:
 
-   PARAMS: `USER=carol`, `REPO_OWBER=myorg`, `REPO_NAME=project`, `REF_VALUE=<blank>`, `BP_NAME=repo-myorg-project`
+- `USER=carol`
+- `repoOwner=myorg`
+- `repoName=project1`
+- computed `BP_NAME=repo-myorg-project1`
+- `ref` blank, `pr` blank
 
-* User `eve` with git-based blueprint on custom branch `v1.2`.
+### 4) Git-based blueprint with explicit ref
 
-   ```
-   eve~repo=acme/portal+ref=v1.2  
-   ```
+```text
+eve~repo=acme/portal+ref=v1.2
+```
 
-   PARAMS: `USER=eve`, `REPO_OWNER=acme`, `REPO_NAME=portal`, `REF_VALUE=1.2`, `BP_NAME=repo-acme-portal`
+- `USER=eve`
+- `repoOwner=acme`
+- `repoName=portal`
+- `ref=v1.2`
+- computed `BP_NAME=repo-acme-portal`
+
+### 5) Git-based blueprint with pull request
+
+```text
+dan~repo=acme/portal+pr=123
+```
+
+- `USER=dan`
+- `repoOwner=acme`
+- `repoName=portal`
+- `pr=123`
+- `ref` must be absent.
+
+### 6) Base64-wrapped whole user string
+
+If a client cannot safely pass delimiters, wrap the entire user string:
+
+```text
+b64-ZXZlfnJlcG89YWNtZS9wb3J0YWwrcmVmPXYxLjI
+```
+
+This decodes to:
+
+```text
+eve~repo=acme/portal+ref=v1.2
+```
+
+…and is then parsed normally.
 
