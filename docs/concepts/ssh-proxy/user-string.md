@@ -9,7 +9,7 @@ The **User String** (`USERSTR`) is a compact identifier that represents a user t
 - an **explicit blueprint name** (`bp-name`), or
 - a **parameter list** (currently: `repo`, `ref`, `pr`) that describes a git-based blueprint.
 
-## Grammar (v1.0)
+## Grammar 
 
 ```ebnf
 USERSTR        ::= USER [ "~" WS_SPEC ]
@@ -28,7 +28,7 @@ USER           ::= 1*( ALPHA / DIGIT / "_" / "-" )
 DELIMS         ::= "@" | "~" | "+" | "="
 ```
 
-### Special (optional) input form: base64-wrapped user strings
+### Base64-wrapped user strings
 
 A whole `USERSTR` may be provided as a raw base64url token:
 
@@ -65,11 +65,11 @@ For example, Visual Studio Code’s `code` CLI and `scp` may require the slash (
 
 ## Semantics
 
-### Blueprint form (`user~bp-name`)
+### Blueprint form
 
 If `WS_SPEC` is a blueprint name (no `=` present), it is decoded with `url.PathUnescape` and used as an **explicit** blueprint.
 
-### Parameter-list form (`user~k=v+...`)
+### Parameter-list form
 
 - Parameters are parsed as `key=value` pairs separated by `+`.
 - Values are decoded using `url.PathUnescape`.
@@ -96,16 +96,16 @@ When `repo` is present and parsed successfully, the computed blueprint name beco
 You may specify **at most one** of `ref` and `pr`.
 
 :::note
-Pull request resolution is performed internally by the identity provider: when a pull request number (`pr`) is specified (and `ref` is not), it may be resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
+In canonicalization (outside of pure parsing), a `pr` may be resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
 :::
 
-:::note
-In canonicalization (outside of pure parsing), a `pr` may be resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
+:::info
+Pull request resolution is performed internally by the identity provider: when a pull request number (`pr`) is specified (and `ref` is not), it may be resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
 :::
 
 ## Examples
 
-### 1) User only (implicit blueprint)
+### User only (implicit blueprint)
 
 ```text
 alice
@@ -114,7 +114,7 @@ alice
 - `USER=alice`
 - No workspace spec → implicit blueprint (default from user settings).
 
-### 2) Explicit blueprint name
+### Explicit blueprint name
 
 ```text
 bob~dev
@@ -123,7 +123,7 @@ bob~dev
 - `USER=bob`
 - `BP_NAME=dev` (decoded via `url.PathUnescape`)
 
-### 3) Git-based blueprint (repo), URL-encoded slash
+### Git-based blueprint
 
 ```text
 carol~repo=myorg%2Fproject1
@@ -137,7 +137,7 @@ After decoding:
 - computed `BP_NAME=repo-myorg-project1`
 - `ref` blank, `pr` blank
 
-### 4) Git-based blueprint with explicit ref
+### Git-based blueprint with explicit ref
 
 ```text
 eve~repo=acme/portal+ref=v1.2
@@ -149,7 +149,7 @@ eve~repo=acme/portal+ref=v1.2
 - `ref=v1.2`
 - computed `BP_NAME=repo-acme-portal`
 
-### 5) Git-based blueprint with pull request
+### Git-based blueprint with pull request
 
 ```text
 dan~repo=acme/portal+pr=123
@@ -161,7 +161,7 @@ dan~repo=acme/portal+pr=123
 - `pr=123`
 - `ref` must be absent.
 
-### 6) Base64-wrapped whole user string
+### Base64-wrapped whole user string
 
 If a client cannot safely pass delimiters, wrap the entire user string:
 
@@ -175,5 +175,5 @@ This decodes to:
 eve~repo=acme/portal+ref=v1.2
 ```
 
-…and is then parsed normally.
+The decoded user string is then parsed normally.
 
