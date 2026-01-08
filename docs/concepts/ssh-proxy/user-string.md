@@ -95,12 +95,10 @@ When `repo` is present and parsed successfully, the computed blueprint name beco
 
 You may specify **at most one** of `ref` and `pr`.
 
-:::note
-In canonicalization (outside of pure parsing), a `pr` may be resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
-:::
-
 :::info
-Pull request resolution is performed internally by the identity provider: when a pull request number (`pr`) is specified (and `ref` is not), it may be resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
+In canonicalization (outside of pure parsing), a `pr` is resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
+
+Pull request resolution is performed internally by the identity provider: a pull request number (`pr`) is resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
 :::
 
 ## Examples
