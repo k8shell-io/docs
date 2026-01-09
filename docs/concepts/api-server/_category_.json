@@ -1,6 +1,6 @@
 {
   "label": "API Server",
-  "position": 6,
+  "position": 7,
   "link": {
     "type": "doc",
     "id": "concepts/api-server/index"
