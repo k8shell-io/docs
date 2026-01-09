@@ -49,7 +49,7 @@ image: prepare
 	@echo "Tagging as latest"
 	docker tag $(FULL_IMAGE) $(LATEST)
 
-push: build
+push: image
 	@echo "Pushing images to $(IMAGE_REPO)"
 	docker push $(FULL_IMAGE)
 	docker push $(LATEST)
@@ -67,7 +67,7 @@ clean:
 help:
 	@echo "Available targets:"
 	@echo "  make prepare     - Copy source files to docker/docs/files"
-	@echo "  make build       - Build Docker image"
+	@echo "  make image       - Build Docker image"
 	@echo "  make push        - Build and push image to registry"
 	@echo "  make clean       - Remove local Docker images and files"
 	@echo "  make help        - Show this help message"
