@@ -64,7 +64,7 @@ clean:
 help:
 	@echo "Available targets:"
 	@echo "  make prepare     - Copy source files to docker/docs/files"
-	@echo "  make build       - Build Docker image"
+	@echo "  make image       - Build Docker image"
 	@echo "  make push        - Build and push image to registry"
 	@echo "  make clean       - Remove local Docker images and files"
 	@echo "  make help        - Show this help message"
