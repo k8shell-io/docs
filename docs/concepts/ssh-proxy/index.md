@@ -14,7 +14,7 @@ The following sequence outlines the high-level operations handled by the SSH Pro
 
 :::NumberedList
 * **SSH Connection.** The user connects to K8shell using a standard SSH client (e.g., ssh, VS Code, IntelliJ). The SSH Proxy accepts the incoming SSH session request. 
-* **User Authentication.** The SSH Proxy authenticates the user by calling the Identity Service over REST. The Identity Service integrates with GitHub, OIDC, or LDAP to verify the user. See [User Discovery and Onboarding](communication-flows#user-discovery-and-onboarding) for more details. 
+* **User Authentication.** The SSH Proxy authenticates the user by calling the[Identity Service](/concepts/identity) over gRPC. The Identity Service integrates with GitHub, OIDC, or LDAP to verify the user. See [User Discovery and Onboarding](communication-flows#user-discovery-and-onboarding) for more details. 
 * **Failed Authentication Event Publishing.** The SSH Proxy publishes information about failed authentication attempts to the NATS middleware for further analysis and automated IP blocking. See [IP Address Protection](ip-protection) for more details.   
 * **Session Management.** The SSH Proxy stores information about a session in the NATS KV store. The session service subscribes to the KV's events and persists  session details in the DB. 
 * **Workspace Provisioning.** The SSH Proxy requests the Provisioner to find or start a workspace in Kubernetes. The Provisioner uses Kubernetes APIs for pods, volumes, and networking. See [Workspace Provisioning](communication-flows#workspace-provisioning) for more details. 

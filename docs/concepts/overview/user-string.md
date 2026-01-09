@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # User String
 
-The **User String** (`USERSTR`) is a compact identifier that represents a user together with an optional workspace specification. The workspace can be specified either as:
+The **User String** (`USERSTR`) is the user portion of the SSH connection string—the substring before the `@` delimiter. It is a compact identifier that represents a user together with an optional workspace specification. The workspace can be specified either as:
 
 - an **explicit blueprint name** (`bp-name`), or
 - a **parameter list** (currently: `repo`, `ref`, `pr`) that describes a git-based blueprint.
