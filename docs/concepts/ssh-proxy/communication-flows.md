@@ -308,10 +308,15 @@ sequenceDiagram
 
 ### Agent Forwarding
 
-Agent forwarding lets processes inside the workspace request signatures from the SSH agent on the user’s machine. When the SSH client requests agent forwarding (`auth-agent-req@openssh.com`), the SSH Proxy (via k8shelld) creates a Unix domain socket at `/var/run/ssh-agent-ux-{proxy-id}-{proxy-pid}-{channel-num}.sock` in the workspace and sets the environment variable `SH_AUTH_SOCK` for the session. 
+Agent forwarding lets processes inside the workspace request signatures from the SSH agent on the user’s machine. When the SSH client requests agent forwarding (`auth-agent-req@openssh.com`), the SSH Proxy (via k8shelld) creates a Unix domain socket at `/var/run/ssh-agent-ux-{proxy-id}-{proxy-pid}-{channel-num}.sock` in the workspace and sets the environment variable `SSH_AUTH_SOCK` for the session. 
+
+:::warning
+Agent forwarding is a standard SSH feature (OpenSSH: `ssh -A` / `ForwardAgent yes`), but it can introduce security risks. Any process on the forwarded-to host that can access the forwarded agent socket may be able to use your agent to authenticate to other systems *as you* (without extracting your private key), so it should only be enabled for trusted hosts.
+
+For accessing remote systems (for example, Git repositories), we recommend using a **Git credential helper** that integrates with k8shell via the API server instead of relying on agent forwarding. For more information see [K8shell Credential Helpers]().
+:::
 
 The following sequence diagram shows how agent forwarding works in the workspace when a user uses a GIT CLI to clone a remote repository e.g. `git clone git@github.com:user/repo.git` for which there exists a key on the host machine. This assumes that the session with `auth-agent-req@openssh.com` request has been established. Please note that the same protocol flow applies when accessing any remote SSH server, not only when using Git.
-
 
 ```mermaid
 %%{init:{ "theme": "base", "fontSize": 26 }}%%
