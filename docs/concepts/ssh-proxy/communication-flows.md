@@ -102,7 +102,7 @@ SSH Proxy accepts SSH channel requests and establishes connections with the work
 
 After the handshake completes, SSH Proxy creates a new SSH session with the Session service that tracks session information such as SSH Proxy ID, process ID, and workspace name. It then uses the SSH session ID to send periodic updates including ingress and egress data volumes, client IP, and client type information. 
 
-SSH Proxy supports session and direct TCP/IP channels. 
+SSH Proxy supports session channels, direct TCP/IP channels (port forwarding), and direct streamlocal channels (Unix domain socket forwarding).
 
 ### Session Channels
 
@@ -146,6 +146,119 @@ sequenceDiagram
 
     C->>P: Terminal size (width, height)
     P->>K: Set terminal size (width, height)
+```
+
+### Direct TCP/IP Channels
+
+Direct TCP/IP channels implement SSH **local port forwarding** (for example, `ssh -L 8080:127.0.0.1:8080 ...`). The SSH client opens a `direct-tcpip` channel and requests the SSH Proxy to connect to a destination host/port **from within the workspace network**. SSH Proxy delegates the outbound TCP dial to `k8shelld`, then tunnels bytes between the SSH channel and the TCP stream.
+
+Typical use cases:
+
+- Access a service listening inside the workspace (for example, `127.0.0.1:8080`, `localhost:5432`).
+- Forward traffic to a workspace-reachable internal address (for example, a cluster service DNS name).
+
+
+:::info
+The port-forward **target** (destination host/port) can be controlled by configuration in the **workspace blueprint** (for example, to restrict which hosts/ports are allowed for `direct-tcpip` forwarding from within the workspace network).
+:::
+
+The following diagram shows the communication flow for a single `direct-tcpip` channel.
+
+```mermaid
+%%{init:{ "theme": "base", "fontSize": 26 }}%%
+sequenceDiagram
+    autonumber
+    participant C as SSH Client
+    participant P as SSH Proxy
+    participant K as k8shelld/<br/>tcp dialer
+    participant T as Target<br/>TCP service
+    participant S as Session
+
+    note over C,T: Client sets up local port forwarding (ssh -L).<br/>When a connection hits the local forwarded port,the client opens a direct-tcpip channel.
+
+    C->>P: Open channel: direct-tcpip<br/>(destHost, destPort, originHost, originPort)
+    P-->>C: Accepted
+
+    P->>K: Start port-forward<br/>(destHost, destPort)
+    alt Dial successful
+        K->>T: TCP connect (destHost:destPort)
+        T-->>K: Connected
+        K-->>P: Stream ready
+        note over C,T: Bidirectional byte stream over the SSH channel
+        loop Data transfer
+            alt Client to target
+                C->>P: channel data
+                P->>K: forward bytes
+                K->>T: write bytes
+                P-->>S: Report ingress
+            else Target to client
+                T->>K: read bytes
+                K->>P: forward bytes
+                P->>C: channel data
+                P-->>S: Report egress
+            end
+        end
+        C->>P: Channel close
+        P->>K: Close stream
+        K->>T: TCP close
+    else Dial failed (e.g., refused/timeout)
+        K-->>P: Dial error
+        P-->>C: Channel failure / close
+    end
+```
+
+### Direct Streamlocal Channels
+
+Direct streamlocal channels implement SSH **Unix domain socket forwarding** (OpenSSH: `direct-streamlocal@openssh.com`). The SSH client opens a `direct-streamlocal@openssh.com` channel and requests the SSH Proxy to connect to a destination **Unix socket path from within the filesystem namespace**. SSH Proxy delegates the outbound socket dial to `k8shelld`, then tunnels bytes between the SSH channel and the Unix socket stream.
+
+Typical use cases:
+
+- Forward traffic to a Unix socket inside the workspace (for example, `/var/run/docker.sock`, `/var/run/postgresql/.s.PGSQL.5432`).
+- Connect to a workspace-local service that is only exposed via a Unix domain socket.
+
+The following diagram shows the communication flow for a single `direct-streamlocal@openssh.com` channel.
+
+```mermaid
+%%{init:{ "theme": "base", "fontSize": 26 }}%%
+sequenceDiagram
+    autonumber
+    participant C as SSH Client
+    participant P as SSH Proxy
+    participant K as k8shelld/<br/>streamlocal dialer
+    participant T as Target<br/>Unix socket
+    participant S as Session
+
+    note over C,T: Client sets up streamlocal forwarding (ssh -L for Unix sockets).<br/>When a connection hits the forwarded endpoint, the client opens a direct-streamlocal channel.
+
+    C->>P: Open channel: direct-streamlocal@openssh.com<br/>(socketPath, originHost, originPort)
+    P-->>C: Accepted
+
+    P->>K: Start streamlocal forward<br/>(socketPath)
+    alt Dial successful
+        K->>T: Connect to Unix socket (socketPath)
+        T-->>K: Connected
+        K-->>P: Stream ready
+        note over C,T: Bidirectional byte stream over the SSH channel
+        loop Data transfer
+            alt Client to socket
+                C->>P: channel data
+                P->>K: forward bytes
+                K->>T: write bytes
+                P-->>S: Report ingress
+            else Socket to client
+                T->>K: read bytes
+                K->>P: forward bytes
+                P->>C: channel data
+                P-->>S: Report egress
+            end
+        end
+        C->>P: Channel close
+        P->>K: Close stream
+        K->>T: Socket close
+    else Dial failed (e.g., not found/permission denied)
+        K-->>P: Dial error
+        P-->>C: Channel failure / close
+    end
 ```
 
 ### File Transfer 
