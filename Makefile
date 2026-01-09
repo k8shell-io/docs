@@ -49,7 +49,7 @@ image: prepare
 	@echo "Tagging as latest"
 	docker tag $(FULL_IMAGE) $(LATEST)
 
-push: build
+push: image
 	@echo "Pushing images to $(IMAGE_REPO)"
 	docker push $(FULL_IMAGE)
 	docker push $(LATEST)
