@@ -5,4 +5,5 @@ node_modules
 .docusaurus
 docker/docs/files
 static/img/gen-svg
+build
 
