@@ -61,7 +61,12 @@ const config: Config = {
 
     themeConfig: {
         navbar: {
-            title: 'k8shell Docs',
+            logo: {
+                alt: 'k8shell logo',
+                src: 'img/k8shell-logo-black.svg',
+                srcDark: 'img/k8shell-logo-white.svg',
+            },
+            title: 'Docs',
             hideOnScroll: false,
             items: [
                 {

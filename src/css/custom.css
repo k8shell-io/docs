@@ -1,4 +1,21 @@
 /* =========================================
+   Link colour variables – tune here
+   ========================================= */
+:root {
+    --docs-link-color: #007bff;
+    --docs-toc-hover-color: rgba(0, 123, 255, 0.15);
+    /* right sidebar hover bg */
+}
+
+[data-theme='dark'] {
+    --docs-link-color: #4db8ff;
+    --docs-toc-hover-color: #4db8ff;
+    /* right sidebar hover bg */
+    --ifm-link-color: var(--docs-link-color);
+    --ifm-link-hover-color: var(--docs-link-color);
+}
+
+/* =========================================
    Layout & Navbar
    ========================================= */
 @media (min-width: 1416px) {
@@ -12,6 +29,29 @@
 .navbar {
     padding-left: 30px;
     padding-right: 30px;
+}
+
+.navbar__logo {
+    flex: 0 0 auto;
+    height: 26px;
+    margin-right: -3px;
+}
+
+.navbar__brand .navbar__title {
+    font-weight: 900;
+    font-size: 23px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    color: #111;
+}
+
+.navbar__brand:hover .navbar__title {
+    color: #111;
+}
+
+[data-theme='dark'] .navbar__brand .navbar__title,
+[data-theme='dark'] .navbar__brand:hover .navbar__title {
+    color: #fff;
 }
 
 .container {
@@ -84,9 +124,18 @@ h4 {
     font-weight: 700;
 }
 
-.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1 .menu__list-item-collapsible:hover {
-    background-color: transparent !important;
+[data-theme='dark'] .theme-doc-sidebar-menu>li.theme-doc-sidebar-item-category-level-1>.menu__list-item-collapsible>.menu__link {
+    color: #fff !important;
+}
+
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1 .menu__list-item-collapsible:hover,
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1:hover {
     color: inherit !important;
+}
+
+/* Override Infima's hover background variable for level-1 category headers */
+.theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-1 {
+    --ifm-menu-color-background-hover: transparent;
 }
 
 .theme-doc-sidebar-menu>li.theme-doc-sidebar-item-category-level-1 {
@@ -113,12 +162,14 @@ h4 {
 }
 
 .theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-2 .menu__list-item-collapsible:hover,
-.theme-doc-sidebar-item-link:hover,
-.theme-doc-sidebar-menu .menu__list-item-collapsible:hover {
+.theme-doc-sidebar-item-link:not(.theme-doc-sidebar-item-category-level-1):hover,
+.theme-doc-sidebar-menu li:not(.theme-doc-sidebar-item-category-level-1)>.menu__list-item-collapsible:hover {
     background-color: rgba(219, 219, 219, 0.303) !important;
     color: inherit !important;
     border-radius: 6px !important;
 }
+
+/* Level-1 category headers: never show hover background (handled via CSS var above) */
 
 .menu__list-item-collapsible {
     transition: none !important;
@@ -181,10 +232,15 @@ h4 {
    Dark Mode variants (only where needed)
    ========================================= */
 [data-theme='dark'] .theme-doc-sidebar-item-link:hover:not(.theme-doc-sidebar-item-link--active),
-[data-theme='dark'] .theme-doc-sidebar-menu .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
+[data-theme='dark'] .theme-doc-sidebar-menu li:not(.theme-doc-sidebar-item-category-level-1) .menu__link:hover:not(.menu__link--active):not(.menu__link--sublist):not(.menu__link--sublist-caret) {
     background-color: rgba(77, 184, 255, 0.1) !important;
     color: inherit !important;
     border-radius: 6px !important;
+}
+
+[data-theme='dark'] .theme-doc-sidebar-menu li.theme-doc-sidebar-item-category-level-2 .menu__list-item-collapsible--active:hover,
+[data-theme='dark'] .theme-doc-sidebar-menu li.theme-doc-sidebar-item-link:has(> a.menu__link--active):hover {
+    background-color: rgba(77, 184, 255, 0.25) !important;
 }
 
 /* Optional: lighter blue for active LEAF items in dark mode */
@@ -233,6 +289,19 @@ h4 {
     background-color: transparent !important;
 }
 
+[data-theme='dark'] .breadcrumbs__item--active .breadcrumbs__link {
+    color: #4db8ff !important;
+}
+
+[data-theme='dark'] .table-of-contents__link--active,
+[data-theme='dark'] .table-of-contents__link--active:hover {
+    color: var(--docs-link-color) !important;
+}
+
+.table-of-contents__link:hover {
+    background-color: transparent !important;
+}
+
 /* =========================================
    Sidebar borders – remove any lines
    ========================================= */
@@ -247,6 +316,57 @@ h4 {
     border-left: none !important;
     border-top: none !important;
     border-bottom: none !important;
+}
+
+/* =========================================
+   Excalidraw SVG – dark mode white card
+   ========================================= */
+[data-theme='dark'] p:has(img[src*="/img/gen-svg/"]) {
+    background: #a0a0a0;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+}
+
+[data-theme='dark'] img[src*="/img/gen-svg/"] {
+    border-radius: 4px;
+}
+
+/* [data-theme='dark'] img[src*="/img/gen-svg/"] {
+    filter: invert(1) hue-rotate(180deg);
+} */
+
+/* =========================================
+   Mermaid dark mode overrides
+   ========================================= */
+[data-theme='dark'] .docusaurus-mermaid-container svg text,
+[data-theme='dark'] .docusaurus-mermaid-container svg .messageText,
+[data-theme='dark'] .docusaurus-mermaid-container svg .labelText,
+[data-theme='dark'] .docusaurus-mermaid-container svg .loopText,
+[data-theme='dark'] .docusaurus-mermaid-container svg .noteText,
+[data-theme='dark'] .docusaurus-mermaid-container svg tspan {
+    fill: #cdd6f4 !important;
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container svg .actor {
+    fill: #2a2a3e !important;
+    stroke: var(--docs-link-color) !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container svg .note {
+    fill: #313244 !important;
+    stroke: var(--docs-link-color) !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container svg line,
+[data-theme='dark'] .docusaurus-mermaid-container svg path.arrowMarkerPath {
+    stroke: var(--docs-link-color) !important;
+}
+
+[data-theme='dark'] .docusaurus-mermaid-container svg .rect {
+    fill: #2a2a3e !important;
+    stroke: var(--docs-link-color) !important;
 }
 
 /* =========================================

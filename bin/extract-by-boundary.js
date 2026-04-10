@@ -287,6 +287,17 @@ try {
   // 2) Keep only elements whose bbox intersects the rectangle
   pruneToIntersecting($, $svg, boundaryBBox, 0, 0, $boundary ? $boundary[0] : null);
 
+  // 2b) Remove white background rect (makes SVG transparent for theming)
+  $svg.find('rect').each((_, el) => {
+    const $el = $(el);
+    const fill = ($el.attr('fill') || '').toLowerCase().trim();
+    const x = parseFloat($el.attr('x') || '0');
+    const y = parseFloat($el.attr('y') || '0');
+    if ((fill === '#ffffff' || fill === 'white') && x === 0 && y === 0) {
+      $el.remove();
+    }
+  });
+
   // 3) Rebase to origin: move all non-<defs> into a translated group (-rx1, -ry1)
   const $contentGroup = $('<g/>').attr('transform', `translate(${-rx1}, ${-ry1})`);
   $svg.children().toArray().forEach(node => {

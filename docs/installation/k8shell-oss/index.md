@@ -10,9 +10,11 @@ The following services are deployed as part of k8shell OSS:
 
 | Service | Role |
 |---|---|
-| **SSH Proxy** | Terminates inbound SSH connections, authenticates users, and forwards SSH channels to running workspaces. See [SSH Proxy](/concepts/ssh-proxy). |
+| **SSH Proxy** | Terminates inbound SSH connections, calls Identity to authenticate users, and forwards SSH channels to running workspaces. See [SSH Proxy](/concepts/ssh-proxy). |
 | **Identity** | Authenticates users via local credentials (password hash or SSH public key). See [Identity](/concepts/identity). |
 | **Provisioner** | Creates and tears down workspaces in a target namespace based on workspace blueprints. See [Provisioner](/concepts/provisioner). |
+| **k8shelld** | Serves as a workspace control plane, runs as PID 1 of the main workspace container. See [k8shelld](/concepts/k8shelld). |
+
 
 The remaining platform services (API Server, Session, Frontend, SSH Shield, Worktrace, etc.) are available in the full k8shell platform. See [Full k8shell platform]() for more details.
 
