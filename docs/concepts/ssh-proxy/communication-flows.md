@@ -63,7 +63,7 @@ sequenceDiagram
 
 ## Workspace Provisioning 
 
-Users can request workspace access through the user string in two ways: by specifying a blueprint name, or by specifying a Git repository name (for users onboarded via identity providers like GitHub). The Provisioner service manages workspace blueprints and retrieves blueprint definitions from Git repositories. SSH Proxy uses the user string to check if the requested workspace is running and requests to provision it when necessary.
+Users can request workspace access through the user string in two ways: by specifying a blueprint name, or by specifying a Git repository name (for users onboarded via git-based identity providers). The Provisioner service manages workspace blueprints and retrieves blueprint definitions from Git repositories. SSH Proxy uses the user string to check if the requested workspace is running and requests to provision it when necessary.
 
 The following diagram shows the communication flow for workspace provisioning. For more details on how the Provisioner service retrieves blueprint information and provisions workspaces, see the Provisioner service documentation.
 
@@ -100,7 +100,7 @@ sequenceDiagram
 
 SSH Proxy accepts SSH channel requests and establishes connections with the workspace k8shelld process. Using workspace status details that contain the workspace IP address, it connects to k8shelld via gRPC protocol on TCP port `2822` and calls the `handshake` operation. 
 
-After the handshake completes, SSH Proxy creates a new SSH session with the Session service that tracks session information such as SSH Proxy ID, process ID, and workspace name. It then uses the SSH session ID to send periodic updates including ingress and egress data volumes, client IP, and client type information. 
+After the handshake completes, SSH Proxy creates a new SSH session with the Session service (when enabled) that tracks session information such as SSH Proxy ID, process ID, and workspace name. It then uses the SSH session ID to send periodic updates including ingress and egress data volumes, client IP, and client type information. 
 
 SSH Proxy supports session channels, direct TCP/IP channels (port forwarding), and direct streamlocal channels (Unix domain socket forwarding).
 
