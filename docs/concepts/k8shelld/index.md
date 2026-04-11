@@ -1,4 +1,4 @@
-# Workspace
+# k8shell Daemon (k8shelld)
 
 A **workspace** is an isolated runtime environment where user processes (shell, tools, apps) execute, and where SSH sessions are terminated and handled. At the core of every workspace is the `k8shelld` process, which runs as **PID 1** inside the main workspace container. `k8shelld` acts as the workspace “control plane” and exposes a set of **gRPC services** that implement (and enforce) the SSH functionality provided to the user.
 
@@ -17,7 +17,7 @@ The following sequence outlines the high-level lifecycle and interaction points 
 * **API Server Integration (Sessions & Credentials).** For some operations, `k8shelld` calls the API server to retrieve additional user context such as the latest user sessions, or credentials used by Git and Docker credential helpers.
 :::
 
-## Workspace containers
+<!-- ## Workspace containers
 
 A workspace runs in Kubernetes as a **Pod** with multiple containers. Each container has a specific responsibility and they cooperate through shared volumes and local (Pod-internal) networking.
 
@@ -51,4 +51,4 @@ A workspace runs in Kubernetes as a **Pod** with multiple containers. Each conta
 
 
 
-
+ -->
