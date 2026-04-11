@@ -6,43 +6,39 @@ sidebar_position: 1
 
 **k8shell OSS** is the open-source core of the k8shell platform. It delivers the minimum set of services needed to provision and access Kubernetes-based developer workspaces over SSH. No proprietary infrastructure is required.
 
-The following services are deployed as part of k8shell OSS:
+## What's included
 
 | Service | Role |
 |---|---|
-| **SSH Proxy** | Terminates inbound SSH connections, calls Identity to authenticate users, and forwards SSH channels to running workspaces. See [SSH Proxy](/concepts/ssh-proxy). |
-| **Identity** | Authenticates users via local credentials (password hash or SSH public key). See [Identity](/concepts/identity). |
-| **Provisioner** | Creates and tears down workspaces in a target namespace based on workspace blueprints. See [Provisioner](/concepts/provisioner). |
-| **k8shelld** | Serves as a workspace control plane, runs as PID 1 of the main workspace container. See [k8shelld](/concepts/k8shelld). |
+| **SSH Proxy** | Terminates inbound SSH connections, authenticates users, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy) |
+| **Identity** | Authenticates users via local credentials — password hash or SSH public key. [Learn more](/concepts/identity) |
+| **Provisioner** | Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/concepts/provisioner) |
+| **k8shelld** | Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/concepts/workspace) |
 
-
-The remaining platform services (API Server, Session, Frontend, SSH Shield, Worktrace, etc.) are available in the full k8shell platform. See [Full k8shell platform]() for more details.
+The full k8shell platform adds API Server, Session, Frontend, SSH Shield, Worktrace, and more.
 
 ## Prerequisites
 
-To install k8shell OSS, you need:
+| Tool | Version |
+|---|---|
+| Kubernetes + `kubectl` | 1.26+ with permission to create namespaces, RBAC, and workloads |
+| Helm | 3.12+ |
+| `openssl` | Any recent version (key generation) |
 
-* Kubernetes 1.26 or later with `kubectl` configured with sufficient permissions to create namespaces, RBAC, and workloads.
-* Helm 3.12 or later.
+## Get started
 
-## Quick start
+→ **[Quick Start](./quickstart)** — install k8shell on any cluster in under 5 minutes using the quickstart script.
 
-1. **Prepare** — create k8shell system and workspace namespaces, create an SSH server key and admin credentials.
-2. **Helm install** — install k8shell using the Helm chart with default values.
-3. **Verify** — confirm all pods are running and connect to the SSH Proxy with the admin SSH key or password.
+## What's next
+
+Once k8shell OSS is running, you can go further:
+
+- **Configure workspace blueprints** — define storage, Docker-in-Docker, resource limits, and user permissions per workspace type.
+- **Add users** — define additional users with SSH public keys or password hashes.
+- **Expose SSH Proxy** — enable `sshProxy.loadBalancer` to put port 22 behind a LoadBalancer, or wire it into an existing ingress.
+- **Values reference** — see all available `values.yaml` parameters.
 
 :::note
-k8shell OSS does not require persistent storage to operate. To use persistent volumes for workspaces, provide a storage class configured in your cluster.
+k8shell OSS does not require persistent storage. To attach persistent volumes to workspaces, provide a storage class available in your cluster.
 :::
-
-## Advanced setup
-
-1. **Configure workspace blueprints** — define workspace configuration such as storage, Docker, and permissions.
-2. **Configure users** — define additional users.
-3. **Expose SSH Proxy** — enable `sshProxy.loadBalancer` to expose port 22 externally, or configure an existing ingress/LB.
-4. **Values.yaml reference** — see all `values.yaml` parameters you can configure.  
-
-## Troubleshooting
-
-TODO
 
