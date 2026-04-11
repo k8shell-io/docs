@@ -1,0 +1,54 @@
+---
+sidebar_position: 5
+---
+
+# Security
+
+Security is a first-class concern in k8shell. The platform is built for environments where multiple teams share the same cluster, and applies a zero-trust approach: every request is authenticated and authorized regardless of its origin. Security is enforced at multiple layers:
+
+- **SSH public key authentication** — passwords supported but off by default
+- **JWT tokens and RBAC** — short-lived, role-scoped user credentials
+- **TLS and cert management** — encrypted service-to-service transport with automated certs rotation
+- **Service-to-service authorization** — scoped Kubernetes tokens limit inter-service access
+- **Brute-force protection** — dynamic IP blocking driven by failed authentication events
+- **Workspace runtime monitoring** — eBPF-based observation of workspace activity for threat detection
+
+## SSH public key authentication
+
+SSH user authentication is handled via public key cryptography. Password authentication is supported but disabled by default. The key comparison is delegated to an Identity Provider, which holds the user's registered public keys.
+
+## User authentication and authorization — JWT and RBAC
+
+The Identity service issues a short-lived JWT when a user is onboarded into the system. The token carries the user's identity and role claims, is propagated into the workspace, and is passed as a bearer token in requests made by the user or the workspace to the API Server.
+
+The API Server validates the JWT on every request and enforces a role-based access control (RBAC) policy before forwarding to internal services. Access decisions — which blueprints a user can provision, which workspaces they can manage, which administrative functions they can invoke — are all governed by the roles encoded in the token.
+
+RBAC policies and identity provider integration are covered in detail in the [Identity service](../identity/index.md) documentation.
+
+## Transport security — TLS and certificate management
+
+All service-to-service communication inside the cluster uses gRPC over TLS. Certificates and private keys are provisioned and rotated automatically through cert-manager, integrated with an external PKI provider such as HashiCorp Vault. Rotation occurs on a configurable schedule (30 days by default). When a new certificate is issued, services reload it and re-establish their gRPC listeners without downtime — there is no manual certificate management and no service restart required.
+
+## Service-to-service authorization — Kubernetes projected tokens
+
+Any k8shell service verifies *who* is calling before processing a request. Each service uses a Kubernetes-projected service account token scoped to the specific target service as its bearer credential. The receiving service validates the token audience, service account name, and namespace before handling the request, ensuring that only authorized services can invoke each API.
+
+## Brute-force and bot protection — SSH Shield
+
+Because TCP/22 is a well-known port, it is routinely targeted by automated scanners and credential-stuffing bots. To address this, the SSH Proxy can be configured to publish failed authentication events — containing the client IP, attempted username, and failure reason — to NATS. The SSH Shield service subscribes to this stream and applies configurable rule-based policies: when an IP address accumulates failures beyond a defined threshold, SSH Shield blocks it at the network layer.
+
+For more details see [IP Address Protection](../ssh-proxy/ip-protection.md) and [SSH Shield](/concepts/ssh-shield).
+
+## Workspace runtime monitoring — Worktrace
+
+Worktrace is a k8shell service that uses [Tetragon](https://tetragon.io) to observe activity inside workspace pods — system calls, process executions, network connections, and file access patterns — without modifying the workspace image or requiring any in-workspace agent. Tetragon is built on Cilium and eBPF.
+
+This provides a continuous audit trail of what runs inside workspaces and enables detection of anomalous behaviour: unexpected outbound connections, privilege escalation attempts or suspicious process trees.
+
+For more details see [Worktrace](../worktrace/index.md).
+
+:::note
+Worktrace is only available in clusters using [Cilium](https://cilium.io) as the CNI.
+:::
+
+
