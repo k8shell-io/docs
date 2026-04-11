@@ -34,10 +34,11 @@ jobs:
           echo "REPO_NAME=$(cat docker/docs/BUILD)" >> $GITHUB_ENV
           echo "IMAGE_TAG=$(make tag)" >> $GITHUB_ENV
 
-      - name: Login to registry
+      # Authenticate to Harbor registry
+      - name: Login to Docker Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.REGISTRY }}
+          registry: registry.k8shell.io
           username: ${{ secrets.HARBOR_USER }}
           password: ${{ secrets.HARBOR_PASSWORD }}
 
@@ -46,8 +47,8 @@ jobs:
         with:
           context: "docker/docs"
           tags: |
-            ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ secrets.REGISTRY }}/${{ env.REPO_NAME }}:latest
+            registry.k8shell.io/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+            registry.k8shell.io/${{ env.REPO_NAME }}:latest
           push: true
 
       - name: Restart the docs server

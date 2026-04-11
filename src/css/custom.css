@@ -532,3 +532,57 @@ h4 {
 .ssh-table td:last-child {
     width: 80%;
 }
+
+/* =========================================
+   Early Adoption badge
+   ========================================= */
+.early-access-badge {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.15s ease;
+    vertical-align: middle;
+    margin-left: 0.35em;
+    gap: 0.2em;
+}
+
+.early-access-badge:hover {
+    opacity: 1;
+}
+
+.early-access-badge img {
+    display: block;
+}
+
+/* Page heading size — slightly smaller than the heading text */
+.early-access-badge--page {
+    vertical-align: super;
+    top: 13px;
+    position: relative;
+    margin-left: 10px;
+}
+
+.early-access-badge--page img {
+    height: 0.8em;
+    width: auto;
+}
+
+/* Sidebar size */
+.early-access-badge--sidebar img {
+    height: 15px;
+    width: auto;
+    margin-top: 1px;
+}
+
+/* Anchor icon — hidden by default, appears on hover */
+.early-access-anchor {
+    display: none;
+    width: 0.65em;
+    height: 0.65em;
+}
+
+.early-access-badge:hover .early-access-anchor {
+    display: inline-block;
+}
