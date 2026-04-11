@@ -5,6 +5,7 @@
     --docs-link-color: #007bff;
     --docs-toc-hover-color: rgba(0, 123, 255, 0.15);
     /* right sidebar hover bg */
+    --docs-max-width: 1440px;
 }
 
 [data-theme='dark'] {
@@ -20,7 +21,7 @@
    ========================================= */
 @media (min-width: 1416px) {
     .main-wrapper {
-        max-width: 1600px;
+        max-width: var(--docs-max-width);
         width: 100%;
         margin: 0 auto;
     }
@@ -72,13 +73,13 @@
     padding-right: 30px;
 }
 
-/* Cap navbar and make padding collapse smoothly below 1600px */
+/* Cap navbar and make padding collapse smoothly below var(--docs-max-width) */
 .navbar .navbar__inner {
     box-sizing: border-box;
-    max-width: 1600px;
+    max-width: var(--docs-max-width);
     width: 100%;
     margin: 0 auto;
-    padding-inline: clamp(0px, (100vw - 1600px) / 2, 30px);
+    padding-inline: clamp(0px, calc((100vw - var(--docs-max-width)) / 2), 30px);
 }
 
 /* Sidebar top spacing */
