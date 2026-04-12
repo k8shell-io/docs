@@ -9,15 +9,15 @@ Install k8shell OSS on any Kubernetes cluster in a few minutes using the quickst
 ## 1. Download and run the script
 
 ```bash
-curl -fsSL https://k8shell.io/install.sh | bash
+curl -sSfL https://get.k8shell.io | bash
 ```
 
 Or download it first to inspect before running:
 
 ```bash
-curl -fsSL https://k8shell.io/install.sh -o k8shell-install.sh
-chmod +x k8shell-install.sh
-./k8shell-install.sh
+curl -sSfL https://get.k8shell.io | bash -o k8shell-quickstrart.sh
+chmod +x k8shell-quickstrart.sh
+./k8shell-quickstart.sh
 ```
 
 ### What the script does

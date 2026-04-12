@@ -1,6 +1,6 @@
 # k8shell Daemon (k8shelld)
 
-A **workspace** is an isolated runtime environment where user processes (shell, tools, apps) execute, and where SSH sessions are terminated and handled. At the core of every workspace is the `k8shelld` process, which runs as **PID 1** inside the main workspace container. `k8shelld` acts as the workspace “control plane” and exposes a set of **gRPC services** that implement (and enforce) the SSH functionality provided to the user.
+At the core of every workspace is the `k8shelld` process, which runs as **PID 1** inside the main workspace container. `k8shelld` acts as the workspace “control plane” and exposes a set of **gRPC services** that implement (and enforce) the SSH functionality provided to the user.
 
 The diagram below shows a high-level architecture with `k8shelld` as the core component.
 
@@ -9,12 +9,13 @@ The diagram below shows a high-level architecture with `k8shelld` as the core co
 The following sequence outlines the high-level lifecycle and interaction points for a workspace.
 
 :::NumberedList
-* **Workspace Initialization.** The workspace is initialized using an init container. As a result, the `k8shelld` and SFTP server binaries are copied into the workspace filesystem.
-* **Container Startup & System Setup.** The main workspace container starts and performs system setup: it creates a user with the configured UID/GID, optionally grants sudo rights, and applies any supplementary groups.
-* **SSH Connectivity via SSH Proxy.** The user connects to the workspace via the SSH Proxy by establishing SSH channels (session channels, port forwarding, etc.) backed by the workspace `k8shelld` gRPC API.
-* **Frontend Connectivity via API Server (Cloudshell).** The user can also connect using the frontend app via the API server’s Cloudshell component, which provides similar functionality to the SSH Proxy.
-* **Running Workloads & Workspace Control.** Inside the workspace, the user runs their workload (development workflow or anything else) and may control the workspace using commands provided by the `kbox` CLI.
-* **API Server Integration (Sessions & Credentials).** For some operations, `k8shelld` calls the API server to retrieve additional user context such as the latest user sessions, or credentials used by Git and Docker credential helpers.
+* **Init Phase.** Before the main container starts, an init container runs once to copy the `k8shelld` binary, `kbox` CLI, and SFTP server into the workspace filesystem. The main container image itself requires no modification — the tooling is injected at startup.
+* **Bootstrapping.** `k8shelld` starts as PID 1 and initializes the environment: creates the workspace user, configures groups and optional sudo, runs blueprint-defined init scripts, and starts any blueprint-defined apps.
+* **SSH Connectivity via SSH Proxy.** Users connect to the workspace over SSH through the SSH Proxy. Shell sessions, exec, port forwarding, SFTP, and SSH agent forwarding are all implemented as gRPC calls from the SSH Proxy to `k8shelld`'s gRPC server running inside the workspace.
+* **Browser Connectivity via API Server.** Users can also connect through the browser-based Console. The API Server proxies the same `k8shelld` gRPC interface to provide terminal access and acts as a reverse proxy for in-workspace apps, making them accessible without any manual tunnel setup.
+* **Workloads & kbox CLI.** Users run workloads in the main container and interact with `k8shelld` through the `kbox` CLI, which communicates over a local Unix socket (`k8shelld.sock`) accessible only from within the pod. 
+* **App Management.** Apps defined in the blueprint (for example, VS Code Server or custom HTTP tools) are managed by `k8shelld`'s app manager. It handles installation on first start, launching apps at workspace startup, supervising and restarting them on failure, and version tracking.
+* **Storage.** Persistent volumes defined in the blueprint are mounted into the workspace and retained across pod restarts, preserving the user's files and state. Ephemeral storage — the container filesystem itself — exists for the lifetime of the pod and is used for temporary files and build caches.
 :::
 
 <!-- ## Workspace containers

@@ -22,36 +22,6 @@ The following sequence outlines the high-level operations handled by the SSH Pro
 :::
 
 
-## SSH Protocol Support 
-
-The K8shell SSH Proxy implements the core channel types and request classes defined in the **SSH-2 protocol suite (RFC 4251–4254)**, providing compatibility with standard SSH clients and IDEs.
-
-### Supported Channel Types
-
-<div class="ssh-table">
-| Channel Type | Description |
-|---------------|-------------|
-| **`session`** | Provides an interactive environment for users. Supports PTY allocation, shell execution, environment variable configuration, agent forwarding, and subsystem operations (SFTP). |
-| **`direct-tcpip`** | Enables client-initiated TCP/IP forwarding (local port forwarding), allowing the user to tunnel connections through the SSH session to internal network services. |
-| **`direct-streamlocal@openssh.com`** | Enables client-initiated unix socket forwarding, allowing the user to tunnel connections through the SSH session to internal services using unix socket. |
-
-</div>
-
-### Supported Channel Requests
-
-<div class="ssh-table">
-| Request Type | Description |
-|---------------|-------------|
-| **`pty-req`** | Allocates a pseudo-terminal for interactive shells. |
-| **`shell`** | Starts an interactive shell session in the workspace. |
-| **`exec`** | Executes a single command without starting a shell. |
-| **`env`** | Sets environment variables within the session context. |
-| **`subsystem`** | Invokes protocol subsystems such as SFTP. |
-| **`auth-agent-req@openssh.com`** | Enables SSH agent forwarding for delegated authentication. |
-</div>
-
-For more information on how SSH Proxy supports the SSH protocol see [Communication Flows](communication-flows).
-
 ## PROXY Protocol Support 
 
 K8shell’s SSH Proxy supports [PROXY protocol version 1](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt), allowing it to retrieve the original client’s IP address and port information even when connections are routed through an external Load Balancer or reverse proxy. This enables accurate identification of the client source for event publishing and auditing. See [IP Address Protection](ip-protection) for more details. 

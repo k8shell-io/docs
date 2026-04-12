@@ -8,10 +8,12 @@ Security is a first-class concern in k8shell. The platform is built for environm
 
 - **SSH public key authentication** — passwords supported but off by default
 - **JWT tokens and RBAC** — short-lived, role-scoped user credentials
+- **Brute-force protection** — dynamic IP blocking driven by failed authentication events
+- **Network policy enforcement via Cilium** — preferred CNI for eBPF-enforced network policies
+- **Workspace runtime monitoring** — eBPF-based observation of workspace activity for threat detection
 - **TLS and cert management** — encrypted service-to-service transport with automated certs rotation
 - **Service-to-service authorization** — scoped Kubernetes tokens limit inter-service access
-- **Brute-force protection** — dynamic IP blocking driven by failed authentication events
-- **Workspace runtime monitoring** — eBPF-based observation of workspace activity for threat detection
+- **Secrets injection from Vault** — k8shell deployment secrets sourced from Vault
 
 ## SSH public key authentication
 
@@ -25,19 +27,15 @@ The API Server validates the JWT on every request and enforces a role-based acce
 
 RBAC policies and identity provider integration are covered in detail in the [Identity service](../identity/index.md) documentation.
 
-## Transport security — TLS and certificate management
-
-All service-to-service communication inside the cluster uses gRPC over TLS. Certificates and private keys are provisioned and rotated automatically through cert-manager, integrated with an external PKI provider such as HashiCorp Vault. Rotation occurs on a configurable schedule (30 days by default). When a new certificate is issued, services reload it and re-establish their gRPC listeners without downtime — there is no manual certificate management and no service restart required.
-
-## Service-to-service authorization — Kubernetes projected tokens
-
-Any k8shell service verifies *who* is calling before processing a request. Each service uses a Kubernetes-projected service account token scoped to the specific target service as its bearer credential. The receiving service validates the token audience, service account name, and namespace before handling the request, ensuring that only authorized services can invoke each API.
-
 ## Brute-force and bot protection — SSH Shield
 
 Because TCP/22 is a well-known port, it is routinely targeted by automated scanners and credential-stuffing bots. To address this, the SSH Proxy can be configured to publish failed authentication events — containing the client IP, attempted username, and failure reason — to NATS. The SSH Shield service subscribes to this stream and applies configurable rule-based policies: when an IP address accumulates failures beyond a defined threshold, SSH Shield blocks it at the network layer.
 
 For more details see [IP Address Protection](../ssh-proxy/ip-protection.md) and [SSH Shield](/concepts/ssh-shield).
+
+## Network policy enforcement — Cilium
+
+[Cilium](https://cilium.io) is the preferred CNI for k8shell deployments. Unlike traditional CNI plugins that enforce network policy at the iptables level, Cilium uses eBPF to apply policies directly in the kernel, giving it better performance and the ability to enforce policies based on Kubernetes identity (pod labels, service accounts, namespaces).
 
 ## Workspace runtime monitoring — Worktrace
 
@@ -50,5 +48,19 @@ For more details see [Worktrace](../worktrace/index.md).
 :::note
 Worktrace is only available in clusters using [Cilium](https://cilium.io) as the CNI.
 :::
+
+## Transport security — TLS and certificate management
+
+All service-to-service communication inside the cluster uses gRPC over TLS. Certificates and private keys are provisioned and rotated automatically through cert-manager, integrated with an external PKI provider such as HashiCorp Vault. Rotation occurs on a configurable schedule (30 days by default). When a new certificate is issued, services reload it and re-establish their gRPC listeners without downtime — there is no manual certificate management and no service restart required.
+
+## Secrets injection from Vault
+
+k8shell supports sourcing secrets for its own deployment from a secrets management system such as HashiCorp Vault. Secrets are not managed as static Kubernetes Secret objects — instead, a `VaultSecret` resource is defined that references a secret path in Vault. A controller synchronizes the Vault secret into a corresponding Kubernetes Secret, which is then consumed by k8shell services in the normal way (as environment variables or mounted files).
+
+This means secrets are defined and rotated in Vault, and the Kubernetes Secrets are derived from them automatically. There is no need to manage credential values directly in cluster manifests or version control.
+
+## Service-to-service authorization — Kubernetes projected tokens
+
+Any k8shell service verifies *who* is calling before processing a request. Each service uses a Kubernetes-projected service account token scoped to the specific target service as its bearer credential. The receiving service validates the token audience, service account name, and namespace before handling the request, ensuring that only authorized services can invoke each API.
 
 
