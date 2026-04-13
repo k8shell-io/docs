@@ -42,7 +42,7 @@ For more details see [IP Address Protection](../ssh-proxy/ip-protection.md) and 
 
 ## Network policy enforcement — Cilium
 
-[Cilium](https://cilium.io) is the preferred CNI for k8shell deployments. Unlike traditional CNI plugins that enforce network policy at the iptables level, Cilium uses eBPF to apply policies directly in the kernel, giving it better performance and the ability to enforce policies based on Kubernetes identity (pod labels, service accounts, namespaces).
+[Cilium](https://cilium.io) is the preferred CNI for k8shell deployments. It enforces network policy using eBPF directly in the kernel, bypassing the ARP/bridge layer used by traditional CNI plugins. This eliminates a class of link-layer attacks — such as ARP spoofing man-in-the-middle — where a pod with `CAP_NET_RAW` poisons ARP caches to intercept traffic between other pods. Because Cilium makes forwarding decisions based on cryptographic pod identity rather than MAC addresses, these attacks have no effect.
 
 ## Workspace runtime monitoring — Worktrace
 
