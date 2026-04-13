@@ -15,7 +15,7 @@ curl -sSfL https://get.k8shell.io | bash
 Or download it first to inspect before running:
 
 ```bash
-curl -sSfL https://get.k8shell.io | bash -o k8shell-quickstrart.sh
+curl -sSfL https://get.k8shell.io | -o k8shell-quickstrart.sh
 chmod +x k8shell-quickstrart.sh
 ./k8shell-quickstart.sh
 ```
