@@ -14,10 +14,6 @@ A workspace pod has one main container and an optional container runtime sidecar
 
 **Podman sidecar** — an optional sidecar that provides container build and run capabilities inside the workspace. When enabled by the blueprint, Podman runs as a rootless, daemonless container engine within the sidecar. Users in the main container interact with it through a shared socket, building images, running containers, and using Compose workflows as they would locally.
 
-:::warning Security
-Docker-in-Docker (DinD) requires a privileged container to run `dockerd`, which can be exploited to escape the pod's namespace isolation. Podman does not require privileged mode — it runs rootless and daemonless, making it significantly safer in a shared multi-tenant cluster.
-:::
-
 ## Bootstrapping
 
 When the main container starts, k8shelld initializes the environment before handing control to the user:

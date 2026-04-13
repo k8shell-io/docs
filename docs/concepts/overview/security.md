@@ -6,14 +6,15 @@ sidebar_position: 5
 
 Security is a first-class concern in k8shell. The platform is built for environments where multiple teams share the same cluster, and applies a zero-trust approach: every request is authenticated and authorized regardless of its origin. Security is enforced at multiple layers:
 
-- **SSH public key authentication** — passwords supported but off by default
-- **JWT tokens and RBAC** — short-lived, role-scoped user credentials
-- **Brute-force protection** — dynamic IP blocking driven by failed authentication events
-- **Network policy enforcement via Cilium** — preferred CNI for eBPF-enforced network policies
-- **Workspace runtime monitoring** — eBPF-based observation of workspace activity for threat detection
-- **TLS and cert management** — encrypted service-to-service transport with automated certs rotation
-- **Service-to-service authorization** — scoped Kubernetes tokens limit inter-service access
-- **Secrets injection from Vault** — k8shell deployment secrets sourced from Vault
+- [**SSH public key authentication**](#ssh-public-key-authentication) — passwords supported but off by default
+- [**JWT tokens and RBAC**](#user-authentication-and-authorization--jwt-and-rbac) — short-lived, role-scoped user credentials
+- [**Least-privileged workspace containers**](#least-privileged-workspace-containers) — workspaces run without elevated privileges
+- [**Brute-force protection**](#brute-force-and-bot-protection--ssh-shield) — dynamic IP blocking driven by failed authentication events
+- [**Network policy enforcement via Cilium**](#network-policy-enforcement--cilium) — preferred CNI for eBPF-enforced network policies
+- [**Workspace runtime monitoring**](#workspace-runtime-monitoring--worktrace) — eBPF-based observation of workspace activity for threat detection
+- [**TLS and cert management**](#transport-security--tls-and-certificate-management) — encrypted service-to-service transport with automated certs rotation
+- [**Service-to-service authorization**](#service-to-service-authorization--kubernetes-projected-tokens) — scoped Kubernetes tokens limit inter-service access
+- [**Secrets injection from Vault**](#secrets-injection-from-vault) — k8shell deployment secrets sourced from Vault
 
 ## SSH public key authentication
 
@@ -26,6 +27,12 @@ The Identity service issues a short-lived JWT when a user is onboarded into the 
 The API Server validates the JWT on every request and enforces a role-based access control (RBAC) policy before forwarding to internal services. Access decisions — which blueprints a user can provision, which workspaces they can manage, which administrative functions they can invoke — are all governed by the roles encoded in the token.
 
 RBAC policies and identity provider integration are covered in detail in the [Identity service](../identity/index.md) documentation.
+
+## Least-privileged workspace containers
+
+Workspace pods run as non-privileged containers by default. No elevated Linux capabilities are granted unless explicitly required — the container security context starts from a minimal capability set, and any additions must be intentionally configured in the blueprint. This limits the blast radius if a workspace is compromised: a process running inside cannot trivially escape to the host or affect other pods.
+
+For container build and run support inside workspaces, k8shell uses **Podman** as a sidecar. Podman runs rootless and daemonless — it requires no privileged container, which means workspace pods stay within normal security boundaries and cannot be exploited to escape to the host. 
 
 ## Brute-force and bot protection — SSH Shield
 

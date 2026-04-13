@@ -43,6 +43,10 @@ It then:
 2. Uses your existing `~/.ssh` public key, or generates a new Ed25519 pair
 3. Creates namespaces and runs `helm install`
 
+:::note Why keys are generated outside the cluster
+The SSH server key and JWT issuer key must be stable across pod restarts and redeployments — if they change, existing SSH clients will see a host key mismatch and all active JWTs will become invalid. Generating them inside the Helm chart would produce a new key on every fresh install. Instead, the keys are generated once, stored locally, and injected into the cluster as Kubernetes Secrets. The same keys can then be reused across upgrades and reinstalls.
+:::
+
 ### Options
 
 | Flag | Default | Description |
