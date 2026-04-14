@@ -7,6 +7,18 @@ title: Support
 
 Learn how to get support for k8shell — including bug reports, feature requests, and technical support for Early Access users.
 
+## Community and technical support
+
+All users can file bugs and feature requests in the GitHub issue tracker — this is community-supported and triaged on a best-effort basis. Early Access users get prioritized triage and a response commitment from the k8shell team.
+
+:::info
+Technical support is available to [Early Access](/licensing#early-access) users.
+:::
+
+Early Access users file issues in the same [GitHub issue tracker](https://github.com/k8shell-io/k8shell/issues/new/choose) as everyone else — mention your Early Access account in the issue and the team will prioritize it accordingly.
+
+For sensitive or confidential information (internal architecture details, security concerns, environment specifics), use email instead: [support@k8shell.io](mailto:support@k8shell.io).
+
 ## GitHub
 
 We use a single GitHub issue tracker for all bugs and feature requests across k8shell services. You don't need to know which service is responsible — file everything in the [k8shell issue tracker](https://github.com/k8shell-io/k8shell/issues) and the team will triage and route it internally.
@@ -52,16 +64,6 @@ Since k8shell is composed of multiple services, the most useful information you 
 Please attach large files (drag-and-drop a `.txt` file onto the issue comment box).
 
 The team will use the logs to identify which service is involved and route the issue accordingly.
-
-## Technical support
-
-:::info
-Technical support is available to [Early Access](/licensing#early-access) users.
-:::
-
-Early Access users file issues in the same [GitHub issue tracker](https://github.com/k8shell-io/k8shell/issues/new/choose) as everyone else — mention your Early Access account in the issue and the team will prioritize it accordingly.
-
-For sensitive or confidential information (internal architecture details, security concerns, environment specifics), use email instead: [support@k8shell.io](mailto:support@k8shell.io).
 
 ## Community
 
