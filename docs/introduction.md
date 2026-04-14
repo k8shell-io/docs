@@ -13,7 +13,7 @@ A workspace is provisioned on demand and accessible over SSH, a browser-based Co
 
 The platform is composed of several microservices: the SSH Proxy and API Server handle access; Identity issues and validates JWT tokens; the Provisioner creates and tears down workspaces; k8shelld runs inside each workspace as the in-workspace daemon; Session, SSH Shield, and Worktrace cover audit, brute-force protection, and runtime monitoring. All services communicate over gRPC, REST, and NATS.
 
-:::tip Prefer learning by doing?
+:::info Prefer learning by doing?
 Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working installation up in minutes and explore k8shell hands-on.
 :::
 

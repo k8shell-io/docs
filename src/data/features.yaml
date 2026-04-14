@@ -1,0 +1,31 @@
+tables:
+  - id: core
+    name: Core services
+    levels:
+      - oss: true
+      - ea: true
+    items:
+      - SSH Proxy
+      - Identity (file-based provider)
+      - Provisioner
+      - k8shelld
+      - SSH Shield
+      - Helm charts & installation scripts
+      - Workspace base images
+
+  - id: ea
+    name: Early Access additions
+    levels:
+      - oss: false
+      - ea: true
+    items:
+      - Identity providers (OAuth - GitHub, GitLab), device code flow (GitHub only)
+      - API Server (CloudShell, reverse proxy forwarding)
+      - Console (web-based terminal)
+      - k8shell CLI
+      - Session (tracking, recording)
+      - Worktrace
+      - ArgoCD-based GitOps deployment
+      - HashiCorp Vault integration
+      - cert-manager integration
+      - Monitoring & observability (OTel, Prometheus, Grafana)

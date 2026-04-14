@@ -88,6 +88,67 @@
 }
 
 /* =========================================
+   Feature comparison table (licensing page)
+   ========================================= */
+.comparison-table-wrapper {
+    width: 100%;
+    overflow-x: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: table;
+    border: 1px solid var(--ifm-color-emphasis-200);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.comparison-table th {
+    padding: 0.55rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ifm-font-color-base);
+    background: var(--ifm-color-emphasis-200);
+    border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.comparison-table th.col-check {
+    text-align: center;
+    width: 130px;
+}
+
+.comparison-table td {
+    padding: 0.45rem 1rem;
+    border-bottom: 1px solid var(--ifm-color-emphasis-200);
+    vertical-align: middle;
+}
+
+.comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+.comparison-table td.col-check {
+    text-align: center;
+    font-size: 1rem;
+}
+
+.check-yes {
+    color: #16a34a;
+}
+
+.check-no {
+    color: var(--ifm-color-emphasis-400);
+}
+
+/* =========================================
    Service grid (introduction page)
    ========================================= */
 .service-grid {
@@ -619,20 +680,22 @@ h4 {
     width: auto;
 }
 
+/* Inline body text size */
+.early-access-badge--inline {
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    margin-left: 0;
+}
+
+.early-access-badge--inline img {
+    height: 1em;
+    width: auto;
+}
+
 /* Sidebar size */
 .early-access-badge--sidebar img {
     height: 15px;
     width: auto;
     margin-top: 1px;
-}
-
-/* Anchor icon — hidden by default, appears on hover */
-.early-access-anchor {
-    display: none;
-    width: 0.65em;
-    height: 0.65em;
-}
-
-.early-access-badge:hover .early-access-anchor {
-    display: inline-block;
 }

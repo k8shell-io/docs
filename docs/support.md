@@ -12,7 +12,7 @@ Learn how to get support for k8shell — including bug reports, feature requests
 All users can file bugs and feature requests in the GitHub issue tracker — this is community-supported and triaged on a best-effort basis. Early Access users get prioritized triage and a response commitment from the k8shell team.
 
 :::info
-Technical support is available to [Early Access](/licensing#early-access) users.
+Technical support is available to [Early Access](/licensing#early-access) users. Early Access includes the full k8shell platform — see [what's included](/licensing#whats-included).
 :::
 
 Early Access users file issues in the same [GitHub issue tracker](https://github.com/k8shell-io/k8shell/issues/new/choose) as everyone else — mention your Early Access account in the issue and the team will prioritize it accordingly.
@@ -67,6 +67,6 @@ The team will use the logs to identify which service is involved and route the i
 
 ## Community
 
-The k8shell community is on [GitHub Discussions](https://github.com/k8shell-io/k8shell/discussions) — a good place to ask how-to questions, share what you're building, and connect with other users and the k8shell team.
+The k8shell community is on [GitHub Discussions](https://github.com/k8shell-io/k8shell/discussions) and [Discord](https://discord.gg/k8shell) — a good place to ask how-to questions, share what you're building, and connect with other users and the k8shell team. Early Access users also have access to the `#early-access` channel on Discord for direct engagement with the k8shell team.
 
 Follow us on [X/Twitter](https://x.com/k8shell_io) and [LinkedIn](https://www.linkedin.com/company/k8shell) for updates and announcements.

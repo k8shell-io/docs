@@ -7,3 +7,5 @@ docker/docs/files
 static/img/gen-svg
 build
 
+# generated files
+src/data/features.ts
