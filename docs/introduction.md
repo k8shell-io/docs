@@ -5,13 +5,11 @@ title: Introduction
 
 # Introduction
 
-k8shell is a platform built around a simple idea: developer workspaces run in isolated environments. Developers can have direct access to backends, databases, and internal services — the same resources available to apps in test or production. There is no gap to bridge between environments. 
+k8shell is a platform built around a simple idea: developer workspaces run in Kubernetes. Developers can have direct access to backends, databases, and internal services — the same resources available to apps in test or production. 
 
-For AI agents, k8shell workspaces provide a natural isolation boundary. Agents run with no credentials on disk, no access to the host filesystem, and outbound network access restricted by policy.
+For AI agents, k8shell workspaces provide a natural isolation boundary. Agents run with no credentials on disk, no access to the host filesystem, and outbound network access restricted by policy. Using the k8shell MCP server, AI agents can spawn workspaces on demand and perform their tasks in a fully isolated, auditable environment — with access scoped to exactly what the workspace allows.
 
-A workspace is provisioned on demand and accessible over SSH, a browser-based Console, or REST API. 
-
-The platform is composed of several microservices: the SSH Proxy and API Server handle access; Identity issues and validates JWT tokens; the Provisioner creates and tears down workspaces; k8shelld runs inside each workspace as the in-workspace daemon; Session, SSH Shield, and Worktrace cover audit, brute-force protection, and runtime monitoring. All services communicate over gRPC, REST, and NATS.
+A workspace is provisioned on demand and accessible over SSH, a browser-based Console, or API. 
 
 :::info Prefer learning by doing?
 Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working installation up in minutes and explore k8shell hands-on.

@@ -10,8 +10,8 @@ tables:
       - Provisioner
       - k8shelld
       - SSH Shield
-      - Helm charts & installation scripts
-      - Workspace base images
+      - Helm charts & installation scripts (MIT license)
+      - Workspace base images (MIT license)
 
   - id: ea
     name: Early Access additions
@@ -19,13 +19,11 @@ tables:
       - oss: false
       - ea: true
     items:
-      - Identity providers (OAuth - GitHub, GitLab), device code flow (GitHub only)
-      - API Server (CloudShell, reverse proxy forwarding)
-      - Console (web-based terminal)
+      - Identity providers (OAuth GitHub, GitLab; device code flow)
+      - API Server (workspace & user management, WebSocket, reverse proxy)
+      - Console (terminal, file browser)
       - k8shell CLI
       - Session (tracking, recording)
       - Worktrace
-      - ArgoCD-based GitOps deployment
-      - HashiCorp Vault integration
-      - cert-manager integration
       - Monitoring & observability (OTel, Prometheus, Grafana)
+      - ArgoCD-based GitOps deployment (Vault and cert-manager integration)

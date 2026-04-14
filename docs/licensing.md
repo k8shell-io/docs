@@ -27,7 +27,7 @@ Any feature marked with the badge <EarlyAccessBadge inline noLink /> in this doc
 
 ## AGPL-v3.0
 
-k8shell open-source components are released under the AGPL — a copyleft license that ensures k8shell and any derivative works remain open. If you distribute a modified version, or run one as a network service accessible to others, you must make the source of your modifications available under the same license. 
+Unless indicated otherwise, k8shell open-source components are released under the AGPL — a copyleft license that ensures k8shell and any derivative works remain open. If you distribute a modified version, or run one as a network service accessible to others, you must make the source of your modifications available under the same license. 
 
 Your own workloads running inside k8shell workspaces are not affected by this license.
 
