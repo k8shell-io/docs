@@ -88,6 +88,42 @@
 }
 
 /* =========================================
+   Service grid (introduction page)
+   ========================================= */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.service-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--ifm-color-emphasis-300);
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none !important;
+    color: var(--ifm-font-color-base) !important;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.service-card:hover {
+    border-color: var(--ifm-color-primary);
+    background: var(--ifm-color-primary-lightest, rgba(0, 123, 255, 0.06));
+    color: var(--ifm-color-primary) !important;
+}
+
+/* Per-card background colours — add more as needed */
+.intro-card-core {
+    --service-card-bg: #fef9c3;
+    background: var(--service-card-bg);
+}
+
+/* =========================================
    Typography
    ========================================= */
 h1 {

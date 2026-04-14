@@ -1,4 +1,4 @@
-# k8shell Daemon (k8shelld)
+# Workspace Daemon (k8shelld)
 
 At the core of every workspace is the `k8shelld` process, which runs as **PID 1** inside the main workspace container. `k8shelld` acts as the workspace “control plane” and exposes a set of **gRPC services** that implement (and enforce) the SSH functionality provided to the user.
 

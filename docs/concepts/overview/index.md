@@ -19,26 +19,26 @@ Components shown in yellow are purpose-built k8shell services. Components shown 
 ## Clients
 
 * **SSH Client** – Any SSH-compatible client: the `ssh` CLI, VS Code Remote, IntelliJ, or similar.
-* **k8shell CLI** – Command-line tool for operating and managing the k8shell platform.
 * **Browser** – Web browser for accessing the k8shell Console.
 
 ## Access
 
-* **SSH Proxy** – Entry point for SSH connections. Authenticates users via Identity, translates SSH protocol into gRPC, and forwards channels to the workspace's k8shelld.
-* **API Server** – REST API gateway for CLI, Console, and automation. Routes requests to Identity, Provisioner, and other backend services.
-* **Console** – Web UI for managing workspaces, sessions, and users. Includes an integrated CloudShell terminal.
+* **SSH Proxy** – Authenticates users via Identity, forwards SSH to workspace's k8shelld gRPC interface.
+* **API Server** – REST API gateway for CLI, Console, and automation. Routes requests to backend services.
+* **Console** – Web UI for managing workspaces, sessions, and users. Includes an integrated CloudShell.
+* **k8shell CLI** – Command-line tool for operating and managing the k8shell platform.
 
 ## Core Platform Services
 
-* **Identity** – Authenticates and authorizes users against external providers (OAuth, OIDC). Issues and renews JWT tokens used across services.
-* **Session** – Tracks active sessions, records metadata, and optionally captures session content for audit and replay.
+* **Identity** – Authenticates and authorizes users against external providers (OAuth, OIDC). JWT issuer.
+* **Session** – Tracks active sessions, and records sessions for audit and replay.
 * **Provisioner** – Creates and tears down workspace pods in Kubernetes based on workspace blueprints.
-* **k8shelld** – In-workspace daemon exposing gRPC services for shell, PTY, port forwarding, file transfer, and SSH agent.
+* **k8shelld** – In-workspace daemon exposing gRPC services for shell, PTY, port forwarding, SFTP.
 
 ## Security
 
-* **SSH Shield** – Listens to failed authentication events from SSH Proxy via NATS and dynamically blocks offending IP addresses at the firewall level.
-* **Worktrace** – Captures and analyzes runtime activity inside workspaces using eBPF for observability and security analytics.
+* **SSH Shield** – Dynamically blocks offending IP addresses at the firewall level.
+* **Worktrace** – Captures and analyzes activities inside workspaces using eBPF.
 
 ## Infrastructure
 
