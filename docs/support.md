@@ -5,23 +5,13 @@ title: Support
 
 # Support
 
-Learn how to get support for k8shell — including bug reports, feature requests, and technical support for Early Access users.
-
-## Community and technical support
-
-All users can file bugs and feature requests in the GitHub issue tracker — this is community-supported and triaged on a best-effort basis. Early Access users get prioritized triage and a response commitment from the k8shell team.
-
-:::info
-Technical support is available to [Early Access](/licensing#early-access) users. Early Access includes the full k8shell platform — see [what's included](/licensing#whats-included).
-:::
-
-Early Access users file issues in the same [GitHub issue tracker](https://github.com/k8shell-io/k8shell/issues/new/choose) as everyone else — mention your Early Access account in the issue and the team will prioritize it accordingly.
-
-For sensitive or confidential information (internal architecture details, security concerns, environment specifics), use email instead: [support@k8shell.io](mailto:support@k8shell.io).
+Reach out if you've hit a bug, have a feature idea, or need direct help as an Early Access user.
 
 ## GitHub
 
 We use a single GitHub issue tracker for all bugs and feature requests across k8shell services. You don't need to know which service is responsible — file everything in the [k8shell issue tracker](https://github.com/k8shell-io/k8shell/issues) and the team will triage and route it internally.
+
+All users can file bugs and feature requests — issues are community-supported and triaged on a best-effort basis. Early Access users get prioritized triage and a response commitment from the k8shell team.
 
 If you think you've found a bug, or you have a new feature idea:
 
@@ -47,15 +37,15 @@ Since k8shell is composed of multiple services, the most useful information you 
   ```bash
   kubectl logs <pod-name> -n <k8shell-namespace>
   ```
-  If the issue happens inside a workspace pod, you can get logs from insdie the workspace:
+  If the issue happens inside a workspace pod, you can get logs from inside the workspace:
 
   ```bash
   kbox logs
   ```
-  
-  or use quivalent `kubectl` command:
+
+  or use the equivalent `kubectl` command:
   ```bash
-  kubectl logs <workspace-pod> -n <workspaces-namespace> 
+  kubectl logs <workspace-pod> -n <workspaces-namespace>
   ```
 
 - **k8shell Helm chart version** and any values overrides
@@ -65,8 +55,20 @@ Please attach large files (drag-and-drop a `.txt` file onto the issue comment bo
 
 The team will use the logs to identify which service is involved and route the issue accordingly.
 
+## Early Access support
+
+:::info
+Technical support is available to [Early Access](/licensing#early-access) users.
+:::
+
+Early Access users file issues in the same [GitHub issue tracker](https://github.com/k8shell-io/k8shell/issues/new/choose) as everyone else — mention your Early Access account in the issue and the team will prioritize it accordingly.
+
+For sensitive or confidential information (internal architecture details, security concerns, environment specifics), use email instead: [support@k8shell.io](mailto:support@k8shell.io).
+
+Once onboarded for Early Access, you'll receive an invite to our [Discord server](https://discord.gg/k8shell) where the `#early-access` channel is the place to ask questions, share feedback, and follow the platform as it evolves.
+
 ## Community
 
-The k8shell community is on [GitHub Discussions](https://github.com/k8shell-io/k8shell/discussions) and [Discord](https://discord.gg/k8shell) — a good place to ask how-to questions, share what you're building, and connect with other users and the k8shell team. Early Access users also have access to the `#early-access` channel on Discord for direct engagement with the k8shell team.
+The k8shell community is on [GitHub Discussions](https://github.com/k8shell-io/k8shell/discussions) and [Discord](https://discord.gg/k8shell) — a good place to ask how-to questions, share what you're building, and connect with other users and the k8shell team.
 
 Follow us on [X/Twitter](https://x.com/k8shell_io) and [LinkedIn](https://www.linkedin.com/company/k8shell) for updates and announcements.

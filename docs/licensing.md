@@ -27,15 +27,9 @@ Any feature marked with the badge <EarlyAccessBadge inline noLink /> in this doc
 
 ## AGPL-v3.0
 
-The open-source release includes the following components: SSH Proxy, Identity service (with file-based identity provider), Provisioner, k8shelld, Helm charts, installation scripts, and a set of workspace base images suitable for use as a starting point for your own images or for demo purposes.
+k8shell open-source components are released under the AGPL — a copyleft license that ensures k8shell and any derivative works remain open. If you distribute a modified version, or run one as a network service accessible to others, you must make the source of your modifications available under the same license. 
 
-The AGPL is a copyleft license. It ensures that k8shell and any derivative works remain open: if you distribute or run a modified version of k8shell as a network service, you must make the source of your modifications available under the same license.
+Your own workloads running inside k8shell workspaces are not affected by this license.
 
 The full license text is available in the [k8shell repository](https://github.com/k8shell-io/k8shell/blob/main/LICENSE).
-
-### What this means in practice
-
-- You can use, study, modify, and distribute k8shell freely.
-- If you run a modified version of k8shell as a service accessible to others (including over a network), you must publish your modifications under AGPL-3.0.
-- There is no requirement to open-source your own workloads or applications that simply run *inside* k8shell workspaces.
 
