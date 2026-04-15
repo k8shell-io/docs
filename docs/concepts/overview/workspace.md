@@ -12,7 +12,7 @@ A workspace pod has one main container and an optional container runtime sidecar
 
 **Main container** — the primary environment where user processes run. It starts `k8shelld` as PID 1, which bootstraps the container, establishes connectivity with the rest of the platform, and manages the workspace lifecycle. Before the main container starts, an init container runs once to copy the `k8shelld` binary and associated tooling into the workspace filesystem.
 
-**Podman sidecar** — an optional sidecar that provides container build and run capabilities inside the workspace. When enabled by the blueprint, Podman runs as a rootless, daemonless container engine within the sidecar. Users in the main container interact with it through a shared socket, building images, running containers, and using Compose workflows as they would locally.
+**Podman sidecar** — an optional sidecar that provides container build and run capabilities inside the workspace. When enabled by the blueprint, Podman runs as a rootless container engine within the sidecar. Users in the main container interact with it through a shared socket, building images, running containers, and using Compose workflows as they would locally.
 
 ## Bootstrapping
 
