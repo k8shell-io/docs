@@ -5,21 +5,21 @@ title: Process Management
 
 # Process Management
 
-`k8shelld` runs as PID 1 inside the main workspace container and takes on two process management responsibilities: reaping orphaned child processes and terminating background processes that were not explicitly detached.
+`k8shelld` runs as PID 1 inside the main workspace container and takes on two process management responsibilities: reaping zombie processes and terminating orphaned processes left behind after a session ends. Both behaviours are opt-in via the `terminateOrphans` and `reapZombies` configuration flags.
 
 ## Process reaping
 
-In Linux, when a process exits and its parent is no longer alive, the orphaned child is re-parented to PID 1. PID 1 is expected to call `wait()` on these children to collect their exit status and free kernel resources. If PID 1 never calls `wait()`, exited processes accumulate as zombies.
+`k8shelld` listens for `SIGCHLD` and calls `wait4(-1, WNOHANG)` in a loop on each signal, collecting exit statuses and freeing kernel resources for any exited children. Without this, exited processes whose parent is PID 1 accumulate as zombies — a common problem when a regular application occupies PID 1 and is not written to handle adopted children.
 
-Most applications are not written to handle this. When a regular process — a shell, a language runtime, a server — runs as PID 1, zombie accumulation is common in workspaces that fork many short-lived subprocesses. `k8shelld` acts as a proper init and reaps all adopted children.
+## Session termination and orphan cleanup
 
-## Background process termination
+When a shell session ends, `k8shelld` sends `SIGKILL` to the shell's entire process group immediately, terminating any foreground processes still attached to it.
 
-When a user's shell session ends, `k8shelld` sends `SIGHUP` to background processes that were started in that session and do not have the nohup flag set. This mirrors the `huponexit` behaviour in bash: with `huponexit` enabled, bash sends `SIGHUP` to all jobs in its process group when the shell exits. `k8shelld` enforces the equivalent at the workspace daemon level, regardless of which shell the user runs.
+Background processes that had already detached from the process group are re-parented to PID 1. A periodic background scanner checks processes re-parented to PID 1. Processes started with `nohup` are left alone; all others receive `SIGHUP`. This mirrors the `huponexit` behaviour in bash — extended to all shells and enforced at the daemon level, regardless of how the session was started.
 
-**Why this is required:** without it, background processes started in a session would continue running after the user disconnects, consuming CPU, memory, and potentially holding open network connections or file locks. Over time this leads to resource leakage across sessions, particularly in workspaces that are long-lived or shared.
+**Why this is required:** without it, background processes started in a session would continue running after the user disconnects, consuming CPU and memory and potentially holding open network connections or file locks. Over time this causes resource leakage, particularly in workspaces that are long-lived or frequently reconnected to.
 
-Processes that should survive session termination must be started with `nohup` (or `disown`ed before the session exits):
+Processes that should survive session termination must be started with `nohup`:
 
 ```bash
 nohup ./my-server &

@@ -19,9 +19,9 @@ A workspace pod has one main container and an optional container runtime sidecar
 When the main container starts, k8shelld initializes the environment before handing control to the user:
 
 - Creates the workspace user with the configured UID and GID
-- Adds the user to the Podman socket group (when the Podman sidecar is enabled)
 - Grants passwordless sudo, if enabled by the blueprint
-- Runs init scripts — shell scripts defined in the blueprint that execute once in the workspace. Typical init scripts handle tasks like cloning a repository, setting up git configuration, running module initializations, and configuring tool environments.
+- Starts the gRPC server — the workspace becomes reachable at this point
+- Runs init scripts and starts apps asynchronously in the background
 
 ## Connectivity
 
