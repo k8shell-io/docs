@@ -9,7 +9,6 @@ tables:
       - Identity (file-based provider)
       - Provisioner
       - k8shelld
-      - SSH Shield
       - Helm charts & installation scripts (MIT license)
       - Workspace base images (MIT license)
 
@@ -24,6 +23,7 @@ tables:
       - Console (terminal, file browser)
       - k8shell CLI
       - Session (tracking, recording)
+      - SSH Shield
       - Worktrace
       - Monitoring & observability (OTel, Prometheus, Grafana)
       - ArgoCD-based GitOps deployment (Vault and cert-manager integration)

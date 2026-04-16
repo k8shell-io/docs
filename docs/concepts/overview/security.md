@@ -46,7 +46,7 @@ For more details, see [Agent Forwarding](/concepts/ssh-proxy/communication-flows
 
 Workspace pods run as non-privileged containers by default. No elevated Linux capabilities are granted unless explicitly required — the container security context starts from a minimal capability set, and any additions must be intentionally configured in the blueprint. This limits the blast radius if a workspace is compromised: a process running inside cannot trivially escape to the host or affect other pods.
 
-For container build and run support inside workspaces, k8shell uses **Podman** as a sidecar. Podman runs rootless with AppArmor unconfined (required for user namespace creation), but the sidecar has no hostPath mounts, no device access, and no PID namespace sharing. This means nested containers stay within normal security boundaries and cannot be exploited to escape to the host.
+For container build and run support inside workspaces, k8shell uses **Podman** as a sidecar. Podman runs in the sidecar sharing the pod's namespaces. The security boundary is the sidecar itself — enforced by Kubernetes.
 
 ## Detection of malicious activities — Worktrace
 
