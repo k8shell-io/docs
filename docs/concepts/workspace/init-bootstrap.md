@@ -54,11 +54,11 @@ initScripts:
     script: |
       git config --global user.name "$(kbox user name)"
       git config --global user.email "$(kbox user email)"
-      git config --global credential.helper "kbox git-credentials"
+      git config --global credential.helper "k8shell"
 
   - name: clone-repo
     script: |
-      # Runs after git-config — credential helper and identity are already configured
+      # Runs after git-config
       git clone https://github.com/my-org/my-repo ~/workspace
 ```
 
