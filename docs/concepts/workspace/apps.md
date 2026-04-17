@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: App Manager
 ---
 
@@ -13,13 +13,29 @@ Apps are not containers. They are processes that run directly inside the main wo
 
 The distinction matters in practice:
 
-| | Apps | Containers (Podman) |
-|---|---|---|
-| **Runtime** | Process in main container | Isolated container via Podman sidecar |
-| **Managed by** | `k8shelld` app manager | User, via Podman CLI |
-| **Console access** | Built-in via API Server reverse proxy | Manual tunnel setup required |
-| **Lifecycle** | Starts at workspace boot, supervised | User-controlled |
-| **Typical use** | VS Code Server, language servers | Build environments, service dependencies |
+<StandardInlineTable data={`
+columns:
+  - header: "Feature"
+    width: 200px
+  - header: Apps
+  - header: "Containers (Podman)"
+rows:
+  - - "**Runtime**"
+    - "Process in main container"
+    - "Isolated container via Podman sidecar"
+  - - "**Managed by**"
+    - "\`k8shelld\` app manager"
+    - "User, via Podman CLI"
+  - - "**Console access**"
+    - "Built-in via API Server reverse proxy"
+    - "Manual tunnel setup required"
+  - - "**Lifecycle**"
+    - "Starts at workspace boot, supervised"
+    - "User-controlled"
+  - - "**Typical use**"
+    - "VS Code Server, language servers"
+    - "Build environments, service dependencies"
+`} />
 
 ## Configuration
 
@@ -43,18 +59,33 @@ apps:
 
 ### Fields
 
-| Field | Description |
-|---|---|
-| `enabled` | Whether this app is active in this blueprint. |
-| `listen` | Port the app listens on inside the workspace. The API Server reverse proxy forwards to this port. |
-| `installAsRoot` | Run the install script as root. Required for package-manager-based installs. |
-| `binary` | Path to the app binary. Used to detect whether the app is already installed. |
-| `versionCmd` | Command to retrieve the installed version. |
-| `versionRegex` | Regex to extract the version string from `versionCmd` output. Used for version tracking. |
-| `install` | Shell script run once if the binary is absent. Handles installation. |
-| `start` | Command and arguments to launch the app. |
-| `restartPolicy` | `always` — restart on failure. |
-| `protocol` | Protocol used by the reverse proxy (`http` or `https`). |
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 120px
+  - header: Description
+rows:
+  - - "\`enabled\`"
+    - "Whether this app is active in this blueprint."
+  - - "\`listen\`"
+    - "The app listen port. The API Server reverse proxy forwards to this port."
+  - - "\`installAsRoot\`"
+    - "Run the install script as root. Required for package-manager-based installs."
+  - - "\`binary\`"
+    - "Path to the app binary. Used to detect whether the app is already installed."
+  - - "\`versionCmd\`"
+    - "Command to retrieve the installed version."
+  - - "\`versionRegex\`"
+    - "Regex to extract the version string from \`versionCmd\` output. Used for version tracking."
+  - - "\`install\`"
+    - "Shell script run once if the binary is absent. Handles installation."
+  - - "\`start\`"
+    - "Command and arguments to launch the app."
+  - - "\`restartPolicy\`"
+    - "\`always\` \u2014 restart on failure."
+  - - "\`protocol\`"
+    - "Protocol used by the reverse proxy (\`http\` or \`https\`)."
+`} />
 
 ## Lifecycle
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 1
 title: Configuration
 ---
 
@@ -72,44 +72,57 @@ The directory from which `k8shelld` loads system-level tool wrapper scripts duri
 
 The provisioner mounts the following files and directories into the main container:
 
-<table>
-  <colgroup>
-    <col style={{width: '300px'}} />
-    <col />
-  </colgroup>
-  <thead><tr><th>Path</th><th>Description</th></tr></thead>
-  <tbody>
-    <tr><td><code>/usr/local/bin/k8shelld</code></td><td>In-workspace daemon binary, injected by the init container.</td></tr>
-    <tr><td><code>/usr/local/bin/kbox</code></td><td>In-workspace CLI binary, injected by the init container.</td></tr>
-    <tr><td><code>/etc/k8shell/config.yaml</code></td><td><code>k8shelld</code> runtime configuration (see above).</td></tr>
-    <tr><td><code>/etc/k8shell/blueprint.yaml</code></td><td>The blueprint used to provision this workspace.</td></tr>
-    <tr><td><code>/usr/local/k8shell/system</code></td><td>System tool wrapper scripts and user-defined init scripts from the blueprint.</td></tr>
-    <tr><td><code>/run/secrets/identity-token</code></td><td>Workspace identity JWT, issued by the Identity service.</td></tr>
-    <tr><td><code>/run/secrets/jwt-verifier</code></td><td>Public key used by <code>k8shelld</code> to verify the identity token.</td></tr>
-    <tr><td><code>/etc/tls/k8shelld</code></td><td>TLS certificate and key for the gRPC server (cert-manager only).</td></tr>
-    <tr><td><code>/var/run/podman</code></td><td>Shared directory with the Podman sidecar containing <code>podman.sock</code> (Podman only).</td></tr>
-    <tr><td><em>Blueprint storage paths</em></td><td>Each storage from the blueprint is mounted at its configured path.</td></tr>
-    <tr><td><em>Blueprint extFiles paths</em></td><td>Extra files from the blueprint are mounted at their configured paths.</td></tr>
-  </tbody>
-</table>
+<StandardInlineTable data={`
+columns:
+  - header: Path
+    width: 250px
+  - header: Description
+rows:
+  - - "\`/etc/k8shell/config.yaml\`"
+    - "\`k8shelld\` runtime configuration (see above)."
+  - - "\`/etc/k8shell/blueprint.yaml\`"
+    - "The blueprint used to provision this workspace."
+  - - "\`/etc/tls/k8shelld\`"
+    - "TLS certificate and key for the gRPC server (cert-manager only)."
+  - - "\`/usr/local/bin/k8shelld\`"
+    - "In-workspace daemon binary, injected by the init container."
+  - - "\`/usr/local/bin/kbox\`"
+    - "In-workspace CLI binary, injected by the init container."
+  - - "\`/usr/local/k8shell/system\`"
+    - "System tool wrapper scripts and user-defined init scripts from the blueprint."
+  - - "\`/run/secrets/identity-token\`"
+    - "Workspace identity JWT, issued by the Identity service."
+  - - "\`/run/secrets/jwt-verifier\`"
+    - "Public key used by \`k8shelld\` to verify the identity token."
+  - - "\`/var/run/podman\`"
+    - "Shared directory with the Podman sidecar containing \`podman.sock\`."
+  - - "Blueprint storage paths"
+    - "Each storage from the blueprint is mounted at its configured path."
+  - - "Blueprint extFiles paths"
+    - "Extra files from the blueprint are mounted at their configured paths."
+`} />
 
 
 ## Environment variables
 
-<table>
-  <colgroup>
-    <col style={{width: '300px'}} />
-    <col />
-  </colgroup>
-  <thead><tr><th>Variable</th><th>Description</th></tr></thead>
-  <tbody>
-    <tr><td><code>WORKSPACE</code></td><td>Workspace name.</td></tr>
-    <tr><td><code>BLUEPRINT</code></td><td>Blueprint name.</td></tr>
-    <tr><td><code>IMAGE</code></td><td>Main container image.</td></tr>
-    <tr><td><code>USERNAME</code></td><td>Workspace user's username.</td></tr>
-    <tr><td><code>USEREMAIL</code></td><td>Workspace user's email address.</td></tr>
-    <tr><td><code>USERFULLNAME</code></td><td>Workspace user's display name.</td></tr>
-  </tbody>
-</table>
+<StandardInlineTable data={`
+columns:
+  - header: Variable
+    width: 250px
+  - header: Description
+rows:
+  - - "\`WORKSPACE\`"
+    - "Workspace name."
+  - - "\`BLUEPRINT\`"
+    - "Blueprint name."
+  - - "\`IMAGE\`"
+    - "Main container image."
+  - - "\`USERNAME\`"
+    - "Workspace user's username."
+  - - "\`USEREMAIL\`"
+    - "Workspace user's email address."
+  - - "\`USERFULLNAME\`"
+    - "Workspace user's display name."
+`} />
 
 Additional variables can be defined in the blueprint under `env` and are merged with the above.
