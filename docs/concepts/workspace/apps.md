@@ -9,7 +9,7 @@ The app manager is a component of `k8shelld` that installs, starts, and supervis
 
 ## Apps vs. containers
 
-Apps are not containers. They are processes that run directly inside the main workspace container, managed by `k8shelld`. This is a deliberate choice: apps need to be reachable by the API Server's reverse proxy, which forwards browser traffic to in-workspace processes over the existing `k8shelld` gRPC channel. A process running in a separate container would require additional networking to achieve the same.
+Apps are not containers. They are processes that run directly inside the main workspace container, managed by `k8shelld`. This is a deliberate choice: apps need to be reachable by the API Server's reverse proxy, which forwards browser traffic to in-workspace processes over the existing `k8shelld` gRPC channel. 
 
 The distinction matters in practice:
 
@@ -22,16 +22,16 @@ columns:
 rows:
   - - "**Runtime**"
     - "Process in main container"
-    - "Isolated container via Podman sidecar"
+    - "Container in Podman sidecar"
   - - "**Managed by**"
     - "\`k8shelld\` app manager"
     - "User, via Podman CLI"
   - - "**Console access**"
     - "Built-in via API Server reverse proxy"
-    - "Manual tunnel setup required"
+    - "Manual setup required"
   - - "**Lifecycle**"
     - "Starts at workspace boot, supervised"
-    - "User-controlled"
+    - "User/Podman-controlled"
   - - "**Typical use**"
     - "VS Code Server, language servers"
     - "Build environments, service dependencies"
