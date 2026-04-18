@@ -5,13 +5,7 @@ title: Podman Sidecar
 
 # Podman Sidecar
 
-The Podman sidecar is an optional second container in the workspace pod that runs a rootless Podman daemon alongside the main workspace container. It gives users the ability to pull images, build images, and run containers as part of their development workflow — without requiring any changes to the main workspace image and without privileged access to the Kubernetes node.
-
-The main container gains access to the Podman socket via a shared volume. 
-
-## How it works
-
-The sidecar runs as a separate container in the same Kubernetes pod as the main workspace container. Podman itself runs rootless inside the sidecar — meaning it does not require `--privileged` and does not need any additional Linux capabilities beyond what a standard container has. This keeps the security footprint small: there is no elevated access to the Kubernetes node, no capability escalation, and no host namespace sharing at the pod level.
+The Podman sidecar is an optional second container in the workspace pod that runs a rootless Podman daemon alongside the main workspace container. It gives users the ability to pull images, build images, and run containers as part of their development workflow — without requiring any changes to the main workspace image. By default, Podman runs rootless inside the sidecar and no additional Linux capabilities are required. The main container reaches the daemon via a shared Podman socket.
 
 ### Namespace isolation
 

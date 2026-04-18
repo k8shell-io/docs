@@ -5,19 +5,13 @@ title: Storage
 
 # Storage
 
-Workspace storage connects external Kubernetes volumes to paths inside the workspace container. Unlike the container's ephemeral filesystem, data on a storage volume lives outside the container and survives pod restarts. The storage size you configure controls how much data the user can write — not the container image size.
-
-## How it works
-
-Each storage entry in the blueprint causes the provisioner to create (or reuse) a PersistentVolumeClaim and mount the resulting volume at a specified path inside the main container. From the workspace's perspective, the path looks like any other directory. From Kubernetes' perspective, it is a PVC-backed volume mount in the pod spec.
-
-Multiple storage entries can be defined in a single blueprint. Each maps independently to its own PVC and its own mount path.
+Workspace storage mounts PersistentVolumeClaims at specified paths inside the workspace container. Data written to these mounts persists independently of the pod lifecycle and does not contribute to the container's ephemeral storage consumption.
 
 ## Storage types
 
 ### Local storage
 
-A local storage is provisioned per workspace. Each workspace gets its own PVC, created when the workspace is provisioned and bound to that workspace. When the workspace is deleted, the PVC can be retained or deleted depending on the `zfs-csi.k8shell.io/retain-on-delete` annotation — or the equivalent field for the storage class in use.
+A local storage is provisioned per workspace. Each workspace gets its own PVC, created when the workspace is provisioned and bound to that workspace. When the workspace is deleted, the PVC can be retained or deleted depending on the storage class configuration.
 
 A typical use is the user's home directory:
 
@@ -45,7 +39,7 @@ The `path` field here uses a CEL expression to compute `/home/<username>` at pro
 
 ### Shared storage
 
-A shared storage is provisioned once and reused by all workspaces that reference it. The provisioner uses the `id` field to identify the shared claim — if a PVC with that identity already exists, it is reused rather than created again. This makes shared storage suitable for team-wide datasets, shared package caches, or anything that should be accessible across multiple workspaces simultaneously.
+A shared storage is provisioned once and reused by all workspaces that reference it. The provisioner uses the `id` field to identify the shared claim — if a PVC with that identity already exists, it is reused rather than created again. This makes shared storage suitable for team-wide datasets, or anything that should be accessible across multiple workspaces simultaneously.
 
 ```yaml
 storages:
@@ -69,7 +63,7 @@ storages:
       zfs-csi.k8shell.io/squash-gid: !cel "user.gid"
 ```
 
-Because the same PVC is mounted by multiple pods concurrently, the storage class must support `ReadWriteMany`. `retain-on-delete: "true"` ensures the data persists when individual workspaces are removed.
+Because the same PVC is mounted by multiple pods concurrently, the storage class must support `ReadWriteMany`. 
 
 ### Fields
 
@@ -82,17 +76,19 @@ rows:
   - - "\`enabled\`"
     - "Whether this storage is active in this blueprint."
   - - "\`type\`"
-    - "\`local\` or \`shared\`. Controls whether a PVC is created per workspace or shared across workspaces."
+    - "\`local\` or \`shared\`. Controls whether a PVC is created per workspace or shared."
   - - "\`id\`"
-    - "Shared storage only. Identity key used to find or create the shared PVC. Supports CEL expressions."
+    - "Shared storage only. Identity key used to find or create the shared PVC."
   - - "\`path\`"
     - "Mount path inside the workspace container. Supports CEL expressions."
   - - "\`readonly\`"
     - "Mount the volume read-only."
+  - - "\`existingClaim\`"
+    - "Name of an existing PVC to mount. Mutually exclusive with \`claimSpec\`."
   - - "\`claimSpec\`"
-    - "Kubernetes PVC spec — storage class, access modes, and size. Passed directly to the PVC."
+    - "Kubernetes PVC spec used to create the PVC resource."
   - - "\`claimSpecAnnotations\`"
-    - "Annotations added to the PVC. Storage-class-specific. Supports CEL expressions in values."
+    - "Annotations added to the PVC. Storage-class-specific."
   - - "\`fsOwnerUid\`"
     - "UID to set as the owner of the volume root during the init phase. Applied by the init container before the main container starts."
   - - "\`fsOwnerGid\`"
@@ -101,9 +97,9 @@ rows:
 
 ## Node-local storage
 
-When the storage class provisions volumes on the node where the pod is scheduled — rather than on a remote storage backend — the volume data is physically co-located with the running container. This is typically achieved with a `local` or `hostPath`-backed storage class, or a CSI driver like `zfs-localpv` that provisions ZFS datasets on the node itself.
+When the storage class provisions volumes on the node where the pod is scheduled — rather than on a remote storage backend — the volume data is physically co-located with the running container. This is typically achieved with a `local` or `hostPath`-backed storage class, or a CSI driver like OpenEBS that can provision ZFS datasets on the node itself.
 
-Node-local storage is particularly useful for workloads with high I/O or where you want a hard cap on local data. A concrete example is backing the Podman sidecar's graph root with a node-local PVC to limit how much image and container data Podman can accumulate. See [Podman Sidecar — Graph storage](./podman-sidecar.md#graph-storage) for a full example.
+Node-local storage is useful for high-I/O workloads or when you need a hard cap on local data. See [Podman Sidecar — Graph storage](./podman-sidecar.md#graph-storage) for an example of backing the Podman graph root with a node-local PVC.
 
 ## Inspecting storage usage
 
