@@ -15,7 +15,7 @@ Containers launched by Podman inside the sidecar do not get their own fully isol
 - **PID** — containers share the PID namespace of the Podman sidecar. They are not isolated from each other or from the Podman daemon process at the PID level.
 - **Resource limits** — all containers running inside the sidecar are subject to the CPU and memory limits configured for the sidecar itself. There is no per-container resource accounting beyond what Podman can enforce within those bounds.
 
-This is a deliberate tradeoff. Full per-container namespace isolation (as you would get on a bare Linux host) would require deeper privilege than a rootless sidecar provides. The current model is sufficient for development workflows while keeping the sidecar unprivileged.
+Full per-container namespace isolation (as you would get on a bare Linux host) would require deeper privilege than a rootless sidecar provides. The current model is sufficient for development workflows while keeping the sidecar unprivileged.
 
 ## Configuration
 
