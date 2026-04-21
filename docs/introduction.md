@@ -33,7 +33,7 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
   <a class="service-card" href="/concepts/ssh-proxy">SSH Proxy</a>
   <a class="service-card" href="/concepts/identity">Identity</a>
   <a class="service-card" href="/concepts/provisioner">Provisioner</a>
-  <a class="service-card" href="/concepts/k8shelld">k8shelld</a>
+  <a class="service-card" href="/concepts/workspace">k8shelld</a>
   <a class="service-card" href="/concepts/api-server">API Server</a>
   <a class="service-card" href="/concepts/session">Session</a>
   <a class="service-card" href="/concepts/ssh-shield">SSH Shield</a>

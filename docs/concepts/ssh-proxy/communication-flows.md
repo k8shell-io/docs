@@ -2,22 +2,27 @@
 sidebar_position: 3
 ---
 
-# Comminication Flows 
+# Communication Flows
 
 This document describes the flow between **SSH Client**, **SSH Proxy**, **Identity**, **Provisioner**, and **k8shelld**.Please refer to the [architecture overview](Architecture) for component details.
 
 The flow is divided into three phases:  
 
-1. [User Discovery and Onboarding](#user-discovery-and-onboarding)  
-2. [Workspace Provisioning](#workspace-provisioning)  
-3. [SSH Channels Communication](#ssh-channels-communication)  
+- [Communication Flows](#communication-flows)
+  - [User Discovery and Onboarding](#user-discovery-and-onboarding)
+  - [Workspace Provisioning](#workspace-provisioning)
+  - [SSH Channels Communication](#ssh-channels-communication)
+    - [Session Channels](#session-channels)
+    - [Direct TCP/IP Channels](#direct-tcpip-channels)
+    - [Direct Streamlocal Channels](#direct-streamlocal-channels)
+    - [File Transfer](#file-transfer)
+    - [Agent Forwarding](#agent-forwarding)
 
 ## User Discovery and Onboarding
 
-Users connect to SSH Proxy using a *user string* that contains their username and configuration parameters like blueprint name or repository details (see [User string specification](concepts/overview/user-string) for details). SSH Proxy parses this user string to extract the username and parameters, then looks up the corresponding internal user identity. 
+Users connect to SSH Proxy using a *user string* that contains their username and configuration parameters like blueprint name or repository details (see [User string specification](concepts/overview/user-string) for details). SSH Proxy parses this user string to extract the username and parameters, then looks up the corresponding internal user identity.
 
 When no user identity is found, SSH Proxy checks whether the user can be onboarded through available identity providers. If onboarding is supported, it automatically initiates the onboarding process. When authentication fails, SSH proxy publishes the failed authentication attempt via NATS messaging middleware. See [IP Address Protection](ip-protection) for more details.
-
 
 The diagram below illustrates the communication flow for user discovery and onboarding using the [OAuth Device Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/device-authorization-flow), with GitHub shown as the example identity provider.
 
@@ -61,7 +66,7 @@ sequenceDiagram
     P-->>C: Access granted / denied
 ```
 
-## Workspace Provisioning 
+## Workspace Provisioning
 
 Users can request workspace access through the user string in two ways: by specifying a blueprint name, or by specifying a Git repository name (for users onboarded via git-based identity providers). The Provisioner service manages workspace blueprints and retrieves blueprint definitions from Git repositories. SSH Proxy uses the user string to check if the requested workspace is running and requests to provision it when necessary.
 
@@ -98,7 +103,7 @@ sequenceDiagram
 
 ## SSH Channels Communication
 
-SSH Proxy accepts SSH channel requests and establishes connections with the workspace k8shelld process. Using workspace status details that contain the workspace IP address, it connects to k8shelld via gRPC protocol on TCP port `2822` and calls the `handshake` operation. 
+SSH Proxy accepts SSH channel requests and establishes connections with the workspace k8shelld process. Using workspace status details that contain the workspace IP address, it connects to k8shelld via gRPC protocol on TCP port `2822` and calls the `handshake` operation.
 
 After the handshake completes, SSH Proxy creates a new SSH session with the Session service (when enabled) that tracks session information such as SSH Proxy ID, process ID, and workspace name. It then uses the SSH session ID to send periodic updates including ingress and egress data volumes, client IP, and client type information. 
 
