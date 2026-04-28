@@ -42,7 +42,7 @@ This means a user can connect over SSH or Console as soon as the servers are rea
 
 Init scripts are shell scripts defined in the blueprint and executed as the workspace user during the asynchronous phase of bootstrap. They run **in sequence** — each script runs to completion before the next one starts. This ordering is intentional: scripts may have dependencies on each other.
 
-Each script runs **once**. After a script completes successfully, `k8shelld` creates a flag file in `~/.k8shell/flags/` named after the script. On subsequent workspace restarts, if the flag file exists the script is skipped. Since the flag directory lives in the user's home directory — which is backed by persistent storage and survives pod restarts — init scripts are not re-run on restart.
+Each script runs **once**. After a script completes successfully, `k8shelld` creates a flag file in `~/.k8shell/flags/` named after the script. On subsequent workspace restarts, if the flag file exists the script is skipped. Since the flag directory lives in the user's home directory. When this directory is backed by a persistent storage which survives restarts, init scripts are not re-run on restart.
 
 Scripts have access to workspace tooling, including credential helpers that proxy requests to the API Server. This means an init script can authenticate with Git or a container registry without any credentials being stored in the workspace.
 

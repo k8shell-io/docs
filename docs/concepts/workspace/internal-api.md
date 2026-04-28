@@ -29,12 +29,12 @@ columns:
 rows:
   - - "\`GET\`"
     - "\`/identity\`"
-    - "\`kbox identity\`, \`user\`"
+    - "\`kbox identity\`, \`kbox user\`"
     - ""
     - "Identity JWT claims"
   - - "\`GET\`"
     - "\`/sysinfo\`"
-    - "\`kbox info\`, \`uptime\`"
+    - "\`kbox info\`, \`kbox uptime\`"
     - "\`uptime\`"
     - "cgroups, /proc, mounts"
   - - "\`GET\`"
@@ -48,10 +48,25 @@ rows:
     - "\`last\`"
     - "API Server proxy"
   - - "\`GET\`"
-    - "\`/ssh/channels\`"
-    - "\`kbox channels\`"
+    - "\`/streams\`"
+    - "\`kbox streams\`"
     - ""
-    - "k8shelld SSH channel state"
+    - "k8shelld active streams"
+  - - "\`POST\`"
+    - "\`/shells/{id}/attach\`"
+    - "\`kbox attach\`"
+    - ""
+    - "k8shelld session manager"
+  - - "\`POST\`"
+    - "\`/shells/{id}/detach\`"
+    - "\`kbox detach\`"
+    - ""
+    - "k8shelld session manager"
+  - - "\`POST\`"
+    - "\`/shells/{id}/resize\`"
+    - "\-"
+    - ""
+    - "k8shelld session manager"
   - - "\`GET\`"
     - "\`/creds\`"
     - "\`kbox credentials\`"
@@ -96,7 +111,7 @@ rows:
     - "\`/validate\`"
     - "\`kbox validate\`"
     - ""
-    - "API Server proxy"
+    - "Config schema validator"
 `} />
 
 :::note
@@ -118,14 +133,16 @@ Usage:
 
 Available Commands:
   apps        Manage workspace apps
-  channels    Display channels
+  attach      Attach to a detached shell session
   credentials Credentials helpers
+  detach      Detach from the current shell session (keeps the process alive)
   identity    Display workspace identity claims
   info        Display workspace system info
   last        Display last user sessions
   logs        Display workspace logs
   shutdown    Shutdown the workspace
   splash      Display the workspace splash message
+  streams     Display streams
   tools-init  Generate wrapper scripts for system tools
   uptime      Display workspace uptime
   user        Display user information
@@ -135,6 +152,8 @@ Flags:
   -h, --help            help for kbox
       --socket string   k8shelld unix socket path (default "/var/run/k8shelld.sock")
   -v, --version         Show version and exit
+
+Use "kbox [command] --help" for more information about a command.
 ```
 
 The socket path defaults to `/var/run/k8shelld.sock` but can be overridden with the `--socket` flag for testing or non-standard deployments.

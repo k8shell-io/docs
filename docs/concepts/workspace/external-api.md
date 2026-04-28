@@ -27,7 +27,7 @@ Provides system-level information and handshake validation.
 
 Handles all interactive and forwarding operations initiated over SSH.
 
-**`Shell`** — bidirectional streaming RPC for interactive shell sessions. The client sends a start request specifying the user, shell command, environment variables, PTY dimensions, and optionally a container reference (for shells inside Podman containers). `k8shelld` spawns the shell and streams stdin/stdout/stderr over the connection. The client sends data (keystrokes) upstream; the server sends output downstream. Terminal resize events are handled via a separate `ResizeTerminal` call.
+**`Shell`** — bidirectional streaming RPC for interactive shell sessions. The client sends a start request specifying the user, shell command, environment variables, PTY dimensions, and optionally a container reference (for shells inside Podman containers). The request can include a `lock_id` from `AcquireSession` to attach to an existing shell session, and a `detach_on_close` flag to keep the session running after the client disconnects. `k8shelld` spawns the shell (or attaches to an existing one) and streams stdin/stdout/stderr over the connection. The client sends data (keystrokes) upstream; the server sends output downstream. Terminal resize events are handled via a separate `ResizeTerminal` call.
 
 **`Exec`** — bidirectional streaming for non-interactive command execution. The client specifies the command, shell binary (if wrapping in a shell is needed), user, and environment. The server streams stdout and stderr separately and returns the exit code when the process terminates. The client can send signals to the running process mid-execution.
 
@@ -36,6 +36,8 @@ Handles all interactive and forwarding operations initiated over SSH.
 **`UnixSocket`** — bidirectional streaming for Unix socket forwarding. Supports two modes: `LISTEN` (server listens on a socket path and accepts connections) and `DIAL` (client connects to an existing socket). This is used primarily for SSH agent forwarding, where the SSH Proxy forwards the user's local SSH agent socket into the workspace.
 
 **`GetCWD`** — returns the current working directory for a running shell session. The client provides a shell ID; the server responds with the absolute path of the shell's working directory. The Console uses this to synchronize the file system tree view with the terminal's current directory.
+
+**`AcquireSession`** — acquires an exclusive lock on an existing shell session by session ID, enabling a client to attach to it. Returns a `lock_id` on success, which must be provided in the `Shell` start request to complete the attachment. Returns a failure reason if the session does not exist or is already acquired by another client. This enables session reconnection workflows, such as restoring terminal sessions in the web console after a browser refresh or network interruption.
 
 ### AppService
 
