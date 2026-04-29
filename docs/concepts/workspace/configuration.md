@@ -111,6 +111,10 @@ The following constraints are enforced:
 
 If you specify `drop: [ALL]` in the capabilities block, you must explicitly re-add then in the `add` list.
 
+:::warning
+When `privileged: true` is set in the security context, the service account token mounted at `/var/run/secrets/kubernetes.io/serviceaccount` is only accessible by root. The workspace user cannot read the token, which prevents accessing the Kubernetes API from user processes. This restriction does not apply when `privileged` is `false` or unset.
+:::
+
 ### Podman sidecar
 
 The Podman sidecar runs with a non-privileged security context by default — no `--privileged` flag and no additional capabilities. Custom security contexts can be specified for fine-tuning alongside the Podman image version. See [Podman Sidecar](./podman-sidecar.md) for details on how Podman operates securely in rootless mode.
