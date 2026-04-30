@@ -65,6 +65,38 @@ storages:
 
 Because the same PVC is mounted by multiple pods concurrently, the storage class must support `ReadWriteMany`. 
 
+### Memory storage
+
+Memory storage provides a tmpfs-backed ramdisk mounted at a specified path. Data in memory storage is stored in RAM and is lost when the pod restarts. This type of storage is ideal for high-speed temporary data, caches, or intermediate build artifacts that don't need to persist across pod lifecycles.
+
+```yaml
+storages:
+  ramdisk:
+    enabled: true
+    type: memory
+    sizeLimit: 5Gi
+    path: "/opt/ramdisk"
+```
+
+The `sizeLimit` field controls the maximum size of the tmpfs filesystem. If not specified, the tmpfs will use up to 50% of the node's memory. Setting an explicit limit prevents a single workspace from consuming excessive memory.
+
+Memory storage does not require a PVC or storage class, making it lightweight to provision. However, because it consumes node memory, it should be sized carefully relative to the node's available RAM and the workspace's memory limits.
+
+### EmptyDir storage
+
+EmptyDir storage provides an ephemeral volume that exists for the lifetime of the pod. Unlike memory storage which is backed by RAM, emptyDir is typically backed by the node's local disk (or can optionally be backed by tmpfs). Data is lost when the pod is deleted but persists across container restarts within the same pod.
+
+```yaml
+storages:
+  scratch:
+    enabled: true
+    type: emptyDir
+    sizeLimit: 10Gi
+    path: /opt/scratch
+```
+
+The `sizeLimit` field sets a quota on the emptyDir volume. If the volume exceeds this limit, the pod may be evicted. When omitted, the volume can grow to fill the available space on the node's backing storage.
+
 ### Fields
 
 <StandardInlineTable data={`
@@ -76,11 +108,13 @@ rows:
   - - "\`enabled\`"
     - "Whether this storage is active in this blueprint."
   - - "\`type\`"
-    - "\`local\` or \`shared\`. Controls whether a PVC is created per workspace or shared."
+    - "\`local\`, \`shared\`, \`memory\`, or \`emptyDir\`. Controls whether a PVC is created per workspace, shared across workspaces, or an ephemeral volume is used."
   - - "\`id\`"
     - "Shared storage only. Identity key used to find or create the shared PVC."
   - - "\`path\`"
     - "Mount path inside the workspace container. Supports CEL expressions."
+  - - "\`sizeLimit\`"
+    - "Memory and emptyDir storage only. Maximum size of the ephemeral volume."
   - - "\`readonly\`"
     - "Mount the volume read-only."
   - - "\`existingClaim\`"
