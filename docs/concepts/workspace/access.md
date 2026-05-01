@@ -1,9 +1,19 @@
 ---
-sidebar_position: 10
-title: Network Policy
+sidebar_position: 6
+title: Access
 ---
 
-# Network Policy
+# Access
+
+Workspace access encompasses both network connectivity and Kubernetes API access. Network policies control traffic between workspace pods and other endpoints, while Kubernetes access is managed through service accounts and RBAC.
+
+## Kubernetes Access
+
+Kubernetes API access from within a workspace is driven by the service account assigned to the workspace pod. Each workspace has a unique, consistent name (see [Configuration](./configuration.md) for details), and the service account name is derived from this workspace identity. Because the workspace name remains consistent across re-creations, the service account name does not change, allowing stable RBAC bindings.
+
+k8shell does not assign Kubernetes access permissions by default. However, it is possible to define RBAC resources externally — such as Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings — and bind them to the workspace's service account. Once RBAC is configured, users can access the Kubernetes API from within the workspace using standard tools such as `kubectl` and `helm`.
+
+## Network Policy
 
 Network policies control traffic between workspace pods and other network endpoints. Policies are defined in the blueprint under the `network` key and are implemented as Kubernetes NetworkPolicy resources applied to the workspace pod. The policy is applied to the workspace pod using pod selectors based on workspace identity labels (`k8shell.io/user`, `k8shell.io/blueprint`, `k8shell.io/organization`).
 
@@ -24,7 +34,7 @@ rows:
 `} />
 
 
-## Network policy classes
+### Network policy classes
 
 The `networkPolicyClass` field selects a predefined policy template that controls which workspaces can communicate with each other. When no class is specified, no network policy is applied and all traffic is permitted.
 
@@ -43,7 +53,7 @@ network:
   networkPolicyClass: user
 ```
 
-## Egress to CIDRs
+### Egress to CIDRs
 
 The `allowEgressToCIDRs` field specifies CIDR ranges that the workspace is permitted to reach. This is a convenience shorthand for adding egress rules without writing a full NetworkPolicy spec. Each entry must be a valid CIDR notation (e.g., `10.0.0.0/8`, `192.168.1.0/24`).
 
@@ -59,7 +69,7 @@ network:
 
 When combined with a network policy class, the CIDR rules are added to the policy generated from the class.
 
-## Egress to pods
+### Egress to pods
 
 The `allowEgressToPods` field specifies label selectors for pods that the workspace is permitted to reach. This is a convenience shorthand for permitting egress to specific services or workloads running in the cluster. Each entry is a map of label key-value pairs that must all match for the rule to apply.
 
