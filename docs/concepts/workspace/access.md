@@ -9,9 +9,23 @@ Workspace access encompasses both network connectivity and Kubernetes API access
 
 ## Kubernetes Access
 
-Kubernetes API access from within a workspace is driven by the service account assigned to the workspace pod. Each workspace has a unique, consistent name (see [Configuration](./configuration.md) for details), and the service account name is derived from this workspace identity. Because the workspace name remains consistent across re-creations, the service account name does not change, allowing stable RBAC bindings.
+Kubernetes API access from within a workspace is controlled through a credential helper that dynamically retrieves authentication tokens from the Kubernetes API server. The service account is not mounted directly to the workspace pod. Instead, when tools like `kubectl` or `helm` attempt to access the Kubernetes API, the credential helper obtains a token on-demand.
 
-k8shell does not assign Kubernetes access permissions by default. However, it is possible to define RBAC resources externally — such as Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings — and bind them to the workspace's service account. Once RBAC is configured, users can access the Kubernetes API from within the workspace using standard tools such as `kubectl` and `helm`.
+RBAC can be assigned to an arbitrary service account and provided in the identity to supply tokens for workspace access bound to a specific user. Once RBAC is configured, users can access the Kubernetes API from within the workspace using standard tools such as `kubectl` and `helm`.
+
+## Credential Helpers
+
+k8shell provides credential helpers that integrate with various tools to provide seamless authentication without requiring users to manage credentials manually.
+
+**Kubernetes credential helper** — Dynamically retrieves authentication tokens from the Kubernetes API server when tools like `kubectl` or `helm` need to authenticate. This eliminates the need to mount service account tokens directly into the workspace pod and allows for fine-grained, on-demand access control.
+
+**Docker credential helper** — Provides authentication for container registries when pulling or pushing images. The credential helper integrates with Docker and Podman to retrieve registry credentials securely without storing them in configuration files.
+
+**Git credential helper** — Supplies authentication credentials for Git operations when accessing private repositories. When a user is onboarded via a git-based identity provider (GitHub or GitLab), the credential helper automatically provides a token associated with the user account. This allows users to clone, push, and pull from Git repositories without manually configuring credentials in the workspace.
+
+## SSH Keys
+
+SSH keys enable secure authentication for remote connections. Workspaces support SSH agent forwarding, which allows users to leverage SSH keys from their local machine without copying private keys into the workspace environment.
 
 ## Network Policy
 

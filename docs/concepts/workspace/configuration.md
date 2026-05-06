@@ -51,6 +51,10 @@ identity:
   publicKeyPath: /run/secrets/jwt-verifier/public.pem
   signingMethod: RS256
 
+saToken:
+  enabled: true
+  cacheTokens: true
+
 terminateOrphans:
   enabled: true
   checkInterval: 30
@@ -58,6 +62,11 @@ terminateOrphans:
 
 reapZombies:
   enabled: true
+
+shells:
+  detachedTTL: 30m
+  allowUnlimittedTTL: false
+  allowSessionDetach: true
 ```
 
 ### system
@@ -78,6 +87,13 @@ The `system` section controls logging and the two servers `k8shelld` exposes: th
 - **`publicKeyPath`** — path to the public key used to verify the token signature.
 - **`signingMethod`** — JWT signing algorithm, e.g. `RS256`.
 
+### saToken
+
+The `saToken` section configures the Kubernetes credential helper that retrieves service account tokens via the API server for Kubernetes API access.
+
+- **`enabled`** — whether the service account token credential helper is active.
+- **`cacheTokens`** — whether retrieved tokens are cached to avoid redundant API server calls.
+
 ### terminateOrphans and reapZombies
 
 These settings control `k8shelld`'s process management behaviour. See [Process Management](./process-management.md) for a detailed explanation of how orphan cleanup and zombie reaping work.
@@ -87,21 +103,33 @@ These settings control `k8shelld`'s process management behaviour. See [Process M
 - **`terminateOrphans.exclude`** — process names to leave alone, even if re-parented to PID 1.
 - **`reapZombies.enabled`** — enable zombie reaping on `SIGCHLD`.
 
+### shells
+
+The `shells` section configures PTY shell session behavior and lifecycle management.
+
+- **`detachedTTL`** — how long a PTY shell session with no attached client is kept alive before automatic termination. Accepts Go duration strings (e.g., `30m`, `1h`). Set to `0s` to disable automatic termination.
+- **`allowUnlimittedTTL`** — whether clients are allowed to set an unlimited TTL for detached sessions.
+- **`allowSessionDetach`** — whether clients are allowed to detach from PTY shell sessions.
+
 ## Security context
 
 The blueprint can specify a Kubernetes `SecurityContext` for the main workspace container and the Podman sidecar. This allows fine-grained control over security settings like capabilities, user/group IDs, and privilege escalation.
 
 ### Main container
 
-The main container must run as root (UID/GID 0) because `k8shelld` runs as PID 1 and performs operations that require root privileges: creating users, and setting up the workspace environment during bootstrap.
+The main container does not require full privileged mode (`privileged: true`). It must run as root (UID/GID 0) because `k8shelld` runs as PID 1 and performs operations that require root privileges: creating users, and setting up the workspace environment during bootstrap.
 
 The following constraints are enforced:
 
-- `runAsUser` must be `0`
-- `runAsGroup` must be `0`
-- `runAsNonRoot` cannot be `true`
-- `readOnlyRootFilesystem` cannot be `true`
-- `allowPrivilegeEscalation` cannot be `false`
+- `runAsUser: 0`
+- `runAsGroup: 0`
+- `runAsNonRoot: true`
+- `readOnlyRootFilesystem: true`
+- `allowPrivilegeEscalation: true`
+
+:::note
+Although PID 1 runs under root with required root privileges, `allowPrivilegeEscalation` is required when the workspace user needs sudo access.
+:::
 
 **Capabilities:** `k8shelld` requires the following Linux capabilities and will fail when they are not present:
 
@@ -111,13 +139,9 @@ The following constraints are enforced:
 
 If you specify `drop: [ALL]` in the capabilities block, you must explicitly re-add then in the `add` list.
 
-:::warning
-When `privileged: true` is set in the security context, the service account token mounted at `/var/run/secrets/kubernetes.io/serviceaccount` is only accessible by root. The workspace user cannot read the token, which prevents accessing the Kubernetes API from user processes. This restriction does not apply when `privileged` is `false` or unset.
-:::
-
 ### Podman sidecar
 
-The Podman sidecar runs with a non-privileged security context by default — no `--privileged` flag and no additional capabilities. Custom security contexts can be specified for fine-tuning alongside the Podman image version. See [Podman Sidecar](./podman-sidecar.md) for details on how Podman operates securely in rootless mode.
+The Podman sidecar runs with a non-privileged security context by default. Custom security contexts can be specified for fine-tuning alongside the Podman image version. See [Podman Sidecar](./podman-sidecar.md) for details on how Podman operates securely in rootless mode.
 
 ## Workspace files and directories
 
