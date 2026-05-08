@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # SSH Protocol Support
 
-The K8shell SSH Proxy implements the core channel types and request classes defined in the **SSH-2 protocol suite (RFC 4251–4254)**, providing compatibility with standard SSH clients and IDEs.
+The k8shell SSH Proxy implements the core channel types and request classes defined in the **SSH-2 protocol suite (RFC 4251–4254)**, providing compatibility with standard SSH clients and IDEs.
 
 ## Supported Channel Types
 

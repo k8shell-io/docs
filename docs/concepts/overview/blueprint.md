@@ -8,7 +8,7 @@ A blueprint is the configuration template from which workspaces are provisioned.
 
 When a user connects — over SSH, the Console, or the API — the Provisioner resolves the appropriate blueprint, renders it into a `values.yaml`, and uses it to create the workspace pod in Kubernetes. The blueprint is the single authoritative description of what a workspace looks like.
 
-![Bpueprint](svg-gen:drawings/blueprint.excalidraw.svg)
+![Blueprint](svg-gen:drawings/blueprint.excalidraw.svg)
 
 ## Blueprint types
 

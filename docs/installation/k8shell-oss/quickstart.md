@@ -15,8 +15,8 @@ curl -sSfL https://get.k8shell.io | bash
 Or download it first to inspect before running:
 
 ```bash
-curl -sSfL https://get.k8shell.io | -o k8shell-quickstrart.sh
-chmod +x k8shell-quickstrart.sh
+curl -sSfL https://get.k8shell.io -o k8shell-quickstart.sh
+chmod +x k8shell-quickstart.sh
 ./k8shell-quickstart.sh
 ```
 
@@ -49,13 +49,13 @@ The SSH server key and JWT issuer key must be stable across pod restarts and red
 
 ### Options
 
-| Flag | Default | Description |
-|---|---|---|
-| `-v`, `--version VERSION` | latest | Helm chart version |
-| `-n`, `--namespace NS` | `k8shell-system` | Release namespace |
-| `-t`, `--target-namespace NS` | `k8shell-workspaces` | Workspace target namespace |
-| `--node-port PORT` | `30022` | NodePort for SSH access |
-| `--disable-node-port` | — | Disable NodePort (use port-forward instead) |
+| Flag                          | Default              | Description                                 |
+| ----------------------------- | -------------------- | ------------------------------------------- |
+| `-v`, `--version VERSION`     | latest               | Helm chart version                          |
+| `-n`, `--namespace NS`        | `k8shell-system`     | Release namespace                           |
+| `-t`, `--target-namespace NS` | `k8shell-workspaces` | Workspace target namespace                  |
+| `--node-port PORT`            | `30022`              | NodePort for SSH access                     |
+| `--disable-node-port`         | —                    | Disable NodePort (use port-forward instead) |
 
 ## 2. Verify the installation
 
