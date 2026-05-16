@@ -12,13 +12,17 @@ interface TableData {
 }
 
 function renderInline(content: string): React.ReactNode[] {
-    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*)/);
+    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*|\*[^*]+\*)/);
     return parts.map((part, i) => {
         if (i % 2 === 1) {
             if (part.startsWith('`')) return <code key={i}>{part.slice(1, -1)}</code>;
             if (part.startsWith('**')) {
                 const inner = renderInline(part.slice(2, -2));
                 return <strong key={i}>{inner}</strong>;
+            }
+            if (part.startsWith('*')) {
+                const inner = renderInline(part.slice(1, -1));
+                return <em key={i}>{inner}</em>;
             }
         }
         return part || null;

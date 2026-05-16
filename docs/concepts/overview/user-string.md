@@ -4,23 +4,27 @@ sidebar_position: 4
 
 # User String
 
-The **User String** (`USERSTR`) is the user portion of the SSH connection string—the substring before the `@` delimiter. It is a compact identifier that represents a user together with an optional workspace specification. The workspace can be specified either as:
+The **User String** (`USERSTR`) is the user portion of the SSH connection string—the substring before the `@` delimiter. It is a compact identifier that represents a user together with an optional workspace specification. The workspace can be specified as:
 
 - an **explicit blueprint name** (`bp-name`), or
-- a **parameter list** (currently: `repo`, `ref`, `pr`) that describes a git-based blueprint.
+- a **parameter list** that describes a git-based or named workspace.
 
-## Grammar 
+## Grammar
 
 ```ebnf
 USERSTR        ::= USER [ "~" WS_SPEC ]
 
-WS_SPEC        ::= BP_NAME | PARAM_LIST
+WS_SPEC        ::= BP_FORM | PARAM_LIST
+
+; Blueprint form: first segment contains no "="
+BP_FORM        ::= BP_NAME *( "+" KV )
 BP_NAME        ::= <url-path-escaped string>      ; decoded with url.PathUnescape
 
+; Parameter-list form: all segments are key=value pairs
 PARAM_LIST     ::= KV *( "+" KV )
 KV             ::= KEY "=" VALUE
 
-KEY            ::= "repo" | "ref" | "pr"
+KEY            ::= "repo" | "ref" | "user" | "pod" | "ns" | "workload"
 VALUE          ::= <url-path-escaped string>      ; decoded with url.PathUnescape
 
 USER           ::= 1*( ALPHA / DIGIT / "_" / "-" )
@@ -38,68 +42,125 @@ USERSTR ::= ( "b64-" | "base64-" ) b64url-raw
 
 This token is decoded (base64url **raw**, **no padding**) into a plain `USERSTR`, which is then parsed normally.
 
+## Forms
+
+There are four distinct forms a user string can take:
+
+<StandardInlineTable data={`
+columns:
+  - header: Form
+    width: 120px
+  - header: Description
+rows:
+  - - "implicit"
+    - "*Implicit blueprint*: \`alice\` — username only; workspace is resolved from user defaults."
+  - - "explicit"
+    - "*Explicit blueprint*: \`alice~dev\` — blueprint name given literally after \`~\`. Optional \`workload\`, \`ns\`, and \`user\` params may follow."
+  - - "named"
+    - "*Named workspace*: \`alice~pod=ws1\` — targets a specific running workspace pod by name. Optional \`ns\` and \`user\` params allowed."
+  - - "repo"
+    - "*Repo workspace*: \`alice~repo=org/proj\` — git-based blueprint computed from repo. Optional \`ref\`, \`workload\`, \`ns\`, and \`user\` params allowed."
+`} />
+
+## Parameters
+
+<StandardInlineTable data={`
+columns:
+  - header: Key
+    width: 120px
+  - header: Forms
+    width: 120px
+  - header: Description
+rows:
+  - - "\`repo\`"
+    - "repo"
+    - "Repository in \`owner/name\` or bare \`name\` format. Owner defaults to username if omitted."
+  - - "\`ref\`"
+    - "repo"
+    - "Branch, tag, or commit ref."
+  - - "\`user\`"
+    - "all"
+    - "Override the OS user inside the workspace container."
+  - - "\`pod\`"
+    - "named"
+    - "Name of a specific running workspace pod to connect to."
+  - - "\`ns\`"
+    - "explicit, named, repo"
+    - "Kubernetes namespace. Required when \`workload\` is set; must not appear without \`workload\` (in blueprint and repo forms)."
+  - - "\`workload\`"
+    - "explicit, repo"
+    - "Kubernetes workload to inject into, in \`kind/name\` format (e.g. \`deployment/identity\`, \`statefulset/postgres\`, \`daemonset/agent\`). Must be paired with \`ns\`."
+`} />
+
 ## Parsing, decoding, and normalization rules
 
-<div class="ssh-table">
+<StandardInlineTable data={`
+columns:
+  - header: Rule
+    width: 180px
+  - header: Description
+rows:
+  - - "Whitespace"
+    - "Leading/trailing whitespace is trimmed before parsing."
+  - - "Case: username"
+    - "Usernames are normalized to lowercase."
+  - - "Case: keys"
+    - "Parameter keys are normalized to lowercase."
+  - - "Case: values"
+    - "All parameter values are normalized to lowercase."
+  - - "Form detection"
+    - "If the first segment after \`~\` contains **no** \`=\`, it is treated as a blueprint name. Otherwise all segments are treated as \`key=value\` pairs."
+  - - "Percent-decoding"
+    - "\`url.PathUnescape\` is applied to blueprint names and to all parameter values (not keys)."
+  - - "Slash \`/\` in values"
+    - "\`/\` is allowed inside values (e.g. \`repo=org/proj\`, \`workload=Deployment/identity\`). When encoded as \`%2F\` it is decoded back to \`/\`."
+  - - "Reserved delimiters"
+    - "\`@\`, \`~\`, \`+\`, \`=\` are syntax delimiters. To use them literally inside a value, percent-encode them (\`%40\`, \`%7E\`, \`%2B\`, \`%3D\`)."
+  - - "\`workload\` + \`ns\`"
+    - "\`workload\` and \`ns\` must always appear together."
+  - - "\`pod\` exclusivity"
+    - "\`pod\` cannot be combined with \`repo\` or \`workload\`."
+  - - "Maximum length"
+    - "Total user string length ≤ 128 characters."
+`} />
 
-| Rule | Description |
-|------|-------------|
-| Whitespace | Leading/trailing whitespace is trimmed before parsing. |
-| Case: username | Usernames are normalized to lowercase. |
-| Workspace spec selection | If the part after `~` contains **no** `=`, it is treated as a blueprint name (`bp-name`). Otherwise it is treated as a parameter list. |
-| Percent-decoding | Apply **url.PathUnescape** to **blueprint names** and **values** (not keys). |
-| Key normalization | Keys are converted to lowercase. |
-| Allowed keys | Only `repo`, `ref`, `pr` are allowed. Any other key is an error. |
-| Slash `/` in values | `/` is allowed inside values. When encoded as `%2F`, it is decoded back to `/`. |
-| Reserved delimiters | `@`, `~`, `+`, `=` are delimiters in the syntax. If you need them literally **inside a value**, percent-encode them (e.g. `%40`, `%7E`, `%2B`, `%3D`). |
-| Mutual exclusion | `ref` and `pr` cannot both be specified. |
-| `pr` validation | If present, `pr` must be a base-10 integer (> 0). |
-| Maximum length | Total user string length ≤ 128 characters. |
-
-</div>
-
-:::info
-Some clients require certain characters in the user string to be URL-encoded.
-For example, Visual Studio Code’s `code` CLI and `scp` may require the slash (`/`) character to be percent-encoded, whereas the standard `ssh` CLI often accepts it without encoding.
-:::
+> **Note:** Some clients require certain characters in the user string to be URL-encoded.
+> For example, Visual Studio Code's `code` CLI and `scp` may require the slash (`/`) character to be percent-encoded, whereas the standard `ssh` CLI often accepts it without encoding.
 
 ## Semantics
 
-### Blueprint form
+### Implicit form
 
-If `WS_SPEC` is a blueprint name (no `=` present), it is decoded with `url.PathUnescape` and used as an **explicit** blueprint.
+No workspace spec is given. The workspace blueprint is resolved from the user's default settings.
 
-### Parameter-list form
+### Explicit blueprint form
 
-- Parameters are parsed as `key=value` pairs separated by `+`.
-- Values are decoded using `url.PathUnescape`.
-- Only keys `repo`, `ref`, `pr` are accepted.
-- `repo` determines the git blueprint source and therefore the computed blueprint name.
+The first segment after `~` (no `=` present) is decoded with `url.PathUnescape` and used as an **explicit** blueprint name. The optional `workload` and `ns` params target a specific Kubernetes workload within a namespace.
 
-#### `repo` value format
+### Named workspace form
 
-`repo` may be either:
+`pod` is the primary key. The value is the name of a specific running workspace pod. `ns` may optionally narrow the namespace. Cannot be combined with `repo` or `workload`.
 
-- `repo=<name>`  
-  In this case, the repository owner defaults to the **username**.
-- `repo=<owner>/<name>`
+### Repo workspace form
 
-When `repo` is present and parsed successfully, the computed blueprint name becomes:
+- `repo` determines the git blueprint source.
+- Owner defaults to the username when `repo=<name>` (no slash).
+- `repo=<owner>/<name>` sets both owner and name explicitly.
+- The computed blueprint name is `repo-<repoOwner>-<repoName>`.
+- `ref` pins a branch, tag, or commit.
+- `workload` and `ns` (paired) target a specific Kubernetes workload.
 
-- `repo-<repoOwner>-<repoName>`
+### `workload` value format
 
-#### `ref` and `pr`
+The `workload` value uses the format `kind/name`, where `kind` is the lowercase Kubernetes resource kind and `name` is the resource name:
 
-- `ref` is a branch/tag ref string.
-- `pr` is a pull request number.
+```
+workload=deployment/identity
+workload=statefulset/postgres
+workload=daemonset/agent
+```
 
-You may specify **at most one** of `ref` and `pr`.
-
-:::info
-In canonicalization (outside of pure parsing), a `pr` is resolved into a `ref` via a resolver, and the resolved `ref` can be used for workspace identity. The `pr` is treated as metadata/alias rather than identity.
-
-Pull request resolution is performed internally by the identity provider: a pull request number (`pr`) is resolved to a concrete git ref using a pull request resolver that calls the backing git service API (for example, the GitHub API).
-:::
+When `workload` is set, no workspace name is generated — the workload itself is the injection target.
 
 ## Examples
 
@@ -109,8 +170,7 @@ Pull request resolution is performed internally by the identity provider: a pull
 alice
 ```
 
-- `USER=alice`
-- No workspace spec → implicit blueprint (default from user settings).
+- `username=alice`, no workspace spec → implicit blueprint.
 
 ### Explicit blueprint name
 
@@ -118,8 +178,16 @@ alice
 bob~dev
 ```
 
-- `USER=bob`
-- `BP_NAME=dev` (decoded via `url.PathUnescape`)
+- `username=bob`, `blueprint=dev`.
+
+### Explicit blueprint with workload injection
+
+```text
+bob~dev+workload=Deployment%2Fidentity+ns=team-a
+```
+
+- `username=bob`, `blueprint=dev`
+- `workloadKind=deployment`, `workloadName=identity`, `namespace=team-a`
 
 ### Git-based blueprint
 
@@ -127,51 +195,48 @@ bob~dev
 carol~repo=myorg%2Fproject1
 ```
 
-After decoding:
+- `username=carol`, `repoOwner=myorg`, `repoName=project1`
+- computed `blueprint=repo-myorg-project1`
 
-- `USER=carol`
-- `repoOwner=myorg`
-- `repoName=project1`
-- computed `BP_NAME=repo-myorg-project1`
-- `ref` blank, `pr` blank
-
-### Git-based blueprint with explicit ref
+### Git-based blueprint with ref
 
 ```text
 eve~repo=acme/portal+ref=v1.2
 ```
 
-- `USER=eve`
-- `repoOwner=acme`
-- `repoName=portal`
-- `ref=v1.2`
-- computed `BP_NAME=repo-acme-portal`
+- `username=eve`, `repoOwner=acme`, `repoName=portal`, `repoRef=v1.2`
+- computed `blueprint=repo-acme-portal`
 
-### Git-based blueprint with pull request
+### Git-based blueprint with workload injection
 
 ```text
-dan~repo=acme/portal+pr=123
+alice~repo=org/proj+workload=Deployment%2Fidentity+ns=k8s-test
 ```
 
-- `USER=dan`
-- `repoOwner=acme`
-- `repoName=portal`
-- `pr=123`
-- `ref` must be absent.
+- `username=alice`, `repoOwner=org`, `repoName=proj`
+- `workloadKind=deployment`, `workloadName=identity`, `namespace=k8s-test`
+- computed `blueprint=repo-org-proj`
 
-### Base64-wrapped whole user string
+### Named workspace (pod)
 
-If a client cannot safely pass delimiters, wrap the entire user string:
+```text
+alice~pod=workspace1+ns=team-a
+```
+
+- `username=alice`, `pod=workspace1`, `namespace=team-a`
+
+### Override container user
+
+```text
+alice~dev+user=root
+```
+
+- `username=alice`, `blueprint=dev`, container OS user overridden to `root`.
+
+### Base64-wrapped user string
 
 ```text
 b64-ZXZlfnJlcG89YWNtZS9wb3J0YWwrcmVmPXYxLjI
 ```
 
-This decodes to:
-
-```text
-eve~repo=acme/portal+ref=v1.2
-```
-
-The decoded user string is then parsed normally.
-
+Decodes to `eve~repo=acme/portal+ref=v1.2`, then parsed normally.
