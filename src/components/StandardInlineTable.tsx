@@ -12,7 +12,7 @@ interface TableData {
 }
 
 function renderInline(content: string): React.ReactNode[] {
-    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*|\*[^*]+\*)/);
+    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/);
     return parts.map((part, i) => {
         if (i % 2 === 1) {
             if (part.startsWith('`')) return <code key={i}>{part.slice(1, -1)}</code>;
@@ -24,6 +24,8 @@ function renderInline(content: string): React.ReactNode[] {
                 const inner = renderInline(part.slice(1, -1));
                 return <em key={i}>{inner}</em>;
             }
+            const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+            if (linkMatch) return <a key={i} href={linkMatch[2]}>{linkMatch[1]}</a>;
         }
         return part || null;
     });

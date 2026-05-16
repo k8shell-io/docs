@@ -143,7 +143,6 @@ Available Commands:
   shutdown    Shutdown the workspace
   splash      Display the workspace splash message
   streams     Display streams
-  tools-init  Generate wrapper scripts for system tools
   uptime      Display workspace uptime
   user        Display user information
   validate    Validate k8shell file
