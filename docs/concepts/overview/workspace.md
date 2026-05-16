@@ -4,7 +4,27 @@ sidebar_position: 3
 
 # Workspace
 
-A workspace is an isolated Linux environment running as a Kubernetes pod, provisioned for a specific user according to a [blueprint](./blueprint.md). Users access it over SSH, through the browser-based Console, or via the API Server. Inside the workspace, users can write and run code, build containers, interact with Git repositories, and use their preferred development tools — exactly as they would on a local machine.
+A workspace is an isolated Linux environment provisioned for a specific user according to a [blueprint](./blueprint.md). Users access it over SSH, through the browser-based Console, or via the API Server. Inside the workspace, users can write and run code, build containers, interact with Git repositories, and use their preferred development tools — exactly as they would on a local machine.
+
+## Deployment modes
+
+A workspace can be deployed in two ways:
+
+**Standalone pod** — the platform creates a dedicated Kubernetes pod for the workspace. This is the default mode and gives the workspace full control over the pod spec, including optional sidecars, storage mounts, and resource limits defined in the blueprint.
+
+**Injected into an existing workload** — rather than creating a new pod, k8shell injects the workspace into an already-running workload: a Deployment, StatefulSet, or DaemonSet. The workspace runs inside an existing pod alongside the workload's own containers. This is useful when a user needs interactive access to an environment that must be embedded in an existing workload — for example, to debug a running service or work within a constrained execution context.
+
+:::note
+When injected into a scalable workload such as a Deployment, the workspace scales with it. Each replica runs an independent instance of the workspace — meaning there can be multiple simultaneous instances of the "same" workspace, one per pod. Users connected to different replicas are in separate environments and do not share state.
+:::
+
+### Injection limitations
+
+When a workspace is injected into an existing workload, the following limitations apply:
+
+- **No Podman sidecar** — the Podman container runtime sidecar cannot be added to an existing pod, so container build and run capabilities are unavailable.
+- **Network policies not applied** — network policies defined in the blueprint are not enforced; the existing workload's network configuration takes precedence.
+- **No exclusive local storage** — local persistent volumes mounted under the user home directory may be shared across multiple pod replicas simultaneously. There is no mechanism to guarantee exclusive access, which can lead to data corruption if multiple workspace instances write to the same volume concurrently.
 
 ## Pod structure
 
