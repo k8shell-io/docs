@@ -11,6 +11,7 @@ program
   .requiredOption('--color <hexOrRgb>', 'boundary color (e.g., "#ff0000" or "rgb(255,0,0)")')
   .option('--prefer <attr>', 'choose "stroke" or "fill" for boundary detection', 'stroke')
   .option('--pad <number>', 'pad the boundary bbox on all sides', v => parseFloat(v), 0)
+  .option('--links <file>', 'JSON file mapping label text to URL for clickable regions')
   .parse(process.argv);
 
 const opts = program.opts();
@@ -263,6 +264,122 @@ function expandBBox([x1, y1, x2, y2], pad) {
   return [x1 - pad, y1 - pad, x2 + pad, y2 + pad];
 }
 
+// ---------- Link overlay helpers ----------
+
+function unionBBox(b1, b2) {
+  return [Math.min(b1[0], b2[0]), Math.min(b1[1], b2[1]), Math.max(b1[2], b2[2]), Math.max(b1[3], b2[3])];
+}
+
+function normalizeText(str) {
+  return (str || '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+// Cumulative translation from all ancestors above el (not including el's own transform)
+function getAncestorTranslation($, el) {
+  let tx = 0, ty = 0;
+  let node = el.parent;
+  while (node && node.type === 'tag') {
+    const { tx: ltx, ty: lty } = parseTranslateFromTransform($(node).attr('transform') || '');
+    tx += ltx;
+    ty += lty;
+    node = node.parent;
+  }
+  return { tx, ty };
+}
+
+// Union bbox of all shape (non-text) leaf descendants of groupEl, in original SVG coordinates
+function computeGroupUnionBBox($, groupEl) {
+  const { tx: ancTx, ty: ancTy } = getAncestorTranslation($, groupEl);
+  const { tx: grpTx, ty: grpTy } = parseTranslateFromTransform($(groupEl).attr('transform') || '');
+  const baseTx = ancTx + grpTx;
+  const baseTy = ancTy + grpTy;
+
+  let union = null;
+
+  // Visit descendant nodes; cumTx/cumTy is the translation from all ancestors above the node
+  function visitNode(el, cumTx, cumTy) {
+    if (el.type !== 'tag') return;
+    const tag = getTagName(el).toLowerCase();
+    if (tag === 'defs') return;
+
+    // Shapes only — exclude text (point bbox) to get the visual shape boundary
+    const isShape = /^(path|rect|circle|ellipse|line|polyline|polygon|image)$/.test(tag);
+    if (isShape) {
+      const bb = computeLeafBBox($, el, cumTx, cumTy);
+      if (bb) union = union ? unionBBox(union, bb) : bb;
+      return;
+    }
+
+    // Recurse into groups, passing this node's full cumulative translation to children
+    const $el = $(el);
+    const { tx: ltx, ty: lty } = parseTranslateFromTransform($el.attr('transform') || '');
+    const ntx = cumTx + ltx;
+    const nty = cumTy + lty;
+    $el.children().toArray().forEach(child => visitNode(child, ntx, nty));
+  }
+
+  $(groupEl).children().toArray().forEach(child => visitNode(child, baseTx, baseTy));
+  return union;
+}
+
+// For each label in linksMap, find its shape group bbox using spatial matching.
+// Excalidraw SVGs use a flat structure where text labels and shape groups are siblings,
+// so we compute the text element's absolute position and find the smallest shape-group
+// bbox that contains it.
+function resolveLinkOverlays($, $svg, linksMap) {
+  const overlays = [];
+  const allText = $svg.find('text').toArray();
+
+  // Pre-compute bboxes for all shape-containing <g> elements
+  const allShapeGroups = $svg.find('g').toArray().filter(g =>
+    $(g).find('path, rect, circle, ellipse, polygon, polyline').length > 0
+  );
+
+  for (const [label, url] of Object.entries(linksMap)) {
+    const normalized = normalizeText(label);
+    const textEl = allText.find(el => normalizeText($(el).text()) === normalized);
+    if (!textEl) {
+      console.warn(`[extract-by-boundary] Warning: no text element found for label "${label}"`);
+      continue;
+    }
+
+    // Compute text element's absolute position in original SVG coordinates.
+    // getAncestorTranslation starts from textEl.parent and walks up, so it captures
+    // the cumulative translation from the immediate parent group onward.
+    const textLocalX = parseFloat($(textEl).attr('x') || '0');
+    const textLocalY = parseFloat($(textEl).attr('y') || '0');
+    const { tx: textOwnTx, ty: textOwnTy } = parseTranslateFromTransform($(textEl).attr('transform') || '');
+    const { tx: ancTx, ty: ancTy } = getAncestorTranslation($, textEl);
+    const textAbsX = ancTx + textOwnTx + textLocalX;
+    const textAbsY = ancTy + textOwnTy + textLocalY;
+
+    // Find the smallest shape-group bbox that contains the text point
+    let bestBBox = null;
+    let bestArea = Infinity;
+
+    for (const g of allShapeGroups) {
+      const bbox = computeGroupUnionBBox($, g);
+      if (!bbox) continue;
+      const [x1, y1, x2, y2] = bbox;
+      if (textAbsX >= x1 && textAbsX <= x2 && textAbsY >= y1 && textAbsY <= y2) {
+        const area = (x2 - x1) * (y2 - y1);
+        if (area < bestArea) {
+          bestArea = area;
+          bestBBox = bbox;
+        }
+      }
+    }
+
+    if (!bestBBox) {
+      console.warn(`[extract-by-boundary] Warning: no shape group bbox contains text position for label "${label}" (text at ${textAbsX.toFixed(1)}, ${textAbsY.toFixed(1)})`);
+      continue;
+    }
+
+    overlays.push({ label, url, bbox: bestBBox });
+  }
+  return overlays;
+}
+
 // ---------- Main ----------
 try {
   const raw = fs.readFileSync(inputPath, 'utf8');
@@ -298,6 +415,19 @@ try {
     }
   });
 
+  // 2c) Resolve link overlays in original coordinate space (before rebasing)
+  let linkOverlays = [];
+  if (opts.links) {
+    const linksPath = path.resolve(opts.links);
+    let linksMap;
+    try {
+      linksMap = JSON.parse(fs.readFileSync(linksPath, 'utf8'));
+    } catch (e) {
+      throw new Error(`Failed to read links file ${linksPath}: ${e.message}`);
+    }
+    linkOverlays = resolveLinkOverlays($, $svg, linksMap);
+  }
+
   // 3) Rebase to origin: move all non-<defs> into a translated group (-rx1, -ry1)
   const $contentGroup = $('<g/>').attr('transform', `translate(${-rx1}, ${-ry1})`);
   $svg.children().toArray().forEach(node => {
@@ -306,6 +436,22 @@ try {
     if (tag === 'defs') return; // keep defs at root
     $contentGroup.append($(node)); // move
   });
+
+  // 3b) Append clickable overlay rects on top of content (original coords; group's transform handles offset)
+  for (const { url, bbox } of linkOverlays) {
+    const [ex1, ey1, ex2, ey2] = bbox;
+    const ew = ex2 - ex1;
+    const eh = ey2 - ey1;
+    if (ew <= 0 || eh <= 0) continue;
+    const $aEl = $('<a/>').attr('href', url);
+    const $rectEl = $('<rect/>').attr('x', ex1).attr('y', ey1)
+      .attr('width', ew).attr('height', eh)
+      .attr('fill', 'transparent').attr('stroke', 'none')
+      .attr('style', 'cursor:pointer');
+    $aEl.append($rectEl);
+    $contentGroup.append($aEl);
+  }
+
   $svg.append($contentGroup);
 
   // 4) Normalize viewBox to 0 0 w h; optional snap to integers if desired

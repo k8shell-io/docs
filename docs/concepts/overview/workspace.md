@@ -102,5 +102,3 @@ For more details, see [Storage](../workspace/storage.md).
 ## Lifecycle
 
 A workspace pod exists for as long as it is needed. It can be stopped and restarted — persistent volumes are retained across restarts so the user's files and state are preserved. When a workspace is deleted via `kbox shutdown --delete` or through the Console, the workspace is deleted. Depending on the storage configuration, volumes may be retained for later re-provisioning or cleaned up.
-
-For more details, see [Lifecycle](../workspace/lifecycle.md).

@@ -4,6 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import remarkDirective from 'remark-directive';
 import numberedList from './plugins/remark-numberedlist.mjs';
 import excalidrawGen from './plugins/remark-excalidraw-gen.mjs';
+import rehypeRaw from 'rehype-raw';
 
 const config: Config = {
     title: 'K8Shell Documentation',
@@ -36,6 +37,17 @@ const config: Config = {
                             // color: '#ff0000',
                             // pad: 0,
                             // prefer: 'stroke',
+                        }],
+                    ],
+                    rehypePlugins: [
+                        [rehypeRaw, {
+                            passThrough: [
+                                'mdxJsxFlowElement',
+                                'mdxJsxTextElement',
+                                'mdxjsEsm',
+                                'mdxFlowExpression',
+                                'mdxTextExpression',
+                            ],
                         }],
                     ],
                     routeBasePath: '/',

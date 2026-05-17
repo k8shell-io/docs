@@ -432,6 +432,8 @@ h4 {
 /* =========================================
    Excalidraw SVG – dark mode white card
    ========================================= */
+
+/* <img> path (no links sidecar) */
 [data-theme='dark'] p:has(img[src*="/img/gen-svg/"]) {
     background: #a0a0a0;
     border-radius: 16px;
@@ -440,6 +442,27 @@ h4 {
 }
 
 [data-theme='dark'] img[src*="/img/gen-svg/"] {
+    border-radius: 4px;
+}
+
+/* Inlined <svg> path (links sidecar present) */
+.excalidraw-diagram {
+    text-align: center;
+}
+
+.excalidraw-diagram svg {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}
+
+[data-theme='dark'] .excalidraw-diagram {
+    background: #a0a0a0;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+[data-theme='dark'] .excalidraw-diagram svg {
     border-radius: 4px;
 }
 

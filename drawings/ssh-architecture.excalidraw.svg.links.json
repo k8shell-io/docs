@@ -1,0 +1,8 @@
+{
+  "Session": "/concepts/session/",
+  "SSH Shield": "/concepts/ssh-shield/",
+  "Provisioner": "/concepts/provisioner/",
+  "Identity": "/concepts/identity/",
+  "k8shelld": "/concepts/workspace/",
+  "SSH Proxy": "/concepts/ssh-proxy/"
+}

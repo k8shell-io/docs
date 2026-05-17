@@ -7,6 +7,10 @@ import { visit } from 'unist-util-visit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function escapeHtmlAttr(str) {
+  return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function getSvgSize(filePath) {
   try {
     const svg = fs.readFileSync(filePath, 'utf8');
@@ -55,9 +59,13 @@ export default function excalidrawGenPlugin(userOpts = {}) {
       const outPath = path.join(OUT_DIR, outName);
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
 
+      const linksPath = `${inPath}.links.json`;
+      const hasLinks = fs.existsSync(linksPath);
+
       const need =
         !fs.existsSync(outPath) ||
-        fs.statSync(outPath).mtimeMs < fs.statSync(inPath).mtimeMs;
+        fs.statSync(outPath).mtimeMs < fs.statSync(inPath).mtimeMs ||
+        (hasLinks && fs.statSync(outPath).mtimeMs < fs.statSync(linksPath).mtimeMs);
 
       if (need) {
         const args = [
@@ -68,6 +76,7 @@ export default function excalidrawGenPlugin(userOpts = {}) {
           '--prefer', String(opts.prefer),
           '--pad', String(opts.pad),
         ];
+        if (hasLinks) args.push('--links', linksPath);
 
         // Use the same Node binary Docusaurus runs with
         const bin = process.execPath;
@@ -96,7 +105,7 @@ export default function excalidrawGenPlugin(userOpts = {}) {
         }
       }
 
-      return `/img/gen-svg/${outName}`;
+      return { publicUrl: `/img/gen-svg/${outName}`, outPath, hasLinks };
     };
 
     visit(tree, 'image', (node) => {
@@ -108,18 +117,29 @@ export default function excalidrawGenPlugin(userOpts = {}) {
         throw new Error(`[remark-excalidraw-gen] Unsupported svg-gen URL: ${url}`);
       }
 
-      const publicUrl = processOne(name);                // e.g. "/img/gen-svg/foo.svg"
-      const outPath = path.join(OUT_DIR, name.replace(/\.excalidraw\.svg$/i, '.svg'));
+      const { publicUrl, outPath, hasLinks } = processOne(name);
       const { width, height } = getSvgSize(outPath);
 
-      node.url = publicUrl;
-      node.data = node.data || {};
-      node.data.hProperties = {
-        ...(node.data.hProperties || {}),
-        ...(width && height ? { width, height } : {}),
-        decoding: 'async',
-        loading: 'lazy',
-      };
+      if (hasLinks) {
+        // Inline the SVG so that <a> elements inside it are interactive
+        const svgContent = fs.readFileSync(outPath, 'utf8');
+        const alt = node.alt || '';
+        node.type = 'html';
+        node.value = `<div class="excalidraw-diagram"${alt ? ` role="img" aria-label="${escapeHtmlAttr(alt)}"` : ''}${width && height ? ` style="max-width:${width}px"` : ''}>${svgContent}</div>`;
+        delete node.url;
+        delete node.alt;
+        delete node.title;
+        node.data = {};
+      } else {
+        node.url = publicUrl;
+        node.data = node.data || {};
+        node.data.hProperties = {
+          ...(node.data.hProperties || {}),
+          ...(width && height ? { width, height } : {}),
+          decoding: 'async',
+          loading: 'lazy',
+        };
+      }
     });
   };
 }
