@@ -46,7 +46,7 @@ When a workspace is provisioned from a repository that contains a `.k8shell.yaml
 
 The `ComposeWithScope` function:
 
-1. Takes the `CustomBlueprint` read from `.k8shell.yaml` (which specifies a platform blueprint via its `template` field)
+1. Takes the `CustomBlueprint` read from `.k8shell.yaml` (which specifies a [platform blueprint](blueprint.md) via its `template` field)
 2. Looks up the named platform blueprint in the already-resolved blueprint map
 3. Merges the custom blueprint's YAML node on top of the platform blueprint using the same rules as inheritance resolution
 4. Evaluates all CEL expressions in the merged result (see below)
@@ -73,7 +73,7 @@ rows:
     - "Authenticated user — username, UID/GID, roles, allowed blueprints"
   - - "\`workspaceName\`"
     - string
-    - The workspace canonical ID
+    - "The workspace [canonical ID](../overview/user-string#canonical-id)"
   - - "\`metadata\`"
     - object
     - "Blueprint name, repository owner/name, ref, remote address"

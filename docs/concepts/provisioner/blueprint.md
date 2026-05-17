@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Blueprint
 
-A blueprint is the configuration template from which workspaces are provisioned. It describes everything the Provisioner needs to create a workspace: the container image, compute resources, network policy, persistent volumes, environment variables, and optional services.
+A blueprint is the configuration template from which workspaces are provisioned. It describes everything the Provisioner needs to create a workspace: the container image, compute resources, network policy, persistent volumes, environment variables, and optional services. Blueprints are organized into [inheritance hierarchies](blueprint-manager.md#inheritance-resolution) and can be composed layer by layer, allowing common configuration to be defined once and reused across many concrete blueprints.
 
 ## Platform blueprint fields
 
@@ -36,9 +36,7 @@ rows:
   - - "\`image\`"
     - string
     - "Required. Workspace container image."
-  - - "\`imagePullSecret\`"
-    - string
-    - "Kubernetes image pull secret name."
+
   - - "\`imagePullPolicy\`"
     - string
     - "Image pull policy: \`Always\`, \`Never\`, or \`IfNotPresent\`. Default: \`IfNotPresent\`."
@@ -85,7 +83,7 @@ rows:
 
 ## Custom blueprint fields
 
-Custom blueprints are defined by developers in a `.k8shell.yaml` file at the root of their repository. A custom blueprint always references a platform blueprint as its parent via the `template` field and can override or extend a subset of its settings without requiring admin access. Custom blueprint defines following fileds. 
+Custom blueprints are defined by developers in a `.k8shell.yaml` file at the root of their repository. A custom blueprint always references a platform blueprint as its parent via the `template` field and can override or extend a subset of its settings without requiring admin access. Custom blueprint defines following fileds.
 
 <StandardInlineTable data={`
 columns:
@@ -129,6 +127,10 @@ rows:
     - map
     - "App definitions. See [Apps](#apps)."
 `} />
+
+:::info
+The division between platform and custom blueprint fields is deliberate. Fields that control security-sensitive configuration — such as Linux capabilities, security contexts, and k8shelld settings — are only available to platform administrators. Custom blueprints are intentionally limited to workload-level concerns, ensuring that developer-defined blueprints cannot circumvent platform security policy.
+::: 
 
 ## k8shelld
 
