@@ -74,7 +74,7 @@ columns:
 rows:
   - - "\`repo\`"
     - "repo"
-    - "Repository in \`owner/name\` or bare \`name\` format. Owner defaults to username if omitted."
+    - "Repository in \`owner/name\` or bare \`name\` format. Owner defaults to username if omitted. The computed blueprint name is \`repo-<owner>-<name>\`."
   - - "\`ref\`"
     - "repo"
     - "Branch, tag, or commit ref."
@@ -124,43 +124,36 @@ rows:
     - "Total user string length ≤ 128 characters."
 `} />
 
-> **Note:** Some clients require certain characters in the user string to be URL-encoded.
-> For example, Visual Studio Code's `code` CLI and `scp` may require the slash (`/`) character to be percent-encoded, whereas the standard `ssh` CLI often accepts it without encoding.
+:::note
+Some clients require certain characters in the user string to be URL-encoded. For example, Visual Studio Code's `code` CLI and `scp` may require the slash (`/`) character to be percent-encoded, whereas the standard `ssh` CLI often accepts it without encoding.
+:::
 
-## Semantics
+## Canonical ID
 
-### Implicit form
-
-No workspace spec is given. The workspace blueprint is resolved from the user's default settings.
-
-### Explicit blueprint form
-
-The first segment after `~` (no `=` present) is decoded with `url.PathUnescape` and used as an **explicit** blueprint name. The optional `workload` and `ns` params target a specific Kubernetes workload within a namespace.
-
-### Named workspace form
-
-`pod` is the primary key. The value is the name of a specific running workspace pod. `ns` may optionally narrow the namespace. Cannot be combined with `repo` or `workload`.
-
-### Repo workspace form
-
-- `repo` determines the git blueprint source.
-- Owner defaults to the username when `repo=<name>` (no slash).
-- `repo=<owner>/<name>` sets both owner and name explicitly.
-- The computed blueprint name is `repo-<repoOwner>-<repoName>`.
-- `ref` pins a branch, tag, or commit.
-- `workload` and `ns` (paired) target a specific Kubernetes workload.
-
-### `workload` value format
-
-The `workload` value uses the format `kind/name`, where `kind` is the lowercase Kubernetes resource kind and `name` is the resource name:
+Each workspace is assigned a deterministic canonical ID derived from the user string. The format is:
 
 ```
-workload=deployment/identity
-workload=statefulset/postgres
-workload=daemonset/agent
+{username}-{hash}
 ```
 
-When `workload` is set, no workspace name is generated — the workload itself is the injection target.
+Where `{hash}` is the first 7 hex characters of a SHA-256 hash computed over the canonical key. The canonical key is constructed from the fields present in the user string:
+
+- `username` — always included
+- `repo` — repository owner and name (if specified)
+- `ref` — branch or tag reference (if specified)
+- `bp` — blueprint name (if included)
+- `workload` — workload kind and name (if injecting into an existing workload)
+- `ns` — namespace (if specified)
+
+The key format is `u={username}|r={owner}/{name}|ref={ref}|bp={blueprint}|workload={kind}/{name}|ns={namespace}`, with fields omitted if not present. This ensures that the same user string always resolves to the same canonical ID, while different user strings produce distinct IDs.
+
+The canonical ID is used as the pod name in the standalone model, as the Helm release name, and as the prefix for all injected resources in the injection model. Workspaces are tracked by their canonical key internally; the hash is purely for naming.
+
+**Examples:**
+
+- User `alice` with no repo: `alice-a3b5c7d`
+- User `alice` with repo `k8shell-io/docs` on branch `main`: `alice-e8f2a1c`
+- User `alice` with same repo on branch `dev`: `alice-9d4b2e6`
 
 ## Examples
 

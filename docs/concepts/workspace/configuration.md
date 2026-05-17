@@ -11,30 +11,7 @@ A workspace pod is configured through a combination of a runtime configuration f
 
 A workspace name is always the name of the pod the workspace runs in. In the **standalone model** the pod is created by the provisioner and its name equals the workspace canonical ID (e.g. `alice-a3b5c7d`). In the **injection model** the workspace runs inside a pod owned by the target workload, so the workspace name is that pod's name (e.g. `identity-6d7f9c8b4-xkpqr`).
 
-Workspace canonical IDs are deterministic and derived from the workspace identity. The format is:
-
-```
-{username}-{hash}
-```
-
-Where `{hash}` is the first 7 hex characters of a SHA-256 hash computed over the canonical key. The canonical key is constructed from:
-
-- `username` — always included
-- `repo` — repository owner and name (if specified)
-- `ref` — branch or tag reference (if specified)
-- `bp` — blueprint name (if included in identity)
-- `workload` — workload kind and name (if injecting into an existing workload)
-- `ns` — namespace (if specified)
-
-The key format is `u={username}|r={owner}/{name}|ref={ref}|bp={blueprint}|workload={kind}/{name}|ns={namespace}`, with fields omitted if not present. This ensures that workspaces with the same identity parameters always resolve to the same name, while different identities produce distinct names.
-
-**Examples:**
-
-- User `alice` with no repo: `alice-a3b5c7d`
-- User `alice` with repo `k8shell-io/docs` on branch `main`: `alice-e8f2a1c`
-- User `alice` with same repo on branch `dev`: `alice-9d4b2e6`
-
-The hash keeps names short and Kubernetes-safe while maintaining uniqueness. Workspaces are tracked by their canonical key internally; the hash is purely for naming the pod and related resources.
+For how canonical IDs are derived from the user string, see [Canonical ID](../overview/user-string.md#canonical-id).
 
 ## Main configuration
 
