@@ -36,7 +36,9 @@ RBAC policies and identity provider integration are covered in detail in the [Id
 
 ## No credentials stored in workspaces
 
-No credentials are written to the workspace filesystem. Instead, k8shell provides credential helpers for the tools that need them — git, Docker, and Helm retrieve credentials on-demand by calling the API Server, which validates the workspace's JWT and returns the appropriate credential. Credentials are never cached on disk.
+No credentials are written to the workspace filesystem. Instead, k8shell provides credential helpers for the tools that need them — git, Docker, and kubectl retrieve credentials on-demand by calling the API Server, which validates the workspace's JWT and returns the appropriate credential. Credentials are not cached on disk.
+
+For more details, see [Credential Helpers](/concepts/workspace/access#credential-helpers)
 
 For SSH authentication to external hosts, k8shell supports standard SSH agent forwarding (`ssh -A`). When enabled, signing requests are forwarded back to the agent on the client machine — the private key never leaves the client.
 
