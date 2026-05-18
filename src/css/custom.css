@@ -3,6 +3,7 @@
    ========================================= */
 :root {
     --docs-link-color: #007bff;
+    --docs-link-color-dark: #0060c7;
     --docs-toc-hover-color: rgba(0, 123, 255, 0.15);
     /* right sidebar hover bg */
     --docs-max-width: 1440px;
@@ -10,7 +11,7 @@
 
 [data-theme='dark'] {
     --docs-link-color: #4db8ff;
-    --docs-toc-hover-color: #4db8ff;
+    --docs-link-color-dark: #0060c7;
     /* right sidebar hover bg */
     --ifm-link-color: var(--docs-link-color);
     --ifm-link-hover-color: var(--docs-link-color);
@@ -464,6 +465,13 @@ h4 {
 
 [data-theme='dark'] .excalidraw-diagram svg {
     border-radius: 4px;
+}
+
+.excalidraw-diagram a:hover text {
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    cursor: pointer;
+    fill: var(--docs-link-color-dark) !important;
 }
 
 /* [data-theme='dark'] img[src*="/img/gen-svg/"] {

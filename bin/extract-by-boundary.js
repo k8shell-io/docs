@@ -375,7 +375,7 @@ function resolveLinkOverlays($, $svg, linksMap) {
       continue;
     }
 
-    overlays.push({ label, url, bbox: bestBBox });
+    overlays.push({ label, url, bbox: bestBBox, textGroup: textEl.parent });
   }
   return overlays;
 }
@@ -437,13 +437,23 @@ try {
     $contentGroup.append($(node)); // move
   });
 
-  // 3b) Append clickable overlay rects on top of content (original coords; group's transform handles offset)
-  for (const { url, bbox } of linkOverlays) {
+  // 3b) Append link anchors on top of content.
+  // Each <a> contains the label's text group (so CSS :hover can reach <text> children
+  // for underline styling) plus a transparent overlay rect that makes the entire shape
+  // area clickable. The text group is detached from its original position and re-appended
+  // here; since text labels are already the topmost visual layer in Excalidraw SVGs this
+  // does not change the rendered appearance.
+  for (const { url, bbox, textGroup } of linkOverlays) {
     const [ex1, ey1, ex2, ey2] = bbox;
     const ew = ex2 - ex1;
     const eh = ey2 - ey1;
     if (ew <= 0 || eh <= 0) continue;
     const $aEl = $('<a/>').attr('href', url);
+    // Move the text's parent <g> inside the <a> so CSS hover reaches <text> nodes
+    if (textGroup && textGroup.type === 'tag') {
+      const $textGroup = $(textGroup).remove();
+      $aEl.append($textGroup);
+    }
     const $rectEl = $('<rect/>').attr('x', ex1).attr('y', ey1)
       .attr('width', ew).attr('height', eh)
       .attr('fill', 'transparent').attr('stroke', 'none')
