@@ -9,8 +9,6 @@ blueprint:
   network:
     networkPolicy: system
   apps:
-    jupyter:
-      enabled: false
     vscode:
       enabled: false
       autoStart: true
