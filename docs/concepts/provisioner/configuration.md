@@ -303,8 +303,8 @@ A `Role` and `RoleBinding` are created in `targetNamespace` to allow the Provisi
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: provisioner
-  namespace: <targetNamespace>
+  name: provisioner-inject-<injectNamespace>
+  namespace: <injectNamespace>
 rules:
   - apiGroups: ["", "apps", "metrics.k8s.io"]
     resources:
@@ -339,20 +339,6 @@ rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificates"]
     verbs: ["create", "delete", "get", "list", "watch", "update", "patch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: provisioner
-  namespace: <targetNamespace>
-subjects:
-  - kind: ServiceAccount
-    name: provisioner
-    namespace: <provisioner-namespace>
-roleRef:
-  kind: Role
-  name: provisioner
-  apiGroup: rbac.authorization.k8s.io
 ```
 
 The `cilium.io` rule is added only when a `CiliumNetworkPolicy` CRD is detected in the cluster. The `cert-manager.io` rule is added only when `certManager.enabled` is `true`.
@@ -360,6 +346,12 @@ The `cilium.io` rule is added only when a `CiliumNetworkPolicy` CRD is detected 
 ### Injection namespaces
 
 A `Role` and `RoleBinding` are created in each namespace listed in `injectNamespaces`, granting the Provisioner the permissions it needs to inject and eject workspaces in that namespace.
+
+:::warning
+Injection namespaces are often owned by third-party applications that manage their own desired state. If such a tool has sync or reconciliation enabled, it may delete or overwrite the `Role` and `RoleBinding` that the Provisioner creates, causing injection to fail silently or with permission errors.
+
+For example, if the namespace is managed by [Argo CD](https://argo-cd.readthedocs.io/) with automated sync enabled, Argo CD will treat the Provisioner-created resources as out-of-band and prune them on the next sync cycle. To avoid this, either exclude the Provisioner-managed resources from Argo CD's sync scope (e.g. using resource exclusions or the `argocd.argoproj.io/managed-by` annotation) or disable automated pruning for the affected namespace.
+:::
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -389,20 +381,6 @@ rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificates"]
     verbs: ["get", "create", "update", "delete"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: provisioner-inject
-  namespace: <injectNamespace>
-subjects:
-  - kind: ServiceAccount
-    name: provisioner
-    namespace: <provisioner-namespace>
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: provisioner-inject
 ```
 
 One `Role` and `RoleBinding` pair is created per namespace. Namespaces are determined by the `injectNamespaces` configuration field.
