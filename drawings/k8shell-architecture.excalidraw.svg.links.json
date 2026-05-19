@@ -4,7 +4,7 @@
   "Identity": "/concepts/identity/",
   "Session": "/concepts/session/",
   "Provisioner": "/concepts/provisioner/",
-  "k8shelld": "/concepts/k8shelld/",
+  "k8shelld": "/concepts/workspace/",
   "SSH Shield": "/concepts/ssh-shield/",
   "Worktrace": "/concepts/worktrace/"
 }

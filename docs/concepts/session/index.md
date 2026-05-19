@@ -3,6 +3,6 @@ sidebar_custom_props:
   earlyAccess: true
 ---
 
-# Ssession Service <EarlyAccessBadge />
+# Session Service <EarlyAccessBadge />
 
 TODO

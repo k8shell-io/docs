@@ -176,6 +176,15 @@ function computeLeafBBox($, el, cumTx, cumTy) {
       const w = num($el.attr('width'));
       const h = num($el.attr('height'));
       return addTranslateToBBox([x, y, x + w, y + h], tx, ty);
+    } else if (tag === 'use') {
+      // <use> references a <symbol> in <defs> (used by Excalidraw for pasted images).
+      // Position comes from ancestor translate; width/height are on the element itself.
+      const x = num($el.attr('x'));
+      const y = num($el.attr('y'));
+      const w = num($el.attr('width'));
+      const h = num($el.attr('height'));
+      if (w <= 0 || h <= 0) return null;
+      return addTranslateToBBox([x, y, x + w, y + h], tx, ty);
     } else if (tag === 'text') {
       // Approximation: treat (x,y) as a point bbox
       const x = num($el.attr('x'));
@@ -242,7 +251,7 @@ function pruneToIntersecting($, $parent, targetBBox, cumTx = 0, cumTy = 0, bound
     const { tx: ltx, ty: lty } = parseTranslateFromTransform($node.attr('transform') || '');
     const ntx = cumTx + ltx, nty = cumTy + lty;
 
-    const isLeaf = /^(path|rect|circle|ellipse|line|polyline|polygon|image|text)$/.test(tag);
+    const isLeaf = /^(path|rect|circle|ellipse|line|polyline|polygon|image|text|use)$/.test(tag);
     if (isLeaf) {
       const bb = computeLeafBBox($, node, cumTx, cumTy);
       if (!bb || !intersects(bb, targetBBox)) {
@@ -303,7 +312,7 @@ function computeGroupUnionBBox($, groupEl) {
     if (tag === 'defs') return;
 
     // Shapes only — exclude text (point bbox) to get the visual shape boundary
-    const isShape = /^(path|rect|circle|ellipse|line|polyline|polygon|image)$/.test(tag);
+    const isShape = /^(path|rect|circle|ellipse|line|polyline|polygon|image|use)$/.test(tag);
     if (isShape) {
       const bb = computeLeafBBox($, el, cumTx, cumTy);
       if (bb) union = union ? unionBBox(union, bb) : bb;
