@@ -1,14 +1,11 @@
 blueprint:
   template: development
-  shell: /bin/zsh
   image: workspaces/dev:1.12
-  sudo: true
   resources:
     cpu: 16
     memory: 16Gi
   network:
-    networkPolicy: system
+    networkPolicyClass: system
   apps:
     vscode:
       enabled: false
-      autoStart: true
