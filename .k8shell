@@ -8,3 +8,10 @@ blueprint:
   apps:
     vscode:
       enabled: false
+
+  initScripts:
+  - name: npm-init
+    script: |
+      # install dependencies
+      cd $HOME/docs
+      npm install --verbose
