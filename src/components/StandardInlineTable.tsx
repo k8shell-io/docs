@@ -1,5 +1,6 @@
 import React from 'react';
 import { parse } from 'yaml';
+import EarlyAccessBadge from './EarlyAccessBadge';
 
 interface Column {
     header: string;
@@ -12,9 +13,10 @@ interface TableData {
 }
 
 function renderInline(content: string): React.ReactNode[] {
-    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/);
+    const parts = content.split(/(`[^`]*`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\)|<EarlyAccessBadge\s*\/>)/);
     return parts.map((part, i) => {
         if (i % 2 === 1) {
+            if (part.startsWith('<EarlyAccessBadge')) return <EarlyAccessBadge key={i} inline />;
             if (part.startsWith('`')) return <code key={i}>{part.slice(1, -1)}</code>;
             if (part.startsWith('**')) {
                 const inner = renderInline(part.slice(2, -2));

@@ -15,13 +15,15 @@ RBAC can be assigned to an arbitrary service account and provided in the identit
 
 ## Credential Helpers
 
-k8shell provides credential helpers that integrate with various tools to provide seamless authentication without requiring users to manage credentials manually.
+k8shell provides credential helpers that integrate with various tools to provide seamless authentication without requiring users to manage credentials manually. 
 
 **Kubernetes credential helper** — Dynamically retrieves authentication tokens from the Kubernetes API server when tools like `kubectl` or `helm` need to authenticate. This eliminates the need to mount service account tokens directly into the workspace pod and allows for fine-grained, on-demand access control.
 
 **Docker credential helper** — Provides authentication for container registries when pulling or pushing images. The credential helper integrates with Docker and Podman to retrieve registry credentials securely without storing them in configuration files.
 
 **Git credential helper** — Supplies authentication credentials for Git operations when accessing private repositories. When a user is onboarded via a git-based identity provider (GitHub or GitLab), the credential helper automatically provides a token associated with the user account. This allows users to clone, push, and pull from Git repositories without manually configuring credentials in the workspace.
+
+Credentials are managed by the [Identity credential helper backend](../identity/credential-helpers.md).
 
 ## SSH Keys
 
