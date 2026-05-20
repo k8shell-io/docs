@@ -20,9 +20,8 @@ blueprint:
   initScripts:
   - name: npm-init
     script: |
-      mkdir -p /opt/ramdisk/node_modules
-      rm -rf $HOME/docs/node_modules
-      ln -s /opt/ramdisk/node_modules $HOME/docs/node_modules
+      mkdir -p /opt/ramdisk/npm-cache
+      npm config set cache /opt/ramdisk/npm-cache --global
       cd $HOME/docs
       npm install --verbose
 
