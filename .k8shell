@@ -15,3 +15,9 @@ blueprint:
       # install dependencies
       cd $HOME/docs
       npm install --verbose
+
+  - name: agents-setup
+    script: |
+      # setup agents
+      mkdir -p $HOME/docs/.github/agents/
+      ln -s /opt/shared/consistency-check.agent.md $HOME/docs/.github/agents/consistency-check.agent.md

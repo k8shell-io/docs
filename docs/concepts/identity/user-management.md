@@ -22,7 +22,7 @@ Device flow does not require browser redirect handling. This is used by SSH Prox
 * The SSH Proxy calls `OnboardUserDeviceFlow` RPC, specifying the username and the target IdP.
 * Identity forwards the request to the IdP, which returns a device code and a verification URI.
 * The SSH Proxy presents the verification URI and user code to the user in the terminal. The user opens the URI in a browser and authorises the request on the IDP's site.
-* Once the user has authorised, the SSH Proxy calls `CompleteUserDeviceFlow`. Identity resolves the user via the IdP and, if a database is configured, provisions a dynamic Git credential for the user.
+* Once the user has authorised, the SSH Proxy calls `CompleteUserDeviceFlow`. Identity resolves the user via the IdP and, if a database is configured, provisions a dynamic [Git credential](./credential-helpers.md) for the user.
 :::
 
 ### Web flow
@@ -33,7 +33,7 @@ Web flow is used by API Server that provide OAuth capability for the Console App
 * The API Server calls `OnboardUserWebFlow`, specifying the IdP and a redirect URI. Identity forwards the request to the IdP, which returns an authorization URL.
 * The API Server redirects the user's browser to the authorization URL. The user authenticates and consents on the IDP's site.
 * The IdP redirects the browser back to the API Server's redirect URI with an authorization code and an opaque state token. The API Server calls `CompleteUserWebFlow`, passing the code and state. 
-* Identity decodes the state to identify the IdP, calls the IdP to exchange the code for the user's profile, resolves or creates the user record in the database, issues a JWT, and provisions a dynamic Git credential.
+* Identity decodes the state to identify the IdP, calls the IdP to exchange the code for the user's profile, resolves or creates the user record in the database, issues a [JWT](./jwt-issuer.md), and provisions a dynamic [Git credential](./credential-helpers.md).
 :::
 
 ## OAuth scopes

@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # JWT Issuer
 
-The Identity service issues signed JWTs that represent authenticated users. These tokens are presented to k8shell services — such as the API Server — to authorize access to resources. Tokens are short-lived by design, with a default TTL of one hour. When a token expires, callers obtain a new one via the `IssueUserToken` RPC. The tokens are not stored in the DB.
+The Identity service issues signed JWTs that represent authenticated users. These tokens are presented to k8shell services — such as the API Server and SSH Proxy — to authorize access to resources. Tokens are short-lived by design, with a default TTL of one hour. When a token expires, callers obtain a new one via the `IssueUserToken` RPC. The tokens are not stored in the DB.
 
 ## Token contents
 
@@ -67,3 +67,5 @@ Identity supports two signing algorithms, configured via `jwtIssuer.signingMetho
 - **`rs256`** — RSA with SHA-256. Requires a private key file for signing. Verifiers use the corresponding public key file.
 
 The signing key never leaves the Identity process. Services that only need to verify tokens — such as the API Server and SSH Proxy — are configured with the public key only.
+
+See [Configuration — JWT issuer](./configuration.md#jwt-issuer) for all available fields.

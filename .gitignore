@@ -9,3 +9,5 @@ build
 
 # generated files
 src/data/features.ts
+
+.github/agents/consistency-check.agent.md
