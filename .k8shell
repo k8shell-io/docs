@@ -20,10 +20,11 @@ blueprint:
   initScripts:
   - name: npm-init
     script: |
-      ln -s /opt/ramdisk /home/bruckins/docs/node_modules 
-      # install dependencies
+      mkdir -p /opt/ramdisk/node_modules
+      rm -rf $HOME/docs/node_modules
+      ln -s /opt/ramdisk/node_modules $HOME/docs/node_modules
       cd $HOME/docs
-      #npm install --verbose
+      npm install --verbose
 
   - name: agents-setup
     script: |
