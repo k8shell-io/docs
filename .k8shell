@@ -23,7 +23,7 @@ blueprint:
       ln -s /opt/ramdisk /home/bruckins/docs/node_modules 
       # install dependencies
       cd $HOME/docs
-      npm install --verbose
+      #npm install --verbose
 
   - name: agents-setup
     script: |
