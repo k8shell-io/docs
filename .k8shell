@@ -20,4 +20,4 @@ blueprint:
     script: |
       # setup agents
       mkdir -p $HOME/docs/.github/agents/
-      ln -s /opt/shared/consistency-check.agent.md $HOME/docs/.github/agents/consistency-check.agent.md
+      ln -s /opt/shared/agents/consistency-check.agent.md $HOME/docs/.github/agents/consistency-check.agent.md
