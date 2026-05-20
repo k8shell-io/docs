@@ -1,21 +1,25 @@
 ---
-sidebar_position: 4
-title: External API
+sidebar_position: 11
+title: API Reference
 ---
 
-# External API
+# API Reference
 
-`k8shelld` exposes a gRPC API over a TLS-secured channel that SSH Proxy and API Server use to interact with the workspace. This is the primary external interface — all remote access to shell sessions, command execution, port forwarding, and workspace introspection flows through this API.
+`k8shelld` exposes two APIs: an external gRPC API used by other k8shell services over the network, and an internal REST API over a Unix socket used by in-workspace tooling.
 
-## Authentication
+## External API
 
-Every API call requires a valid JWT token passed in the request metadata. The token is issued by the Identity service and contains the user's identity claims (username, UID, GID, email). `k8shelld` verifies the token signature on every request using the public key mounted at `/run/secrets/jwt-verifier/public.pem`. Expired or tampered tokens are rejected.
+The external API is a gRPC service over a TLS-secured channel. The API Server and SSH Proxy use it to interact with the workspace — all remote access to shell sessions, command execution, port forwarding, and workspace introspection flows through this interface.
 
-## Services
+### Authentication
 
-The API is organized into four gRPC services, each handling a distinct aspect of workspace interaction.
+Every call requires a valid JWT token passed in the request metadata. The token is issued by the Identity service and contains the user's identity claims (username, UID, GID, email). `k8shelld` verifies the token signature on every request using the public key from the `JWT_VERIFIER_PUBLIC_KEY` environment variable. Expired or tampered tokens are rejected.
 
-### SystemService
+### Services
+
+The external API is organized into four gRPC services, each handling a distinct aspect of workspace interaction.
+
+#### SystemService
 
 Provides system-level information and handshake validation.
 
@@ -23,7 +27,7 @@ Provides system-level information and handshake validation.
 
 **`SystemInfo`** — returns real-time workspace metrics: CPU and memory usage, uptime, load averages, mounted storage usage (including PVC-backed volumes), and Podman/Docker storage breakdown if the sidecar is enabled. This is what `kbox info` queries internally.
 
-### SshService
+#### SshService
 
 Handles all interactive and forwarding operations initiated over SSH.
 
@@ -39,7 +43,7 @@ Handles all interactive and forwarding operations initiated over SSH.
 
 **`AcquireSession`** — acquires an exclusive lock on an existing shell session by session ID, enabling a client to attach to it. Returns a `lock_id` on success, which must be provided in the `Shell` start request to complete the attachment. Returns a failure reason if the session does not exist or is already acquired by another client. This enables session reconnection workflows, such as restoring terminal sessions in the web console after a browser refresh or network interruption.
 
-### AppService
+#### AppService
 
 Manages apps defined in the blueprint.
 
@@ -49,12 +53,127 @@ Manages apps defined in the blueprint.
 
 **`GetLogs`** / **`GetLogsStream`** — fetch app logs. `GetLogs` returns the full log as a single response; `GetLogsStream` tails the log line-by-line in real time. Both support querying runtime logs or install logs.
 
-### CommandService
+#### CommandService
 
 Provides a bidirectional command/reply channel for `k8shelld` to send commands to the calling service (SSH Proxy or API Server) that require implementation outside the workspace. Each message carries a command ID for request/response correlation.
 
 The primary use case is the `shutdown` command: when a user runs `shutdown` from inside the workspace, `k8shelld` sends the command over this channel to the calling service, which then invokes the provisioner to delete the workspace pod via the Kubernetes API. This ensures separation of concerns — `k8shelld` does not interact with the Kubernetes API directly; pod lifecycle management is handled by the provisioner. The mechanism works regardless of whether the API Server is deployed, since SSH Proxy can also handle the command and forward it to the provisioner.
 
-## Transport
+### Transport
 
 The gRPC server listens on a pod-internal address and uses TLS when cert-manager is enabled. The certificate and key are mounted from `/etc/tls/k8shelld` and are signed by the cluster CA. Service-to-service authorization is implemented using JWT tokens issued by Kubernetes OIDC — SSH Proxy and API Server present these tokens in request metadata.
+
+## Internal API
+
+The internal API is a REST API over a Unix socket at `/var/run/k8shelld.sock`. This is the interface used by [`kbox`](./kbox.md), the workspace CLI, and any other local processes that need programmatic access to workspace state or operations.
+
+### Access
+
+The socket is accessible only from within the workspace container. No authentication is required — the assumption is that any process running inside the container is already authorized by virtue of having shell access. This makes the API suitable for user-facing tooling and scripts without requiring token management.
+
+### Endpoints
+
+All endpoints are prefixed with `/api/v1`.
+
+<StandardInlineTable data={`
+columns:
+  - header: Method
+    width: 80px
+  - header: Path
+    width: 200px
+  - header: kbox Command
+    width: 190px
+  - header: Wrapper
+    width: 100px
+  - header: Source
+rows:
+  - - "\`GET\`"
+    - "\`/identity\`"
+    - "\`kbox identity\`, \`kbox user\`"
+    - ""
+    - "Identity JWT claims"
+  - - "\`GET\`"
+    - "\`/sysinfo\`"
+    - "\`kbox info\`, \`kbox uptime\`"
+    - "\`uptime\`"
+    - "cgroups, /proc, mounts"
+  - - "\`GET\`"
+    - "\`/splash\`"
+    - "\`kbox splash\`"
+    - ""
+    - "Blueprint configuration"
+  - - "\`GET\`"
+    - "\`/sessions\`"
+    - "\`kbox last\`"
+    - "\`last\`"
+    - "API Server proxy"
+  - - "\`GET\`"
+    - "\`/streams\`"
+    - "\`kbox streams\`"
+    - ""
+    - "k8shelld active streams"
+  - - "\`POST\`"
+    - "\`/shells/{id}/attach\`"
+    - "\`kbox attach\`"
+    - ""
+    - "k8shelld session manager"
+  - - "\`POST\`"
+    - "\`/shells/{id}/detach\`"
+    - "\`kbox detach\`"
+    - ""
+    - "k8shelld session manager"
+  - - "\`POST\`"
+    - "\`/shells/{id}/resize\`"
+    - "\-"
+    - ""
+    - "k8shelld session manager"
+  - - "\`GET\`"
+    - "\`/creds\`"
+    - "\`kbox credentials\`"
+    - ""
+    - "API Server proxy"
+  - - "\`GET\`"
+    - "\`/apps\`"
+    - "\`kbox apps list\`"
+    - ""
+    - "App manager"
+  - - "\`POST\`"
+    - "\`/apps/{name}/install\`"
+    - "\`kbox apps install\`"
+    - ""
+    - "App manager"
+  - - "\`POST\`"
+    - "\`/apps/{name}/start\`"
+    - "\`kbox apps start\`"
+    - ""
+    - "App manager"
+  - - "\`POST\`"
+    - "\`/apps/{name}/stop\`"
+    - "\`kbox apps stop\`"
+    - ""
+    - "App manager"
+  - - "\`GET\`"
+    - "\`/apps/{name}/logs\`"
+    - "\`kbox apps logs\`"
+    - ""
+    - "App manager log files"
+  - - "\`GET\`"
+    - "\`/logs\`"
+    - "\`kbox logs\`"
+    - ""
+    - "k8shelld daemon logs"
+  - - "\`POST\`"
+    - "\`/shutdown\`"
+    - "\`kbox shutdown\`"
+    - "\`shutdown\`"
+    - "gRPC CommandService → Provisioner"
+  - - "\`POST\`"
+    - "\`/validate\`"
+    - "\`kbox validate\`"
+    - ""
+    - "Config schema validator"
+`} />
+
+:::note
+The `/creds` and `/sessions` endpoints require the API Server to be enabled in the deployment. When the API Server is not available, `kbox credentials`, `kbox last`, and the `last` wrapper are not functional.
+:::
