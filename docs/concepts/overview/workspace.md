@@ -14,18 +14,6 @@ A workspace can be deployed in two ways:
 
 **Injected into an existing workload** — rather than creating a new pod, k8shell injects the workspace into an already-running workload: a Deployment, StatefulSet, or DaemonSet. The workspace runs inside an existing pod alongside the workload's own containers. This is useful when a user needs interactive access to an environment that must be embedded in an existing workload — for example, to debug a running service or work within a constrained execution context.
 
-:::note
-When injected into a scalable workload such as a Deployment, the workspace scales with it. Each replica runs an independent instance of the workspace — meaning there can be multiple simultaneous instances of the "same" workspace, one per pod. Users connected to different replicas are in separate environments and do not share state.
-:::
-
-### Injection limitations
-
-When a workspace is injected into an existing workload, the following limitations apply:
-
-- **No Podman sidecar** — the Podman container runtime sidecar cannot be added to an existing pod, so container build and run capabilities are unavailable.
-- **Network policies not applied** — network policies defined in the blueprint are not enforced; the existing workload's network configuration takes precedence.
-- **No exclusive local storage** — local persistent volumes mounted under the user home directory may be shared across multiple pod replicas simultaneously. There is no mechanism to guarantee exclusive access, which can lead to data corruption if multiple workspace instances write to the same volume concurrently.
-
 For more details, see [Deployment Models](../workspace/deployment-models.md).
 
 ## Pod structure
@@ -98,7 +86,3 @@ A typical use of node-local storage is the Podman graph directory: mounting the 
 :::
 
 For more details, see [Storage](../workspace/storage.md).
-
-## Lifecycle
-
-A workspace pod exists for as long as it is needed. It can be stopped and restarted — persistent volumes are retained across restarts so the user's files and state are preserved. When a workspace is deleted via `kbox shutdown --delete` or through the Console, the workspace is deleted. Depending on the storage configuration, volumes may be retained for later re-provisioning or cleaned up.

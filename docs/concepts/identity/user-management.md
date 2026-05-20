@@ -121,11 +121,3 @@ Identity supports two sources of SSH public keys for a user:
 - **Internally registered keys.** Keys can also be registered directly in Identity, independent of any provider. These are stored in the same `auth_keys` field and are available for authentication.
 
 When the SSH Proxy authenticates a connection, it calls Identity's `AuthUserPublicKey` RPC with the presented key. Identity evaluates the key first against the internally registered keys in `auth_keys`, and if no match is found, falls back to the keys retrieved from the user's provider.
-
-## JWT issuance
-
-Once a user has been resolved (either freshly admitted or found in the database), Identity mints a signed JWT encoding the user's identity claims. The token is returned to the caller and is subsequently used by the API Server to authorize the user's API and workspace requests without making a further round-trip to Identity on every call.
-
-## Credential provisioning
-
-At the end of both web and device flows, Identity automatically provisions a dynamic Git credential record for the user if the IdP supports token retrieval and no credential row already exists. See [Credential Helpers](credential-helpers.md) for details on how credentials are stored and resolved at runtime.

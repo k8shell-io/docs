@@ -59,21 +59,3 @@ At request time Identity calls the Kubernetes TokenRequest API:
 * Identity calls `ServiceAccounts.CreateToken` for the specified namespace and service account.
 * Kubernetes returns a short-lived bound token with the configured audience (`https://kubernetes.default.svc.cluster.local`) and TTL (default one hour).
 * The token and its expiry timestamp are returned to the workspace credential helper. The token is not stored in the database.
-
-## RBAC
-
-To issue service account tokens via the TokenRequest API, Identity requires a `Role` and `RoleBinding` in each namespace where Kubernetes credentials may be requested. This is currently supported for [standalone Pod workspaces](/concepts/workspace/deployment-models). 
-
-```yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: identity
-  namespace: <target-namespace>
-rules:
-  - apiGroups: [""]
-    resources: ["serviceaccounts/token"]
-    verbs: ["create"]
-```
-
-One `Role` and `RoleBinding` pair is required per namespace. The namespace corresponds to the `service_scope` value on the Kubernetes credential row.
