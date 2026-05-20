@@ -15,11 +15,12 @@ blueprint:
       type: memory
       sizeLimit: 3Gi
       #path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"
-      path: /home/bruckins/docs/node_modules
+      path: /opt/ramdisk
 
   initScripts:
   - name: npm-init
     script: |
+      ln -s /opt/ramdisk /home/bruckins/docs/node_modules 
       # install dependencies
       cd $HOME/docs
       npm install --verbose
