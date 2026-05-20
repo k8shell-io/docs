@@ -1,0 +1,56 @@
+# workflow to build proxy image in the k8shell repository.
+
+name: Build docs image
+description: Build docs image and push it to the registry
+
+on:
+  push:
+    branches:
+      - 'main'  
+    tags:
+      - 'v*'
+
+concurrency:
+  # cancel the same workflow if it is running already
+  group: docs-image-workflow
+  cancel-in-progress: true
+
+jobs:
+  docs-image:
+    runs-on: k8shell-runner
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Build docs image
+        run: |
+          make prepare
+
+          # Set environment variables
+          echo "REPO_NAME=$(cat docker/docs/BUILD)" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$(make tag)" >> $GITHUB_ENV
+
+      # Authenticate to Harbor registry
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.k8shell.io
+          username: ${{ secrets.HARBOR_USER }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: "docker/docs"
+          tags: |
+            registry.k8shell.io/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+            registry.k8shell.io/${{ env.REPO_NAME }}:latest
+          push: true
+
+      - name: Restart the docs server
+        run: |
+          kubectl rollout restart deployment docs-server -n k8shell-docs
