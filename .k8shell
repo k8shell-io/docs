@@ -15,7 +15,7 @@ blueprint:
       type: memory
       sizeLimit: 3Gi
       #path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"
-      path: /opt/ramdisk
+      path: /home/bruckins/docs/node_modules
 
   initScripts:
   - name: npm-init
