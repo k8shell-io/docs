@@ -16,6 +16,12 @@ blueprint:
       cd $HOME/docs
       npm install --verbose
 
+  - name: test-error
+    script:
+      sleep 4
+      echo "error!"
+      exit 1
+
   - name: agents-setup
     script: |
       # setup agents
