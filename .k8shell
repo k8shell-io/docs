@@ -9,18 +9,19 @@ blueprint:
     vscode:
       enabled: false
 
+  storages:
+    ramdisk:
+      enabled: true
+      type: memory
+      sizeLimit: 3Gi
+      path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"    
+
   initScripts:
   - name: npm-init
     script: |
       # install dependencies
       cd $HOME/docs
       npm install --verbose
-
-  - name: test-error
-    script:
-      sleep 4
-      echo "error!"
-      exit 1
 
   - name: agents-setup
     script: |
