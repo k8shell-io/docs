@@ -14,7 +14,8 @@ blueprint:
       enabled: true
       type: memory
       sizeLimit: 3Gi
-      path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"    
+      #path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"
+      path: /opt/ramdisk
 
   initScripts:
   - name: npm-init
