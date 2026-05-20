@@ -9,19 +9,9 @@ blueprint:
     vscode:
       enabled: false
 
-  storages:
-    ramdisk:
-      enabled: true
-      type: memory
-      sizeLimit: 3Gi
-      #path: !cel "'/home/' + user.username + '/' + metadata.repoName + '/node_modules'"
-      path: /opt/ramdisk
-
   initScripts:
   - name: npm-init
     script: |
-      mkdir -p /opt/ramdisk/npm-cache
-      npm config set cache /opt/ramdisk/npm-cache --global
       cd $HOME/docs
       npm install --verbose
 
