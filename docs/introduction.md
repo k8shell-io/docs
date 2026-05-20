@@ -17,7 +17,13 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
 
 ## How the docs are organized
 
-**Licensing, Support and Roadmap** — covers the [open-source license](./licensing.md) and [Early Access program](./licensing.md#early-access), [how to get help](./support.md), and [what capabilities are coming next](./roadmap.md).
+**Introduction** — covers the open-source license, Early Access program, how to get help, and roadmap.
+
+<div class="service-grid">
+  <a class="service-card" href="/licensing">Licensing</a>
+  <a class="service-card" href="/support">Support</a>
+  <a class="service-card" href="/roadmap">Roadmap</a>
+</div>
 
 **Overview** — explains how k8shell works: the architecture, core services, security model, and workspace lifecycle. Start here to understand the platform before going deeper.
 
