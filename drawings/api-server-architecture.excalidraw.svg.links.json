@@ -1,0 +1,8 @@
+{
+  "SSH Proxy": "/concepts/ssh-proxy/",
+  "API Server": "/concepts/api-server/",
+  "Identity": "/concepts/identity/",
+  "Provisioner": "/concepts/provisioner/",
+  "Session": "/concepts/session/",
+  "k8shelld": "/concepts/workspace/"
+}
