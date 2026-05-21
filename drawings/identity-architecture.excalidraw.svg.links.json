@@ -2,5 +2,7 @@
   "SSH Proxy": "/concepts/ssh-proxy/",
   "API Server": "/concepts/api-server/",
   "Identity": "/concepts/identity/",
-  "Provisioner": "/concepts/provisioner/"
+  "Provisioner": "/concepts/provisioner/",
+  "GitHub IdP": "/concepts/identity/providers/",
+  "GitLab IdP": "/concepts/identity/providers/"
 }
