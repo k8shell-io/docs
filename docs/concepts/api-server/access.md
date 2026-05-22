@@ -30,51 +30,69 @@ A full reference of paths and methods will be available on the API reference pag
 
 WebSocket connections power the **CloudShell** component of the browser-based Console. The connection uses the `cloudshell-v1` subprotocol and all messages are transmitted as binary frames serialized with **Protocol Buffers**. Using protobuf over binary WebSocket frames avoids the overhead of JSON serialization for the high-frequency, low-latency data that terminal I/O generates.
 
-Each WebSocket connection is managed by a `Session` that runs four concurrent components:
+Each WebSocket connection is shared by two components that handle different message types over the same connection:
 
 <StandardInlineTable data={`
 columns:
   - header: Component
-    width: 200px
-  - header: CloudShell message
+    width: 160px
+  - header: Messages in (browser → server)
+  - header: Messages out (server → browser)
   - header: k8shelld RPC
+    width: 200px
 rows:
   - - "Terminal"
+    - "\`TerminalInput\`, \`TerminalResizeMessage\`"
     - "\`TerminalOutput\`, \`TerminalError\`"
-    - "\`RunShell\`"
-  - - "Terminal resizer"
-    - "\`TerminalResizeMessage\`"
-    - "\`ResizeTerminal\`"
+    - "\`RunShell\`, \`ResizeTerminal\`"
   - - "File explorer"
-    - "\`FileExplorerMessage\`"
+    - "\`FileExplorerMessage\` (commands)"
+    - "\`FileExplorerMessage\` (responses)"
     - "\`RunExec\` (SFTP subsystem)"
-  - - "WebSocket client"
-    - "All \`CloudshellMessage\` types"
-    - "—"
 `} />
 
-- **Terminal** — streams PTY input and output between the browser and the workspace shell via k8shelld's `RunShell` gRPC call. Input arrives as `CloudshellMessage` frames from the browser; output is written back as `TerminalOutput` frames.
-- **Terminal resizer** — listens for `TerminalResizeMessage` frames and forwards PTY resize events to k8shelld, keeping the terminal dimensions in sync with the browser window.
+- **Terminal** — streams PTY input and output between the browser and the workspace shell via k8shelld's `RunShell` gRPC call. Resize events arriving as `TerminalResizeMessage` frames are forwarded to k8shelld via `ResizeTerminal`, keeping the PTY dimensions in sync with the browser window.
 - **File explorer** — handles `FileExplorerMessage` frames for file system operations. It starts an SFTP subsystem inside the workspace by executing the SFTP binary via k8shelld's `RunExec`, then bridges the `pkg/sftp` client over that connection. This gives the Console seamless file transfer capability — upload, download, and directory browsing — without any separate transfer protocol.
-- **WebSocket client** — manages the binary read/write loop, ping/pong keepalives, and connection lifecycle for all of the above.
 
-The four components run in parallel and share a single WebSocket connection. If any component fails or the context is cancelled, all components are shut down together and the connection is closed cleanly.
+### Session persistence across page reloads
 
-Terminal sessions are identified by a `terminalSessionId` that is persisted in the user's session store, keyed by workspace and browser tab. When a tab reconnects — for example after a page reload — the API Server resumes the existing terminal session rather than starting a new one.
+Terminal sessions are identified by a session Id that is persisted in the user's session store, keyed by workspace and browser tab. When a WebSocket connection is closed — for example on a page reload — the underlying PTY session in the workspace is not terminated immediately. Instead, k8shelld keeps it alive in a detached state. When the browser reconnects, the API Server looks up the stored session Id and re-attaches to it, allowing the shell and any running processes to be preserved across reloads. This relies on the [detach/attach mechanism](/concepts/workspace/kbox#kbox-detach) provided by k8shelld.  
 
 ## Reverse proxy
 
-Traffic arriving on the wildcard domain `*.app.k8shell.dev` is handled by the API Server's reverse proxy component. The subdomain encodes the workspace identifier and the app's port, allowing the API Server to locate the correct workspace and forward traffic to the app running inside it — without any additional ingress configuration per workspace.
+Traffic arriving on the wildcard domain `*.app.k8shell.dev` is handled by the API Server's reverse proxy component. Its primary purpose is to expose [workspace apps](/concepts/workspace/apps) — registered HTTP services running inside a workspace — through a stable, authenticated URL. The subdomain encodes the workspace identifier and the app's port — for example:
 
-The reverse proxy is built on Go's `httputil.ReverseProxy` and forwards requests to the workspace via a k8shelld-backed HTTP transport. The transport authenticates each connection using the user's token retrieved from the session, so the upstream app receives only legitimate, authenticated traffic.
+```
+ https://8080--john-1a7fd88.app.k8shell.dev
+ ```
+ 
+routes to port `8080` in workspace with canonical ID `john-1a7fd88`. This allows the API Server to locate the correct workspace and forward traffic to the app running inside it without any additional ingress configuration per workspace.
 
-The proxy handles HTTP and WebSocket traffic differently:
+The reverse proxy forwards requests to the workspace via a k8shelld-backed HTTP transport. For each upstream connection the transport opens a k8shelld `PortForward` gRPC stream, which implements the same direct TCP channel as the SSH `direct-tcpip` forwarding mechanism. The transport authenticates each stream using the user's token retrieved from the session, so the upstream app receives only legitimate, authenticated traffic.
 
-- **HTTP requests** are forwarded as HTTP/1.1 with `Connection: keep-alive` and a `Keep-Alive: timeout=120, max=1000` header, keeping the upstream connection alive across multiple requests from the same browser session.
-- **WebSocket connections** skip the keep-alive headers and instead set the `Origin` header to the original subdomain host. This ensures that upstream apps performing origin or CSRF checks — such as code-server or Jupyter — accept the connection correctly.
+The proxy behaviour differs by traffic type:
 
-In both cases the proxy sets standard forwarding headers — `X-Forwarded-Host`, `X-Forwarded-For`, and `X-Forwarded-Proto` — so upstream apps can see the original client address and protocol (`https`/`http` or `wss`/`ws` depending on whether TLS is in use).
+<StandardInlineTable data={`
+columns:
+  - header: Traffic type
+    width: 80px
+  - header: Protocol
+    width: 80px
+  - header: Purpose
+    width: 210px
+rows:
+  - - "HTTP"
+    - "HTTP/1.1"
+    - "Keeps the upstream connection alive across multiple requests from the same browser session."
+  - - "WebSocket"
+    - "WebSocket upgrade"
+    - "Satisfies upstream CSRF/origin checks in apps such as code-server or Jupyter."
+  - - "Streaming (SSE/chunked)"
+    - "HTTP/1.1"
+    - "Delivers server-sent events and chunked output to the browser as soon as the upstream writes them."
+`} />
 
-The `FlushInterval` is set to `-1` (immediate flush), which ensures that streamed responses — such as server-sent events or chunked output — are delivered to the browser as soon as the upstream writes them, rather than being buffered.
+:::info
+The reverse proxy is not limited to registered workspace apps. Any process running inside a workspace that listens on a port and speaks HTTP can be reached through the same subdomain routing — including ad-hoc development servers, Jupyter notebooks, or internal tooling that has not been formally registered as an app.
+:::
 
-If the upstream connection fails, the proxy removes the cached k8shelld client for that workspace and returns a `502 Bad Gateway` to the browser. The next request will re-establish the connection.
