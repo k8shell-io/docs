@@ -2,28 +2,47 @@
 sidebar_position: 1
 ---
 
+import StandardInlineTable from '@site/src/components/StandardInlineTable';
+
 # k8shell Open Source
 
 **k8shell OSS** is the open-source core of the k8shell platform. It delivers the minimum set of services needed to provision and access Kubernetes-based developer workspaces over SSH. No proprietary infrastructure is required.
 
 ## What's included
 
-| Service | Role |
-|---|---|
-| **SSH Proxy** | Terminates inbound SSH connections, authenticates users, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy) |
-| **Identity** | Authenticates users via local credentials — password hash or SSH public key. [Learn more](/concepts/identity) |
-| **Provisioner** | Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/concepts/provisioner) |
-| **k8shelld** | Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/concepts/workspace) |
+<StandardInlineTable data={`
+columns:
+  - header: Service
+    width: 140px
+  - header: Role
+rows:
+  - - "**SSH Proxy**"
+    - "Terminates inbound SSH connections, authenticates users, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy)"
+  - - "**Identity**"
+    - "Authenticates users via local credentials — password hash or SSH public key. [Learn more](/concepts/identity)"
+  - - "**Provisioner**"
+    - "Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/concepts/provisioner)"
+  - - "**k8shelld**"
+    - "Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/concepts/workspace)"
+`} />
 
 The full k8shell platform adds API Server, Session, Frontend, SSH Shield, Worktrace, and more.
 
 ## Prerequisites
 
-| Tool | Version |
-|---|---|
-| Kubernetes + `kubectl` | 1.26+ with permission to create namespaces, RBAC, and workloads |
-| Helm | 3.12+ |
-| `openssl` | Any recent version (key generation) |
+<StandardInlineTable data={`
+columns:
+  - header: Tool
+    width: 140px
+  - header: Version
+rows:
+  - - "Kubernetes + \`kubectl\`"
+    - "1.26+ with permission to create namespaces, RBAC, and workloads"
+  - - "Helm"
+    - "3.12+"
+  - - "\`openssl\`"
+    - "Any recent version (key generation)"
+`} />
 
 ## Get started
 

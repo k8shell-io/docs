@@ -2,6 +2,8 @@
 sidebar_position: 2
 ---
 
+import StandardInlineTable from '@site/src/components/StandardInlineTable';
+
 # Quick Start
 
 Install k8shell OSS on any Kubernetes cluster in a few minutes using the quickstart script. The script installs the Helm chart with a minimal working configuration — one admin user, one workspace namespace, SSH exposed via NodePort.
@@ -49,13 +51,30 @@ The SSH server key and JWT issuer key must be stable across pod restarts and red
 
 ### Options
 
-| Flag | Default | Description |
-|---|---|---|
-| `-v`, `--version VERSION` | latest | Helm chart version |
-| `-n`, `--namespace NS` | `k8shell-system` | Release namespace |
-| `-t`, `--target-namespace NS` | `k8shell-workspaces` | Workspace target namespace |
-| `--node-port PORT` | `30022` | NodePort for SSH access |
-| `--disable-node-port` | — | Disable NodePort (use port-forward instead) |
+<StandardInlineTable data={`
+columns:
+  - header: Flag
+    width: 240px
+  - header: Default
+    width: 140px
+  - header: Description
+rows:
+  - - "\`-v\`, \`--version VERSION\`"
+    - "latest"
+    - "Helm chart version"
+  - - "\`-n\`, \`--namespace NS\`"
+    - "\`k8shell-system\`"
+    - "Release namespace"
+  - - "\`-t\`, \`--target-namespace NS\`"
+    - "\`k8shell-workspaces\`"
+    - "Workspace target namespace"
+  - - "\`--node-port PORT\`"
+    - "\`30022\`"
+    - "NodePort for SSH access"
+  - - "\`--disable-node-port\`"
+    - "—"
+    - "Disable NodePort (use port-forward instead)"
+`} />
 
 ## 2. Verify the installation
 
@@ -90,7 +109,7 @@ k8shell uses `user~workspace` as the SSH username. `admin~ubuntu` means: authent
 
 ## Next steps
 
-- [Configure workspace blueprints](./) — customise storage, Docker, resource limits
+- [Configure workspace blueprints](./) — customise storage, Podman, resource limits
 - [Add users](./) — add more users with SSH keys or password hashes
 - [Expose SSH Proxy](./) — LoadBalancer or ingress setup
 - [Values reference](./) — full `values.yaml` documentation
