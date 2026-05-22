@@ -20,4 +20,6 @@ The following outlines the key interaction patterns the API Server is involved i
 * **Workspace provisioning** — the API Server looks up available workspaces and forwards provisioning requests to the Provisioner, which creates or tears down workspace pods in Kubernetes.
 * **Session management** — the API Server records active user sessions and retrieves previous sessions from the Session service for audit and resume workflows.
 * **Workspace connectivity** — the API Server establishes a connection to the workspace's k8shelld daemon, translates WebSocket traffic from the downstream web app into k8shelld gRPC calls, and acts as a reverse proxy for HTTP access to apps running inside the workspace.
+* **In-workspace API calls** — processes running inside a workspace call the API Server directly for platform-aware operations, such as retrieving the user's previous sessions or invoking credential helper backends. 
+
 :::
