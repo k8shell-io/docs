@@ -56,7 +56,7 @@ rows:
 
 ### Session persistence across page reloads
 
-Terminal sessions are identified by a session Id that is persisted in the user's session store, keyed by workspace and browser tab. When a WebSocket connection is closed — for example on a page reload — the underlying PTY session in the workspace is not terminated immediately. Instead, k8shelld keeps it alive in a detached state. When the browser reconnects, the API Server looks up the stored session Id and re-attaches to it, allowing the shell and any running processes to be preserved across reloads. This relies on the [detach/attach mechanism](/concepts/workspace/kbox#kbox-detach) provided by k8shelld.  
+Terminal sessions are identified by a session Id that is persisted in the user's session store, keyed by workspace and browser tab. When a WebSocket connection is closed — for example on a page reload — the underlying PTY session in the workspace is not terminated immediately. Instead, k8shelld keeps it alive in a detached state. When the browser reconnects, the API Server looks up the stored session Id and re-attaches to it, allowing the shell and any running processes to be preserved across reloads. This relies on the [detach/attach mechanism](/concepts/workspace/process-management#session-detach-and-attach) provided by k8shelld.  
 
 ## Reverse proxy
 
