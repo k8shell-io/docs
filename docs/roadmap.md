@@ -72,6 +72,9 @@ rows:
   - - "Vault dynamic secrets"
     - "Native support for HashiCorp Vault dynamic secret engines, so workspaces receive short-lived database credentials and cloud IAM tokens at startup."
     - "Mid-term"
+  - - "Cloud firewall API support"
+    - "SSH Shield currently requires a Linux host and uses \`nftables\` to block offending IPs. Planned support for cloud provider firewall APIs — AWS Security Groups, GCP Firewall Rules, and Azure NSGs — will allow SSH Shield to operate without a dedicated Linux entry point, blocking traffic at the network perimeter instead."
+    - "Mid-term"
 `} />
 
 ### Observability

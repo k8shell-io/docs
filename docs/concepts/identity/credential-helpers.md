@@ -59,3 +59,8 @@ At request time Identity calls the Kubernetes TokenRequest API:
 * Identity calls `ServiceAccounts.CreateToken` for the specified namespace and service account.
 * Kubernetes returns a short-lived bound token with the configured audience (`https://kubernetes.default.svc.cluster.local`) and TTL (default one hour).
 * The token and its expiry timestamp are returned to the workspace credential helper. The token is not stored in the database.
+
+
+:::info
+Identity does not create the Kubernetes service account or configure any RBAC for it. The service account must be created and granted the appropriate permissions by a Kubernetes administrator before the credential record is added. The service account name is then referenced in the `subject` field of the credential record, and Identity requests tokens for it at runtime.
+:::
