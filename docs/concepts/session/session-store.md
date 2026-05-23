@@ -75,23 +75,4 @@ FOR UPDATE SKIP LOCKED
 
 When the Session Service runs as multiple replicas, every instance runs its own janitor goroutine. To prevent concurrent sweeps from racing on the same rows, the janitor acquires a PostgreSQL advisory lock before each sweep using `pg_try_advisory_lock`. If another instance already holds the lock, the sweep is skipped without error. The lock is released immediately after the sweep completes.
 
-### Configuration
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 160px
-  - header: Default
-    width: 100px
-  - header: Description
-rows:
-  - - "\`ttl\`"
-    - "\`5m\`"
-    - "How long a session may go without an upsert before the janitor ends it."
-  - - "\`interval\`"
-    - "\`1m\`"
-    - "How often the janitor sweep runs."
-  - - "\`batchSize\`"
-    - "\`100\`"
-    - "Maximum number of sessions ended per sweep. Limits the blast radius of a single run against a large backlog."
-`} />
+Janitor settings (`ttl`, `interval`, `batchSize`) are configured under the `janitor` block. See [Configuration](./configuration.md#janitor).
