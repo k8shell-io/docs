@@ -55,6 +55,3 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
   <a class="service-card" href="/installation/k8shell-oss/quickstart">Quickstart</a>
   <a class="service-card" href="">k8shell Platform</a>
 </div>
-
-**[Reference](/reference/blueprint)** — full field-level reference for configuration resources such as Blueprints.
-
