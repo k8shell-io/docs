@@ -33,7 +33,6 @@ Before making any changes, the script prints a summary and asks for confirmation
   Target namespace   : k8shell-workspaces  (will be created)
   SSH NodePort       : enabled (port 30022)
   SSH proxy key      : ~/k8shell-quickstart/server-key.pem  (will be generated)
-  JWT issuer key     : ~/k8shell-quickstart/issuer-key.pem  (will be generated)
   Admin user         : admin  (sudo enabled, shell: /bin/bash)
   Admin SSH key      : ~/.ssh/id_ed25519.pub
 
@@ -56,7 +55,7 @@ columns:
   - header: Flag
     width: 240px
   - header: Default
-    width: 140px
+    width: 180px
   - header: Description
 rows:
   - - "\`-v\`, \`--version VERSION\`"
@@ -109,7 +108,7 @@ k8shell uses `user~workspace` as the SSH username. `admin~ubuntu` means: authent
 
 ## Next steps
 
-- [Configure workspace blueprints](./) — customise storage, Podman, resource limits
-- [Add users](./) — add more users with SSH keys or password hashes
 - [Expose SSH Proxy](./) — LoadBalancer or ingress setup
+- [Add users](./) — add more users with SSH keys or password hashes
+- [Configure workspace blueprints](./) — customise storage, Podman, resource limits
 - [Values reference](./) — full `values.yaml` documentation
