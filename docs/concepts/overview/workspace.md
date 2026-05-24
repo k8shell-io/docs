@@ -46,7 +46,7 @@ k8shelld is the in-workspace counterpart to the SSH Proxy and API Server. It exp
 
 In addition to the gRPC server, k8shelld exposes a local REST API over a Unix socket (`k8shelld.sock`) accessible only from within the pod. This API surfaces session information, k8shelld logs, and running app state, and proxies requests to the API Server for Docker and Git credential helpers. It is primarily used by the `kbox` CLI — a small command-line tool distributed into the workspace alongside k8shelld during the init phase.
 
-For more details, see [External API](../workspace/external-api.md) and [Internal API](../workspace/internal-api.md).
+For more details, see [API](../workspace/api.md).
 
 ## kbox CLI
 
@@ -60,7 +60,7 @@ For more details, see [External API](../workspace/external-api.md) and [Internal
 Because credentials flow through the API Server rather than being injected as secrets or environment variables, the workspace container never holds long-lived credentials at rest.
 :::
 
-For more details, see [Internal API](../workspace/internal-api.md#kbox-cli).
+For more details, see [Internal API](../workspace/kbox.md).
 
 ## Apps
 

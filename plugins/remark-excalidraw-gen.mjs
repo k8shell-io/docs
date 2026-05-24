@@ -125,7 +125,7 @@ export default function excalidrawGenPlugin(userOpts = {}) {
         const svgContent = fs.readFileSync(outPath, 'utf8');
         const alt = node.alt || '';
         node.type = 'html';
-        node.value = `<div class="excalidraw-diagram"${alt ? ` role="img" aria-label="${escapeHtmlAttr(alt)}"` : ''}${width && height ? ` style="max-width:${width}px"` : ''}>${svgContent}</div>`;
+        node.value = `<div class="diagram"${alt ? ` role="img" aria-label="${escapeHtmlAttr(alt)}"` : ''}${width && height ? ` style="max-width:${width}px"` : ''}>${svgContent}</div>`;
         delete node.url;
         delete node.alt;
         delete node.title;

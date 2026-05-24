@@ -7,15 +7,14 @@ import excalidrawGen from './plugins/remark-excalidraw-gen.mjs';
 import rehypeRaw from 'rehype-raw';
 
 const config: Config = {
-    title: 'K8Shell Documentation',
-    tagline: 'Cloud-native development environment for Kubernetes',
+    title: 'k8Shell Documentation',
+    tagline: 'Cloud-native workspaces on Kubernetes',
     favicon: 'img/favicon.ico',
     url: 'https://docs.k8shell.io',
     baseUrl: '/',
     organizationName: 'k8shell-io',
     projectName: 'k8shell',
     onBrokenLinks: 'warn',
-    onBrokenMarkdownLinks: 'warn',
     i18n: {
         defaultLocale: 'en',
         locales: ['en'],
@@ -69,6 +68,9 @@ const config: Config = {
     // Configure Mermaid
     markdown: {
         mermaid: true,
+        hooks: {
+            onBrokenMarkdownLinks: 'warn',
+        },
     },
 
     themeConfig: {

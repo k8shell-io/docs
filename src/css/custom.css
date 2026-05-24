@@ -447,27 +447,27 @@ h4 {
 }
 
 /* Inlined <svg> path (links sidecar present) */
-.excalidraw-diagram {
+.diagram {
     text-align: center;
 }
 
-.excalidraw-diagram svg {
+.diagram svg {
     display: inline-block;
     max-width: 100%;
     height: auto;
 }
 
-[data-theme='dark'] .excalidraw-diagram {
+[data-theme='dark'] .diagram {
     background: #a0a0a0;
     border-radius: 16px;
     padding: 16px;
 }
 
-[data-theme='dark'] .excalidraw-diagram svg {
+[data-theme='dark'] .diagram svg {
     border-radius: 4px;
 }
 
-.excalidraw-diagram a:hover text {
+.diagram a:hover text {
     text-decoration: underline;
     text-decoration-thickness: from-font;
     cursor: pointer;

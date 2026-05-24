@@ -53,4 +53,4 @@ Three workspace capabilities are unavailable in injection mode.
 
 **Network policies not applied.** Blueprint-defined network policies are not enforced. The workspace joins the workload's existing network namespace, and network access is governed by the workload's own policies in the cluster.
 
-For details on the provisioning mechanics see the [Provisioner Deployment Models](../provisioner/deployment-models.md).
+For details on the provisioning mechanics see the [Standalone Pod](/concepts/provisioner/standalone-pod) and [Workload injection](/concepts/provisioner/workload-injection).

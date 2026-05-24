@@ -313,7 +313,7 @@ Agent forwarding lets processes inside the workspace request signatures from the
 :::warning
 Agent forwarding is a standard SSH feature (OpenSSH: `ssh -A` / `ForwardAgent yes`), but it can introduce security risks. Any process on the forwarded-to host that can access the forwarded agent socket may be able to use your agent to authenticate to other systems *as you* (without extracting your private key), so it should only be enabled for trusted hosts.
 
-For accessing remote systems (for example, Git repositories), we recommend using a **Git credential helper** that integrates with k8shell via the API server instead of relying on agent forwarding. For more information see [K8shell Credential Helpers]().
+For accessing remote systems (for example, Git repositories), we recommend using a **Git credential helper** that integrates with k8shell via the API server instead of relying on agent forwarding. For more information see [k8shell Credential Helpers](/concepts/identity/credential-helpers).
 :::
 
 The following sequence diagram shows how agent forwarding works in the workspace when a user uses a GIT CLI to clone a remote repository e.g. `git clone git@github.com:user/repo.git` for which there exists a key on the host machine. This assumes that the session with `auth-agent-req@openssh.com` request has been established. Please note that the same protocol flow applies when accessing any remote SSH server, not only when using Git.
