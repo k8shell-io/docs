@@ -1,22 +1,7 @@
 blueprint:
   template: development
   resources:
-    cpu: 16
-    memory: 16Gi
+    cpu: 8
+    memory: 2Gi
   network:
     networkPolicyClass: system
-  apps:
-    vscode:
-      enabled: false
-
-  initScripts:
-  - name: npm-init
-    script: |
-      cd $HOME/docs
-      npm install --verbose
-
-  - name: agents-setup
-    script: |
-      # setup agents
-      mkdir -p $HOME/docs/.github/agents/
-      ln -s /opt/shared/agents/consistency-check.agent.md $HOME/docs/.github/agents/consistency-check.agent.md

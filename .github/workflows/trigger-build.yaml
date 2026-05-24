@@ -1,0 +1,17 @@
+name: Trigger docs-engine build
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch to docs-engine
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_ENGINE_PAT }}
+          repository: k8shell-io/docs-engine
+          event-type: docs-updated
