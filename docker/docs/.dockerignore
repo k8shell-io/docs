@@ -1,6 +1,0 @@
-*
-!Dockerfile
-!files/**
-files/node_modules
-files/.git
-files/.cache

@@ -1,1 +1,0 @@
-k8shell-system/k8shell-docs
