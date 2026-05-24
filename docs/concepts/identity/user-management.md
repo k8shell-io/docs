@@ -19,7 +19,7 @@ Identity supports two OAuth 2.0-based onboarding flows. The choice of flow depen
 Device flow does not require browser redirect handling. This is used by SSH Proxy that initiates the device flow when a user connects over SSH. The flow works as follows:
 
 :::NumberedList
-* The SSH Proxy calls `OnboardUserDeviceFlow` RPC, specifying the username and the target IdP.
+* The SSH Proxy calls `OnboardUserDeviceFlow` RPC, specifying the username and the IdP.
 * Identity forwards the request to the IdP, which returns a device code and a verification URI.
 * The SSH Proxy presents the verification URI and user code to the user in the terminal. The user opens the URI in a browser and authorises the request on the IDP's site.
 * Once the user has authorised, the SSH Proxy calls `CompleteUserDeviceFlow`. Identity resolves the user via the IdP and, if a database is configured, provisions a dynamic [Git credential](./credential-helpers.md) for the user.

@@ -1,4 +1,5 @@
 ---
+sidebar_label: API Server
 sidebar_custom_props:
   earlyAccess: true
 ---

@@ -1,4 +1,5 @@
 ---
+sidebar_label: Session
 sidebar_custom_props:
   earlyAccess: true
 ---

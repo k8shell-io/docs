@@ -43,6 +43,36 @@ Only IPv4 is supported. IPv6 addresses are logged as warnings and skipped.
 
 ## Detection: sliding window
 
+SSH Shield consumes failed authentication events from NATS. Each event is published by the SSH Proxy when an authentication attempt fails and has the following structure:
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 120px
+  - header: Type
+    width: 100px
+  - header: Description
+rows:
+  - - "\`client_ip\`"
+    - "string"
+    - "IP address of the connecting client. Used as the key for all hit-counting and blocking decisions."
+  - - "\`client_port\`"
+    - "int"
+    - "Source port of the connecting client."
+  - - "\`username\`"
+    - "string"
+    - "Username supplied during the failed authentication attempt."
+  - - "\`timestamp\`"
+    - "string"
+    - "RFC 3339 timestamp of the failure, as recorded by the SSH Proxy."
+  - - "\`failure_info\`"
+    - "[]string"
+    - "List of failure reason strings from the SSH handshake (e.g. \`User is not onboarded and has no onboarding capability\`)."
+  - - "\`proxy_id\`"
+    - "string"
+    - "Identifier of the SSH Proxy instance that published the event."
+`} />
+
 SSH Shield maintains an in-memory hit counter per IP address. On each failure event it:
 
 1. Discards timestamps older than the configured `window` duration.
