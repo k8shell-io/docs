@@ -19,9 +19,9 @@ rows:
   - - "\`nats\`"
     - "NATS connection and subject configuration. See [NATS](#nats)."
   - - "\`blocker\`"
-    - "Detection and nftables blocking configuration. See [Blocker](#blocker)."
-  - - "\`eventLog\`"
-    - "JSONL event log for persisting failure events to disk. See [Event log](#event-log)."
+    - "Detection policy, ban schedule, and memory management. See [Blocker](#blocker)."
+  - - "\`plugins\`"
+    - "List of firewall plugins used to enforce blocks. See [Plugins](#plugins)."
 `} />
 
 ## NATS
@@ -55,31 +55,7 @@ rows:
 
 ## Blocker
 
-The `blocker` block controls nftables integration, the sliding-window detection policy, the ban schedule, and memory management. See [IP Blocking](./blocking.md) for a full description of how these settings interact at runtime.
-
-### nftables
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 200px
-  - header: Default
-    width: 100px
-  - header: Description
-rows:
-  - - "\`tableName\`"
-    - "required"
-    - "Name of the nftables table SSH Shield writes blocked IPs into."
-  - - "\`setNameV4\`"
-    - "required"
-    - "Name of the IPv4 set inside the table. Blocked IPs are added here with a timeout."
-  - - "\`setNameV6\`"
-    - "required"
-    - "Name of the IPv6 set (reserved for future use — IPv6 blocking is not yet implemented)."
-  - - "\`checkRuleExists\`"
-    - "\`false\`"
-    - "When \`true\`, SSH Shield checks whether the IP is already in the set before adding it. Adds a kernel round-trip per ban; useful for debugging but not needed in normal operation."
-`} />
+The `blocker` block controls the sliding-window detection policy, the ban schedule, and memory management. See [IP Blocking](./blocking.md) for a full description of how these settings interact at runtime.
 
 ### Detection
 
@@ -129,9 +105,9 @@ rows:
     - "Hard cap on the number of IP states held in memory. When the cap is exceeded, the oldest entries by last-seen time are evicted. \`0\` means unlimited."
 `} />
 
-## Event log
+## Plugins
 
-When enabled, every failure event received from NATS is appended as a JSON line to the configured file. The log rotates automatically based on size and age.
+Each entry in the `plugins` list activates a firewall plugin. All listed plugins receive every block decision. SSH Shield currently supports the `nfgate` plugin type; cloud provider plugins are on the roadmap. See [Firewall plugins](./blocking.md#firewall-plugins).
 
 <StandardInlineTable data={`
 columns:
@@ -141,22 +117,39 @@ columns:
     width: 100px
   - header: Description
 rows:
-  - - "\`enabled\`"
-    - "\`false\`"
-    - "Enable event logging."
-  - - "\`filename\`"
+  - - "\`type\`"
     - "required"
-    - "Path to the log file. Relative paths are resolved from the config file directory."
-  - - "\`maxSize\`"
-    - "\`100\`"
-    - "Maximum file size in megabytes before rotation."
-  - - "\`maxBackups\`"
-    - "\`0\`"
-    - "Number of rotated files to retain. \`0\` retains all."
-  - - "\`maxAge\`"
-    - "\`0\`"
-    - "Maximum age in days for rotated files. \`0\` disables age-based deletion."
-  - - "\`compress\`"
+    - "Plugin type. Currently \`nfgate\` is the only supported value."
+  - - "\`configFile\`"
+    - "required"
+    - "Path to the plugin-specific configuration file. Relative paths are resolved from the main config file directory."
+`} />
+
+### nfgate plugin configuration
+
+The nfgate plugin configuration file is referenced by `configFile` in the plugins list.
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 200px
+  - header: Default
+    width: 100px
+  - header: Description
+rows:
+  - - "\`address\`"
+    - "required"
+    - "Address of the nfgate gRPC endpoint (e.g. \`localhost:9090\`)."
+  - - "\`tls\`"
     - "\`false\`"
-    - "Compress rotated files with gzip."
+    - "Enable TLS on the gRPC connection."
+  - - "\`certFile\`"
+    - "—"
+    - "Path to the CA certificate file used to verify the nfgate server when TLS is enabled."
+  - - "\`dialTimeout\`"
+    - "—"
+    - "Maximum time to wait when dialing the gRPC endpoint. Accepts Go duration strings (e.g. \`5s\`)."
+  - - "\`authKey\`"
+    - "—"
+    - "Shared secret sent as \`Authorization: Bearer <key>\` in every gRPC call. Must match the \`authKey\` configured on the nfgate server."
 `} />

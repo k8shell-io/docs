@@ -19,5 +19,5 @@ The following outlines the key interaction points for SSH Shield:
 * **Routing** — the load balancer forwards the traffic to the SSH Proxy via the configured Kubernetes service which tranfers the traffic to SSH proxy instance.
 * **SSH handshake and authentication** — the SSH Proxy accepts the TCP connection and performs the SSH handshake. The SSH Proxy calls the [Identity service](/concepts/identity) over gRPC to verify the user's credentials.
 * **Failure event publishing** — when authentication fails, the SSH Proxy publishes a failure event to NATS. The event includes the client IP, the username, the authentication method, and the failure reason. 
-* **Blocking Rules** — SSH Shield evaluates each event against configured policies, and installs or refreshes firewall blocking rules on the inbound network interface.
+* **Blocking Rules** — SSH Shield evaluates each event against configured policies and delegates rule installation to a [firewall plugin](/concepts/ssh-shield/blocking). The `nfgate` plugin installs rules directly into an `nftables` set on the entry point Linux host; cloud provider plugins (AWS, GCP, Azure) update the corresponding managed firewall via the provider API.
 :::

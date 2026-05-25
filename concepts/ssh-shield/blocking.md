@@ -6,40 +6,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # IP Blocking
 
-SSH Shield detects malicious IPs from the failed authentication event stream and blocks them by adding them to an `nftables` set. Entries in the set expire automatically — no manual cleanup is required.
-
-:::info
-`nftables` is a Linux kernel subsystem, so SSH Shield must run on a Linux host that has direct access to the entry point firewall. Cloud-managed firewall APIs (AWS Security Groups, GCP Firewall Rules, Azure NSGs) are not yet supported — see the [roadmap](/roadmap#integrations).
-:::
-
-## nftables integration
-
-SSH Shield does not manage the `nftables` table itself at runtime — the table, chains, and set must exist before SSH Shield starts. SSH Shield connects to the `nftables` kernel API and writes entries directly into a named IPv4 set on the entry point host.
-
-The expected table structure has two filter chains — `input` and `forward` — each with a single drop rule that matches packets whose source address is in the blocked set:
-
-```
-table ip <table_name> {
-    set <set_name> {
-        type ipv4_addr
-        flags timeout
-    }
-    chain input {
-        type filter hook input priority -1
-        ip saddr @<set_name> drop
-    }
-    chain forward {
-        type filter hook forward priority -1
-        ip saddr @<set_name> drop
-    }
-}
-```
-
-SSH Shield can create this structure on first run using the `--recreate-table` flag, which is useful for initial setup or when the table needs to be reset.
-
-:::info
-Only IPv4 is supported. IPv6 addresses are logged as warnings and skipped.
-:::
+SSH Shield detects malicious IPs from the failed authentication event stream and evaluates them against the detection mechanisms described in this page. Once the decision to block an IP is made, SSH Shield delegates rule installation to a **firewall plugin**. The plugin abstraction decouples detection logic from the underlying firewall technology, allowing SSH Shield to work in both on-premises and cloud environments.
 
 ## Detection: sliding window
 
@@ -95,7 +62,7 @@ banSchedule:
 
 When `decreasingThreshold` is enabled, each ban also reduces the threshold for that IP by one (minimum one), so repeat offenders are banned faster with each cycle.
 
-Bans are implemented as `nftables` set entries with a `timeout` equal to the ban duration. The kernel removes the entry automatically when the timeout expires.
+The ban duration is passed to the firewall plugin as `duration_seconds`. For the nfgate plugin this maps to an `nftables` set entry timeout; the kernel removes the entry automatically when it expires.
 
 ## Whitelist
 
@@ -106,20 +73,6 @@ blocker:
   whitelist:
     - 10.0.0.0/8
     - 192.168.0.0/16
-```
-
-## Event log
-
-Each failure event received from NATS can be written to a structured JSON log file for audit purposes. The log rotates automatically based on configured size and age limits. The event record includes the client IP, attempted username, authentication method, and failure reason.
-
-```yaml
-eventLog:
-  enabled: true
-  filename: /var/log/ssh-shield/events.log
-  maxSize: 100      # MB before rotation
-  maxBackups: 5
-  maxAge: 30        # days
-  compress: true
 ```
 
 ## Memory management
@@ -139,3 +92,17 @@ rows:
   - - "\`maxIPState\`"
     - "Hard cap on the number of IP states held in memory. When exceeded, the oldest entries by last-seen time are evicted."
 `} />
+
+## Firewall plugins
+
+### nfgate plugin
+
+The `nfgate` plugin is used in on-premises setups. In this model, SSH traffic is routed through a Linux host before reaching SSH proxy. `nfgate` runs as a daemon on that Linux host and exposes a gRPC API and SSH Shield calls this API to install blocking rules. See [nfgate](./nfgate.md) for full details on the daemon, its API, and its configuration.
+
+### Cloud provider plugin
+
+:::info Roadmap
+Cloud provider firewall plugins are on the roadmap. SSH Shield currently supports on-premises deployments via the nfgate plugin only.
+:::
+
+For cloud deployments, SSH Shield will use a cloud provider plugin that translates block decisions into managed firewall API calls (AWS Security Groups, GCP Firewall Rules, Azure NSGs), removing the need for a dedicated entry point host.
