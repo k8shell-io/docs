@@ -40,7 +40,7 @@ rows:
     - "Identifier of the SSH Proxy instance that published the event."
 `} />
 
-SSH Shield maintains an in-memory hit counter per IP address. On each failure event it:
+SSH Shield maintains a hit counter per IP address. The counter state is held either in-process or in a shared NATS JetStream KV bucket depending on the configured [state store](#state-store). On each failure event it:
 
 1. Discards timestamps older than the configured `window` duration.
 2. Appends the current timestamp.
@@ -75,9 +75,27 @@ blocker:
     - 192.168.0.0/16
 ```
 
+## State store
+
+SSH Shield can store per-IP rate-limit state either in-process or in NATS JetStream KV.
+
+<StandardInlineTable data={`
+columns:
+  - header: Type
+    width: 140px
+  - header: Description
+rows:
+  - - "\`memory\`"
+    - "In-process state. Fast and zero-dependency, but not shared across instances. Each SSH Shield instance tracks its own hit counts independently. This is the default."
+  - - "\`nats-kv\`"
+    - "State stored in a NATS JetStream KV bucket. Shared across all SSH Shield instances, giving accurate hit counting when running multiple replicas."
+`} />
+
+When using `nats-kv`, the `bucket` field specifies the JetStream KV bucket name. The bucket is created automatically if it does not exist.
+
 ## Memory management
 
-SSH Shield holds per-IP state in memory for the duration of the sliding window. Two settings bound memory growth:
+SSH Shield holds per-IP state for the duration of the sliding window. Two settings bound state growth:
 
 <StandardInlineTable data={`
 columns:

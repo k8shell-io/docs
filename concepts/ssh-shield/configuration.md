@@ -20,6 +20,8 @@ rows:
     - "NATS connection and subject configuration. See [NATS](#nats)."
   - - "\`blocker\`"
     - "Detection policy, ban schedule, and memory management. See [Blocker](#blocker)."
+  - - "\`stateStore\`"
+    - "Per-IP rate-limit state store. See [State store](#state-store)."
   - - "\`plugins\`"
     - "List of firewall plugins used to enforce blocks. See [Plugins](#plugins)."
 `} />
@@ -103,6 +105,26 @@ rows:
   - - "\`maxIPState\`"
     - "\`0\`"
     - "Hard cap on the number of IP states held in memory. When the cap is exceeded, the oldest entries by last-seen time are evicted. \`0\` means unlimited."
+`} />
+
+## State store
+
+Controls where per-IP rate-limit state is held. See [State store](./blocking.md#state-store) for a description of the two modes.
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 200px
+  - header: Default
+    width: 100px
+  - header: Description
+rows:
+  - - "\`type\`"
+    - "\`memory\`"
+    - "State store type. \`memory\` keeps state in-process; \`nats-kv\` stores state in a NATS JetStream KV bucket shared across all instances."
+  - - "\`bucket\`"
+    - "—"
+    - "JetStream KV bucket name. Required when \`type\` is \`nats-kv\`. Created automatically if it does not exist."
 `} />
 
 ## Plugins
