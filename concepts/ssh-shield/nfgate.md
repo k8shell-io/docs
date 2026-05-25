@@ -9,12 +9,6 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 `nfgate` is a lightweight gRPC daemon that manages `nftables` firewall rules on a Linux host. It is the on-premises firewall plugin used by SSH Shield — SSH Shield calls nfgate's API to block and query IPs, and nfgate translates those calls into `nftables` set operations on the host.
 
-## How it works
-
-nfgate exposes a gRPC service (`BlockerService`) that accepts block and query requests over the network. On the host it manages a named `nftables` table containing IPv4 and IPv6 sets. When SSH Shield bans an IP, it calls `BlockIP` with the IP address and ban duration; nfgate adds the IP to the appropriate set with a matching `timeout`. The kernel removes the entry automatically when the timeout expires.
-
-nfgate does not own the `nftables` table structure — the table, chains, and sets must be created before nfgate starts. See [nfgate plugin](./blocking.md#nfgate-plugin) for the expected table layout.
-
 ## gRPC API
 
 The API defines a `BlockerService` that exposes two RPCs:
