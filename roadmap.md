@@ -34,6 +34,24 @@ rows:
     - "Near-term"
 `} />
 
+### Operator
+
+We are building a Kubernetes operator to manage k8shell resources natively via custom resource definitions.
+
+<StandardInlineTable data={`
+columns:
+  - header: Capability
+    width: 180px
+  - header: Description
+  - header: Horizon
+    width: 110px
+rows:
+  - - "Kubernetes operator"
+    - "Manage blueprints, quotas, and workspaces as Kubernetes custom resources. Enables GitOps workflows where workspace configuration is version-controlled and applied declaratively alongside other cluster resources."
+    - "Mid-term"
+`} />
+
+
 ### Multi-tenancy and multi-cloud
 
 We are expanding isolation and deployment options across single and multi-cloud environments.
@@ -59,8 +77,6 @@ rows:
 
 ### Integrations
 
-We are adding deeper integrations with the secrets and identity infrastructure teams.
-
 <StandardInlineTable data={`
 columns:
   - header: Capability
@@ -69,9 +85,6 @@ columns:
   - header: Horizon
     width: 110px
 rows:
-  - - "Vault dynamic secrets"
-    - "Native support for HashiCorp Vault dynamic secret engines, so workspaces receive short-lived database credentials and cloud IAM tokens at startup."
-    - "Mid-term"
   - - "Cloud firewall API support"
     - "SSH Shield currently requires a Linux host and uses \`nftables\` to block offending IPs. Planned support for cloud provider firewall APIs — AWS Security Groups, GCP Firewall Rules, and Azure NSGs — will allow SSH Shield to operate without a dedicated Linux entry point, blocking traffic at the network perimeter instead."
     - "Mid-term"
