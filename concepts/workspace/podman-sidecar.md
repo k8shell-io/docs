@@ -90,7 +90,14 @@ This configuration is insecure and can be used by an attacker to escape the cont
 
 By default, Podman writes pulled image layers and container data to the sidecar's ephemeral filesystem. This is unbounded and counts against the ephemeral storage limit of the sidecar container. For any serious use, you should back the graph root with a dedicated PVC.
 
-The Podman graph root is `/home/podman/.local/share/containers`. Mounting a PVC there gives you a hard size cap and keeps the data off the ephemeral filesystem:
+The Podman graph root path depends on the security context:
+
+- **Rootless (default, UID 1000):** `/home/podman/.local/share/containers`
+- **Privileged (UID 0):** `/var/lib/containers/storage`
+
+Mount a PVC at the appropriate path and set `fsOwnerUid`/`fsOwnerGid` to match the UID/GID Podman runs as.
+
+**Rootless example:**
 
 ```yaml
 storages:
@@ -101,7 +108,7 @@ storages:
     fsOwnerGid: 1000
     readonly: false
     claimSpec:
-      storageClassName: zfs-localpv
+      storageClassName: openebs-zfspv
       accessModes:
         - ReadWriteOnce
       resources:
@@ -109,6 +116,25 @@ storages:
           storage: 5Gi
 ```
 
-`fsOwnerUid` and `fsOwnerGid` tell the init container to chown the volume root to UID/GID 1000 before the sidecar starts — the UID/GID Podman runs as inside the sidecar. Without this, Podman cannot write to the volume.
+**Privileged mode example:**
 
-Using a node-local storage class (like `zfs-localpv`) is recommended here. Image layer writes are I/O-intensive and benefit from local disk, and `ReadWriteOnce` access is all that is needed since the volume is used by a single pod at a time. See [Storage](./storage.md) for more detail on node-local storage.
+```yaml
+storages:
+  graphdb:
+    enabled: true
+    path: "/var/lib/containers/storage"
+    fsOwnerUid: 0
+    fsOwnerGid: 0
+    readonly: false
+    claimSpec:
+      storageClassName: openebs-zfspv
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+```
+
+`fsOwnerUid` and `fsOwnerGid` tell the init container to chown the volume root before the sidecar starts — ensuring Podman can write to the volume. Without this, Podman cannot write to the volume.
+
+Using a node-local storage class (like `zfs-localpv` or `openebs-zfspv`) is recommended here. Image layer writes are I/O-intensive and benefit from local disk, and `ReadWriteOnce` access is all that is needed since the volume is used by a single pod at a time. See [Storage](./storage.md) for more detail on node-local storage.
