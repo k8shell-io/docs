@@ -7,7 +7,7 @@ title: Introduction
 
 k8shell is a platform built around a simple idea: developer workspaces run in Kubernetes. Developers can have direct access to backends, databases, and internal services — the same resources available to apps in test or production. 
 
-For AI agents, k8shell workspaces provide a natural isolation boundary. Agents run with no credentials on disk, no access to the host filesystem, and outbound network access restricted by policy. Using the k8shell MCP server, AI agents can spawn workspaces on demand and perform their tasks in a fully isolated, auditable environment — with access scoped to exactly what the workspace allows.
+For AI agents, k8shell workspaces provide a natural isolation boundary. Agents run with no credentials on disk, no access to the host filesystem, and outbound network access restricted by policy. Using the k8shell MCP server, AI agents can spawn workspaces on demand and perform their tasks in a fully isolated, auditable environment — with access scoped to exactly what the workspace allows. See [Roadmap](/roadmap) for more details.
 
 A workspace is provisioned on demand and accessible over SSH, a browser-based Console, or API. 
 
@@ -41,7 +41,7 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
   <a class="service-card" href="/concepts/ssh-proxy">SSH Proxy</a>
   <a class="service-card" href="/concepts/identity">Identity</a>
   <a class="service-card" href="/concepts/provisioner">Provisioner</a>
-  <a class="service-card" href="/concepts/k8shelld">k8shelld</a>
+  <a class="service-card" href="/concepts/workspace">k8shelld</a>
   <a class="service-card" href="/concepts/api-server">API Server</a>
   <a class="service-card" href="/concepts/session">Session</a>
   <a class="service-card" href="/concepts/ssh-shield">SSH Shield</a>
@@ -53,5 +53,5 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
 <div class="service-grid">
   <a class="service-card" href="/installation/k8shell-oss">k8shell OSS</a>
   <a class="service-card" href="/installation/k8shell-oss/quickstart">Quickstart</a>
-  <a class="service-card" href="">k8shell Platform</a>
+  <a class="service-card service-card--disabled">k8shell Platform</a>
 </div>

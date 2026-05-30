@@ -118,6 +118,10 @@ storages:
 
 **Privileged mode example:**
 
+:::warning
+Privileged mode carries node-escape risk. See [Privileged mode for full isolation](#privileged-mode-for-full-isolation) above.
+:::
+
 ```yaml
 storages:
   graphdb:

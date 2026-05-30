@@ -108,7 +108,7 @@ k8shell uses `user~workspace` as the SSH username. `admin~ubuntu` means: authent
 
 ## Next steps
 
-- [Expose SSH Proxy](./) — LoadBalancer or ingress setup
-- [Add users](./) — add more users with SSH keys or password hashes
-- [Configure workspace blueprints](./) — customise storage, Podman, resource limits
-- [Values reference](./) — full `values.yaml` documentation
+- **Expose SSH Proxy** — LoadBalancer or ingress setup *(documentation coming soon)*
+- **Add users** — add more users with SSH keys or password hashes *(documentation coming soon)*
+- **Configure workspace blueprints** — customise storage, Podman, resource limits *(documentation coming soon)*
+- **Values reference** — full `values.yaml` documentation *(documentation coming soon)*
