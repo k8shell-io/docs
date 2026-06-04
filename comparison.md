@@ -31,11 +31,11 @@ columns:
   - header: k8shell
     width: 90px
   - header: GitHub Codespaces
-    width: 100px
+    width: 90px
   - header: Ona
-    width: 80px
+    width: 90px
   - header: Coder
-    width: 80px
+    width: 90px
   - header: DevPod
     width: 80px
   - header: ContainerSSH
@@ -51,15 +51,15 @@ rows:
   - - "Kubernetes-native environments"
     - "**Yes**"
     - "No"
-    - "Partial ²"
-    - "Partial ²"
-    - "Partial ²"
+    - "Partial²"
+    - "Partial²"
+    - "Partial²"
     - "Yes"
   - - "SSH-based access"
     - "**Yes**"
     - "Yes"
-    - "Limited ³"
-    - "Limited ³"
+    - "Limited³"
+    - "Limited³"
     - "Limited"
     - "Yes"
   - - "Cloud vendor neutral"
@@ -72,7 +72,7 @@ rows:
   - - "Open-source"
     - "**Yes**"
     - "No"
-    - "Partial ⁴"
+    - "Partial⁴"
     - "Yes"
     - "Yes"
     - "Yes"
@@ -82,7 +82,7 @@ rows:
     - "No"
     - "No"
     - "No"
-    - "Partial ⁵"
+    - "Partial⁵"
   - - "Native OPA policy enforcement"
     - "**Yes**"
     - "No"
@@ -92,7 +92,7 @@ rows:
     - "No"
   - - "Pluggable identity providers"
     - "**Yes**"
-    - "Limited ⁶"
+    - "Limited⁶"
     - "Limited"
     - "Yes"
     - "No"

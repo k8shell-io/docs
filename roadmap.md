@@ -102,6 +102,9 @@ columns:
   - header: Horizon
     width: 110px
 rows:
+  - - "DevContainer support"
+    - "Support the DevContainer specification as an alternative way to define a workspace environment. DevContainer configuration will map to a subset of the k8shell blueprint spec — allowing teams already using DevContainers in their repositories to adopt k8shell without rewriting their environment definitions."
+    - "Near-term"
   - - "Cloud firewall API support"
     - "SSH Shield currently requires a Linux host and uses \`nftables\` to block offending IPs. Planned support for cloud provider firewall APIs — AWS Security Groups, GCP Firewall Rules, and Azure NSGs — will allow SSH Shield to operate without a dedicated Linux entry point, blocking traffic at the network perimeter instead."
     - "Mid-term"
