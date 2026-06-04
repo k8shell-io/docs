@@ -23,6 +23,7 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
   <a class="service-card" href="/licensing">Licensing</a>
   <a class="service-card" href="/support">Support</a>
   <a class="service-card" href="/roadmap">Roadmap</a>
+  <a class="service-card" href="/comparison">Comparison</a>
 </div>
 
 **Overview** — explains how k8shell works: the architecture, core services, security model, and workspace lifecycle. Start here to understand the platform before going deeper.
