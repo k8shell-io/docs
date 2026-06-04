@@ -6,7 +6,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # k8shell Open Source
 
-**k8shell OSS** is the open-source core of the k8shell platform. It delivers the minimum set of services needed to provision and access Kubernetes-based developer workspaces over SSH. No proprietary infrastructure is required.
+**k8shell OSS** is the open-source of the k8shell platform. It delivers the minimum set of services needed to provision and access Kubernetes-based developer workspaces over SSH. No proprietary infrastructure is required.
 
 ## What's included
 
@@ -17,16 +17,16 @@ columns:
   - header: Role
 rows:
   - - "**SSH Proxy**"
-    - "Terminates inbound SSH connections, authenticates users, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy)"
+    - "Terminates inbound SSH connections, authenticates users using identity service, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy)"
   - - "**Identity**"
-    - "Authenticates users via local credentials — password hash or SSH public key. [Learn more](/concepts/identity)"
+    - "Authenticates users via local credentials — SSH public key. [Learn more](/concepts/identity)"
   - - "**Provisioner**"
     - "Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/concepts/provisioner)"
   - - "**k8shelld**"
     - "Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/concepts/workspace)"
 `} />
 
-The full k8shell platform adds API Server, Session, Frontend, SSH Shield, Worktrace, and more.
+The full k8shell platform adds API Server, Session, Console, SSH Shield, Worktrace, and more.
 
 ## Prerequisites
 
@@ -52,12 +52,9 @@ rows:
 
 Once k8shell OSS is running, you can go further:
 
-- **Configure workspace blueprints** — define storage, Docker-in-Docker, resource limits, and user permissions per workspace type.
-- **Add users** — define additional users with SSH public keys or password hashes.
-- **Expose SSH Proxy** — enable `sshProxy.loadBalancer` to put port 22 behind a LoadBalancer, or wire it into an existing ingress.
-- **Values reference** — see all available `values.yaml` parameters.
+- [Expose SSH Proxy](./) — LoadBalancer or ingress setup
+- [Add users](./) — add more users with SSH keys
+- [Configure workspace blueprints](./) — customise storage, Podman, resource limits
+- [Values reference](./) — full `values.yaml` documentation
 
-:::note
-k8shell OSS does not require persistent storage. To attach persistent volumes to workspaces, provide a storage class available in your cluster.
-:::
 

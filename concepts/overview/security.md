@@ -8,7 +8,7 @@ Security is a first-class concern in k8shell. The platform is built for environm
 
 **Application security** — built into k8shell services and configuration:
 
-- [**SSH public key authentication**](#ssh-public-key-authentication) — passwords supported but off by default
+- [**Authentication**](#ssh-public-key-authentication) — SSH public key authentication
 - [**JWT tokens and RBAC**](#user-authentication-and-authorization--jwt-and-rbac) — short-lived, role-scoped user credentials
 - [**No credentials stored in workspaces**](#no-credentials-stored-in-workspaces) — credential helpers and SSH agent forwarding supported
 - [**Least-privileged workspace containers**](#least-privileged-workspace-containers) — workspaces run without elevated privileges
@@ -24,7 +24,7 @@ Security is a first-class concern in k8shell. The platform is built for environm
 
 ## SSH public key authentication
 
-SSH user authentication is handled via public key cryptography. Password authentication is supported but disabled by default. The key comparison is delegated to an Identity Provider, which holds the user's registered public keys.
+SSH user authentication is handled via public key cryptography. The key comparison is delegated to an Identity Provider, which holds the user's registered public keys. Support for the [password authentication is planned](/roadmap#authentication). 
 
 ## User authentication and authorization — JWT and RBAC
 

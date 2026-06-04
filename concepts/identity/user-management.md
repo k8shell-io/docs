@@ -102,7 +102,7 @@ rows:
   - - "\`email\`"
     - "User email address as retrieved from the provider."
   - - "\`password\`"
-    - "Bcrypt-hashed password."
+    - "Bcrypt-hashed password (see [password support](/roadmap#authentication))."
   - - "\`auths\`"
     - "List of permitted authentication methods for this user (e.g. \`publickey\`, \`password\`)."
   - - "\`auth_keys\`"

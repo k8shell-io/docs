@@ -75,6 +75,23 @@ rows:
     - "Long-term"
 `} />
 
+### Authentication
+
+We are expanding authentication options to support a wider range of client environments and operator requirements.
+
+<StandardInlineTable data={`
+columns:
+  - header: Capability
+    width: 180px
+  - header: Description
+  - header: Horizon
+    width: 110px
+rows:
+  - - "Password authentication"
+    - "Support password-based authentication for SSH workspace access alongside existing public-key and certificate-based methods."
+    - "Near-term"
+`} />
+
 ### Integrations
 
 <StandardInlineTable data={`
