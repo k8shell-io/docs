@@ -1,0 +1,8 @@
+{
+    "label": "k8shell Chart",
+    "position": 1,
+    "link": {
+        "type": "doc",
+        "id": "configuration/helm-charts/k8shell-chart/index"
+    }
+}

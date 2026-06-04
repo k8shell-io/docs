@@ -1,0 +1,8 @@
+{
+    "label": "Helm Charts",
+    "position": 1,
+    "link": {
+        "type": "doc",
+        "id": "configuration/helm-charts/index"
+    }
+}
