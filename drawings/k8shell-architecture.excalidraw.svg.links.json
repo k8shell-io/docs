@@ -6,5 +6,6 @@
   "Provisioner": "/concepts/provisioner/",
   "k8shelld": "/concepts/workspace/",
   "SSH Shield": "/concepts/ssh-shield/",
+  "nfgate": "/concepts/ssh-shield/nfgate/",
   "Worktrace": "/concepts/worktrace/"
 }

@@ -37,7 +37,8 @@ Components shown in yellow are purpose-built k8shell services. Components shown 
 
 ## Security
 
-* **SSH Shield** – Dynamically blocks offending IP addresses at the firewall level.
+* **SSH Shield** – Evaluates SSH authentication failures and requests IP address blocks at the firewall level.
+* **nfgate** – Blocks IP addresses on request using Linux nftables.
 * **Worktrace** – Captures and analyzes activities inside workspaces using eBPF.
 
 ## Infrastructure
