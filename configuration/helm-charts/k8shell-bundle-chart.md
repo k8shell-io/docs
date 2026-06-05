@@ -73,56 +73,38 @@ rows:
 
 ### charts
 
-Source overrides for each bundled Helm chart. All fields are optional — defaults point to the official k8shell chart registry at the tested version.
+Source and version overrides for each bundled Helm chart. All fields are optional. By default, k8shell charts are pulled from `ghcr.io/k8shell-io/charts` at the version tested with this bundle release.
+
+Each chart key exposes three fields: `repoURL`, `chartName`, and `chartVersion`.
 
 <StandardInlineTable data={`
 columns:
-  - header: Field
-    width: 220px
-  - header: Description
+  - header: Key
+    width: 160px
+  - header: Default chart name
+  - header: Default registry
 rows:
-  - - "\`k8shell.repoURL\`"
-    - "OCI registry or Helm repo URL for the k8shell chart. Default: \`ghcr.io/k8shell-io\`"
-  - - "\`k8shell.chartName\`"
-    - "Chart name within the repo. Default: \`charts/k8shell\`"
-  - - "\`k8shell.chartVersion\`"
-    - "Chart version to deploy. Default: \`26.5.13\`"
-  - - "\`idpGithub.repoURL\`"
-    - "OCI registry or Helm repo URL for the idp-github chart. Default: \`ghcr.io/k8shell-io\`"
-  - - "\`idpGithub.chartName\`"
-    - "Chart name. Default: \`charts/idp-github\`"
-  - - "\`idpGithub.chartVersion\`"
-    - "Chart version. Default: \`0.12.4\`"
-  - - "\`idpGitlab.repoURL\`"
-    - "OCI registry or Helm repo URL for the idp-gitlab chart. Default: \`ghcr.io/k8shell-io\`"
-  - - "\`idpGitlab.chartName\`"
-    - "Chart name. Default: \`charts/idp-gitlab\`"
-  - - "\`idpGitlab.chartVersion\`"
-    - "Chart version. Default: \`0.1.7\`"
-  - - "\`sshShield.repoURL\`"
-    - "OCI registry or Helm repo URL for the ssh-shield chart. Default: \`ghcr.io/k8shell-io\`"
-  - - "\`sshShield.chartName\`"
-    - "Chart name. Default: \`charts/ssh-shield\`"
-  - - "\`sshShield.chartVersion\`"
-    - "Chart version. Default: \`0.2.1\`"
-  - - "\`vaultSecrets.repoURL\`"
-    - "OCI registry or Helm repo URL for the vault-secrets chart. Default: \`ghcr.io/k8shell-io\`"
-  - - "\`vaultSecrets.chartName\`"
-    - "Chart name. Default: \`charts/vault-secrets\`"
-  - - "\`vaultSecrets.chartVersion\`"
-    - "Chart version. Default: \`1.0.0\`"
-  - - "\`nats.repoURL\`"
-    - "Helm repo URL for the NATS chart. Default: \`https://nats-io.github.io/k8s/helm/charts/\`"
-  - - "\`nats.chartName\`"
-    - "Chart name. Default: \`nats\`"
-  - - "\`nats.chartVersion\`"
-    - "Chart version. Default: \`1.3.14\`"
-  - - "\`postgresql.repoURL\`"
-    - "OCI registry URL for the PostgreSQL chart. Default: \`registry-1.docker.io\`"
-  - - "\`postgresql.chartName\`"
-    - "Chart name. Default: \`bitnamicharts/postgresql\`"
-  - - "\`postgresql.chartVersion\`"
-    - "Chart version. Default: \`18.2.3\`"
+  - - "\`k8shell\`"
+    - "\`k8shell\`"
+    - "\`ghcr.io/k8shell-io/charts\`"
+  - - "\`idpGithub\`"
+    - "\`idp-github\`"
+    - "\`ghcr.io/k8shell-io/charts\`"
+  - - "\`idpGitlab\`"
+    - "\`idp-gitlab\`"
+    - "\`ghcr.io/k8shell-io/charts\`"
+  - - "\`sshShield\`"
+    - "\`ssh-shield\`"
+    - "\`ghcr.io/k8shell-io/charts\`"
+  - - "\`vaultSecrets\`"
+    - "\`vault-secrets\`"
+    - "\`ghcr.io/k8shell-io/charts\`"
+  - - "\`nats\`"
+    - "\`nats\`"
+    - "\`https://nats-io.github.io/k8s/helm/charts/\`"
+  - - "\`postgresql\`"
+    - "\`bitnamicharts/postgresql\`"
+    - "\`registry-1.docker.io\`"
 `} />
 
 ### vault
@@ -233,4 +215,45 @@ The following is applied on top of the chart defaults:
 
 - **JetStream** is enabled with a persistent file store when the PVC is configured; otherwise JetStream runs without persistence.
 - **Authorization** defines a single user `k8shell-service` (used by all k8shell services). Passwords are read from the `vault-nats` Kubernetes Secret at key `NATS_K8SHELL_PASSWORD` (synced from Vault).
+
+### git-blueprints
+
+The bundle installs a `git-blueprints` ConfigMap that provides the `git-dev` base blueprint for git-based workspaces. This blueprint is referenced by `k8shell.provisioner.defaultCustomBlueprint` (default: `git-dev`) and can serve as the foundation for any workspace launched from a Git repository.
+
+The blueprint performs two actions on workspace start:
+
+1. **Git configuration** — writes a `.gitconfig` for the user (rebase-on-pull, name, email from k8shell user profile, and the `k8shell` credential helper).
+2. **Repository clone** — clones the repository into `$HOME` using the `GIT_ADDRESS`, `GIT_REPOOWNER`, `GIT_REPONAME`, and optionally `GIT_REPOREF` environment variables injected by the provisioner.
+
+The workspace hostname is derived from the repository name and the subdomain from the repository owner, both normalized for DNS compatibility.
+
+```yaml
+blueprints:
+  - name: git-dev
+    template: base
+    isTemplate: true
+    image: workspaces/dev:1.12
+
+    subdomain: !cel "normalizeDNS(metadata.repoOwner)"
+    hostname: !cel "user.username + '-' + normalizeDNS(metadata.repoName)"
+
+    initScripts:
+      - name: git-config
+        script: |
+          touch /$HOME/.gitconfig
+          git config --global pull.rebase true
+          git config --global user.name "$(kbox user name)"
+          git config --global user.email "$(kbox user email)"
+          git config --global credential.helper "k8shell"
+
+      - name: clone-repo
+        script: |
+          cd "$HOME"
+          REPO_URL="${GIT_ADDRESS}/${GIT_REPOOWNER}/${GIT_REPONAME}.git"
+          if [ -n "${GIT_REPOREF:-}" ]; then
+            git clone -b "$GIT_REPOREF" --single-branch "$REPO_URL"
+          else
+            git clone "$REPO_URL"
+          fi
+```
 
