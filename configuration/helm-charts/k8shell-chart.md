@@ -11,7 +11,7 @@ The `k8shell` Helm chart is the base deployment for k8shell. It includes default
 
 ## Configuration reference
 
-The sections below document every parameter accepted by the chart's `values.yaml`. Parameters are grouped by service. All parameters are optional unless noted otherwise.
+The sections below document every parameter accepted by the chart's `values.yaml`. Fields shared across charts — `imageRegistry`, `certManager`, `postgresql`, `nats`, and secret-valued parameters — are documented on the [Common Fields](./common-fields) page.
 
 ### Top-level
 
@@ -29,49 +29,26 @@ rows:
     - "Lifetime of issued JWT tokens, in seconds. Default: \`600\`"
   - - "\`grpc.roundRobin\`"
     - "Enable client-side round-robin load balancing for gRPC connections between services. Services that expose a gRPC API will use a headless Service so clients can resolve all pod IPs. Default: \`true\`"
-`} />
-
-### imageRegistry 
-
-Private container registry to pull service images.
-
-<StandardInlineTable data={`
-columns:
-  - header: Parameter
-    width: 220px
-  - header: Description
-rows:
-  - - "\`host\`"
-    - 'Hostname of a private container registry. Used to create an image pull secret (\`regcred\`) for all pods. Default: \`""\`'
-  - - "\`username\`"
-    - 'Username for the private registry. Set either this with \`password\`, or \`existingSecret\`. Default: \`""\`'
-  - - "\`password\`"
-    - 'Password for the private registry. Default: \`""\`'
-  - - "\`existingSecret\`"
-    - 'Name of a pre-existing Kubernetes pull-secret to use. Default: \`""\`'
-`} />
-
-
-### certManager
-
-TLS certificate issuance via [cert-manager](https://cert-manager.io). When disabled, all services communicate over plaintext. 
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 220px
-  - header: Description
-rows:
-  - - "\`enabled\`"
-    - "Enable cert-manager integration. Requires cert-manager to be installed and a ClusterIssuer configured. Default: \`false\`"
-  - - "\`issuer.name\`"
-    - "Name of the cert-manager Issuer or ClusterIssuer to use. Default: \`vault-root-issuer\`"
-  - - "\`issuer.kind\`"
-    - "Kind of the issuer resource. One of \`Issuer\` or \`ClusterIssuer\`. Default: \`ClusterIssuer\`"
-  - - "\`duration\`"
-    - "Requested certificate lifetime. Default: \`24h\`"
-  - - "\`renewBefore\`"
-    - "How far ahead of expiry cert-manager will attempt renewal. Default: \`12h\`"
+  - - "\`imageRegistry\`"
+    - "Private container registry for image pulls. See [imageRegistry](./common-fields#imageregistry)."
+  - - "\`certManager\`"
+    - "TLS certificate issuance via cert-manager. See [certManager](./common-fields#certmanager)."
+  - - "\`postgresql\`"
+    - "PostgreSQL backend for identity, session, and provisioner services. See [postgresql](./common-fields#postgresql)."
+  - - "\`nats\`"
+    - "NATS message broker for inter-service communication. See [nats](./common-fields#nats)."
+  - - "\`sshProxy\`"
+    - "SSH proxy service configuration. See [sshProxy](#sshproxy)."
+  - - "\`identity\`"
+    - "Identity and authentication service configuration. See [identity](#identity)."
+  - - "\`provisioner\`"
+    - "Workspace provisioner service configuration. See [provisioner](#provisioner)."
+  - - "\`frontend\`"
+    - "Web console configuration. See [frontend](#frontend)."
+  - - "\`apiServer\`"
+    - "REST API server configuration. See [apiServer](#apiserver)."
+  - - "\`session\`"
+    - "Session state and recording service configuration. See [session](#session)."
 `} />
 
 ### sshProxy
@@ -93,7 +70,7 @@ rows:
   - - "\`proxyProtocol\`"
     - "Enable PROXY protocol support for preserving client IPs when behind a load balancer. Default: \`false\`"
   - - "\`serverKey\`"
-    - "SSH host key. See [secret fields](#secret-fields)."
+    - "SSH host key. See [secret fields](./common-fields#secret-fields)."
   - - "\`writeOptions\`"
     - "SSH banner display options. See [sshProxy.writeOptions](#sshproxywriteoptions)."
   - - "\`publishSshFailures\`"
@@ -236,9 +213,9 @@ rows:
   - - "\`expiry\`"
     - "Lifetime of JWT tokens issued by the identity service. Default: \`60m\`"
   - - "\`privateKey\`"
-    - "RSA/EC private key used to sign JWT tokens. See [secrete fields](#secret-fields). Default: \`{}\`"
+    - "RSA/EC private key used to sign JWT tokens. See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
   - - "\`signingMethod\`"
-    - "JWT signing algorithm (e.g. \`RS256\`, \`ES256\`). See [secrete fields](#secret-fields). Default: \`{}\`"
+    - "JWT signing algorithm (e.g. \`RS256\`, \`ES256\`). See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
 `} />
 
 #### identity.kubernetes
@@ -366,7 +343,7 @@ rows:
   - - "\`enabled\`"
     - "Enable a default container registry for workspace image pulls. Default: \`true\`"
   - - "\`host\`"
-    - "Default registry hostname. See [secrete fields](#secret-fields). Default: \`{}\`"
+    - "Default registry hostname. See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
   - - "\`username\`"
     - "Default registry username. Default: \`{}\`"
   - - "\`password\`"
@@ -561,86 +538,4 @@ rows:
     - "Size of the recordings PVC. Default: \`10Gi\`"
   - - "\`annotations\`"
     - "Annotations to apply to the recordings PVC. Default: \`{}\`"
-`} />
-
-
-### postgresql
-
-PostgreSQL backend used by the identity, session, and provisioner services. Disabled by default — requires Early Access.
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 220px
-  - header: Description
-rows:
-  - - "\`enabled\`"
-    - "Enable PostgreSQL integration. Default: \`false\`"
-  - - "\`host\`"
-    - "PostgreSQL hostname. Default: \`postgresql\`"
-  - - "\`port\`"
-    - "PostgreSQL port. Default: \`5432\`"
-  - - "\`database\`"
-    - 'Database name. Default: \`""\`'
-  - - "\`username\`"
-    - "Database username. See [secrete fields](#secret-fields). Default: \`{}\`"
-  - - "\`password\`"
-    - "Database password. See [secrete fields](#secret-fields). Default: \`{}\`"
-`} />
-
-### nats
-
-NATS message broker used for inter-service communication and KV storage. Disabled by default — requires Early Access. 
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 220px
-  - header: Description
-rows:
-  - - "\`enabled\`"
-    - "Enable NATS integration. Default: \`false\`"
-  - - "\`host\`"
-    - "NATS server hostname. Default: \`nats\`"
-  - - "\`port\`"
-    - "NATS server port. Default: \`4222\`"
-  - - "\`username\`"
-    - "NATS username. Default: \`k8shell-service\`"
-  - - "\`password\`"
-    - "NATS password. See [secrete fields](#secret-fields). Default: \`{}\`"
-`} />
-
-## Secret fields
-
-Unless otherwise noted, all secret-valued parameters accept a `secretRef` object instead of a plain string. There are two forms:
-
-**Inline value** — set `value` to the literal secret. The chart will create a Kubernetes Secret containing that value. Useful for development and simple deployments.
-
-```yaml
-password:
-  value: "my-password"
-```
-
-**External secret** — set `secretName` and `secretKey` to reference a pre-existing Kubernetes Secret. The chart will read the value from `secretName[secretKey]` at runtime without storing it in the chart's own Secret. This form is required when secrets are injected by an external secrets operator such as [HashiCorp Vault](https://www.vaultproject.io/) via the Vault Secrets Operator or External Secrets Operator, and is the mechanism used by the k8shell bundle chart.
-
-```yaml
-password:
-  secretName: my-vault-synced-secret
-  secretKey: password
-```
-
-**Fields**
-
-<StandardInlineTable data={`
-columns:
-  - header: Field
-    width: 220px
-  - header: Description
-rows:
-  - - "\`value\`"
-    - "The literal value. The chart creates a Kubernetes Secret containing this value."
-  - - "\`secretName\`"
-    - "Name of an existing Kubernetes Secret."
-  - - "\`secretKey\`"
-    - "Key within the existing Secret to read the value from."
 `} />
