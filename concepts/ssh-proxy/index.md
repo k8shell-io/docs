@@ -21,10 +21,3 @@ The following sequence outlines the high-level operations handled by the SSH Pro
 * **Interaction.** The SSH Proxy forwards the request to the workspace’s `k8shelld` gRPC API to handle interactive channels such as shell, PTY, port forwarding, and Unix sockets. See [SSH Channels Communication](communication-flows#ssh-channels-communication) for more details. 
 :::
 
-
-## PROXY Protocol Support 
-
-K8shell’s SSH Proxy supports [PROXY protocol version 1](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt), allowing it to retrieve the original client’s IP address and port information even when connections are routed through an external Load Balancer or reverse proxy. This enables accurate identification of the client source for event publishing and auditing. See [IP Address Protection](ip-protection) for more details. 
-
-The use of the PROXY protocol in the SSH Proxy is optional. When enabled, the SSH Proxy inspects incoming connections to detect the presence of a PROXY protocol header. If the header is found, the proxy extracts the original client connection details from it. If the header is not present, the SSH Proxy falls back to using the client IP address obtained directly from the TCP socket.
-
