@@ -10,7 +10,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 The `k8shell-bundle` chart is an umbrella chart that wraps the [k8shell chart](../k8shell-chart) and adds production-ready supporting infrastructure in a single deployment. It is the recommended starting point for production deployments and for teams that use HashiCorp Vault as their secrets backend.
 
 :::info Early Access
-To use `k8shell-bundle` with all services enabled, a valid license file is required. [Register for Early Access](/licensing) to obtain one.
+To use `k8shell-bundle` with all services enabled, please [register for Early Access](https://k8shell.io/early-access) — we'll be happy to get you set up.
 :::
 
 The chart uses ArgoCD Application manfiest to install the following applications:
