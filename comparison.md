@@ -42,24 +42,24 @@ columns:
     width: 100px
 rows:
   - - "Commercial offering"
-    - "**Early Access**"
+    - "**Early Access ¹**"
     - "**Yes**"
     - "**Yes**"
     - "**Yes**"
-    - "No ¹"
+    - "No ²"
     - "No"
   - - "Kubernetes-native environments"
     - "**Yes**"
     - "No"
-    - "Partial²"
-    - "Partial²"
-    - "Partial²"
+    - "Partial³"
+    - "Partial³"
+    - "Partial³"
     - "Yes"
   - - "SSH-based access"
     - "**Yes**"
     - "Yes"
-    - "Limited³"
-    - "Limited³"
+    - "Limited⁴"
+    - "Limited⁴"
     - "Limited"
     - "Yes"
   - - "Cloud vendor neutral"
@@ -72,7 +72,7 @@ rows:
   - - "Open-source"
     - "**Yes**"
     - "No"
-    - "Partial⁴"
+    - "Partial⁵"
     - "Yes"
     - "Yes"
     - "Yes"
@@ -82,7 +82,7 @@ rows:
     - "No"
     - "No"
     - "No"
-    - "Partial⁵"
+    - "Partial⁶"
   - - "Native OPA policy enforcement"
     - "**Yes**"
     - "No"
@@ -92,12 +92,12 @@ rows:
     - "No"
   - - "Pluggable identity providers"
     - "**Yes**"
-    - "Limited⁶"
+    - "Limited⁷"
     - "Limited"
     - "Yes"
     - "No"
     - "Partial"
-  - - "Workspace injection ⁷"
+  - - "Workspace injection ⁸"
     - "**Yes**"
     - "No"
     - "No"
@@ -108,16 +108,18 @@ rows:
 
 ---
 
-¹ DevPod is an open-source project and does not have a commercial SaaS or enterprise offering.
+¹ k8shell platform is currently available under Early Access. See [Licensing](/licensing#early-access) for more details.
 
-² Kubernetes can be used as a deployment or execution backend, but Kubernetes is not the primary user-facing workspace abstraction.
+² DevPod is an open-source project and does not have a commercial SaaS or enterprise offering.
 
-³ SSH access is provided through a standard `sshd` running inside the workspace. Workspace lifecycle management is separate from the SSH connection itself.
+³ Kubernetes can be used as a deployment or execution backend, but Kubernetes is not the primary user-facing workspace abstraction.
 
-⁴ Ona originated from the open-source Gitpod project. The current commercial offering includes proprietary components and the open-source status of all platform components is not clearly documented.
+⁴ SSH access is provided through a standard `sshd` running inside the workspace. Workspace lifecycle management is separate from the SSH connection itself.
 
-⁵ ContainerSSH provides audit logging and session tracking, but not full workspace-level session replay capabilities.
+⁵ Ona originated from the open-source Gitpod project. The current commercial offering includes proprietary components and the open-source status of all platform components is not clearly documented.
 
-⁶ GitHub Codespaces inherits authentication and identity management from GitHub and GitHub Enterprise rather than exposing a generic pluggable identity-provider architecture.
+⁶ ContainerSSH provides audit logging and session tracking, but not full workspace-level session replay capabilities.
 
-⁷ Workspace injection refers to dynamically attaching a workspace runtime to an existing Kubernetes workload, pod, or application environment without modifying or rebuilding the workload.
+⁷ GitHub Codespaces inherits authentication and identity management from GitHub and GitHub Enterprise rather than exposing a generic pluggable identity-provider architecture.
+
+⁸ Workspace injection refers to dynamically attaching a workspace runtime to an existing Kubernetes workload, pod, or application environment without modifying or rebuilding the workload.
