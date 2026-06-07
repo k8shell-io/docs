@@ -1,0 +1,8 @@
+{
+    "label": "Basic Configuration",
+    "position": 2,
+    "link": {
+        "type": "doc",
+        "id": "configuration/basic-configuration/index"
+    }
+}

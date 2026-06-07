@@ -42,7 +42,7 @@ columns:
     width: 100px
 rows:
   - - "Commercial offering"
-    - "**Planned**"
+    - "**Early Access**"
     - "**Yes**"
     - "**Yes**"
     - "**Yes**"

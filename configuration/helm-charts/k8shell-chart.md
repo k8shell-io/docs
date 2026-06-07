@@ -243,7 +243,7 @@ Each entry in `identity.users` supports the following fields:
 <StandardInlineTable data={`
 columns:
   - header: Field
-    width: 220px
+    width: 150px
   - header: Required
     width: 90px
   - header: Description
@@ -278,9 +278,6 @@ rows:
   - - "\`organization\`"
     - "No"
     - "Logical organization or tenant the user belongs to."
-  - - "\`password\`"
-    - "No"
-    - "Password for SSH password authentication."
   - - "\`publicKey\`"
     - "No"
     - "SSH public key for public-key authentication."

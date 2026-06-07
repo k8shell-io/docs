@@ -52,8 +52,8 @@ rows:
 
 Once k8shell OSS is running, you can go further:
 
-- [Expose SSH Proxy](/configuration/base-configuration/expose-ssh-proxy) — LoadBalancer or ingress setup
-- [Add users](./) — add more users with SSH keys
+- [Expose SSH Proxy](/configuration/basic-configuration/expose-ssh-proxy) — LoadBalancer or ingress setup
+- [Add users](/configuration/basic-configuration/adding-users) — add more users with SSH keys
 - [Configure workspace blueprints](./) — customise storage, Podman, resource limits
 - [Values reference](/configuration/helm-charts/k8shell-chart/#configuration-reference) — full `values.yaml` documentation
 
