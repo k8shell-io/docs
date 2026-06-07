@@ -63,19 +63,15 @@ RUN apt-get update && apt-get install -y \
 
 Push the image to your registry and reference it in a blueprint using the fully qualified image name.
 
-### Private registry
+### Default registry
 
-When workspace images are stored in a private registry, the provisioner needs credentials to pull them. Configure the default registry under `provisioner.defaultRegistry` in the k8shell chart values:
+When blueprint `image` fields use a relative path (no hostname), the provisioner resolves them against `provisioner.defaultRegistry.host`:
 
 ```yaml
 provisioner:
   defaultRegistry:
     host: registry.example.com
-    username: my-user
-    password: my-password
 ```
-
-The provisioner passes these credentials when pulling images for workspace pods. Blueprint `image` fields that use a relative path (no hostname) are automatically resolved against `defaultRegistry.host`:
 
 ```yaml
 blueprints:
@@ -85,6 +81,20 @@ blueprints:
 ```
 
 Fully qualified image references (including a hostname) are used as-is and are not affected by `defaultRegistry`.
+
+### Private registry
+
+When workspace images require authentication, configure credentials under `provisioner.privateRegistry`:
+
+```yaml
+provisioner:
+  privateRegistry:
+    host: registry.example.com
+    username: my-user
+    password: my-password
+```
+
+The provisioner passes these credentials when pulling images for workspace pods. `defaultRegistry` and `privateRegistry` are independent — you can set one without the other, or point them at different registries.
 
 :::tip Secrets in production
 In production deployments, avoid placing registry credentials directly in `values.yaml`. Use the `provisioner.defaultRegistry` secret fields via the Vault Secrets chart or another secrets management mechanism. See [Common Fields](../helm-charts/common-fields#secret-fields) for the secret field reference.
