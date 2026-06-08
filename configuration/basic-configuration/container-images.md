@@ -106,7 +106,7 @@ When the private registry uses a self-signed or internally issued TLS certificat
 
 **Kubernetes nodes** — the CA certificate must be installed on every node that runs workspace pods so that the container runtime can pull images. This is a node-level operating system configuration; the exact steps depend on the Linux distribution and container runtime in use. Typically this means adding the CA cert to the system trust store and restarting the container runtime.
 
-**Workspace sidecars (podman)** — workspaces that pull images internally using [Podman](/concepts/workspace/podman-sidecar) (e.g. for building or running containers inside the workspace) require the CA cert to be configured separately, as podman does not use the system trust store by default. Provide the CA certificate via the `caCert` field of `provisioner.privateRegistry`:
+**Workspace sidecars (podman)** — workspaces that pull images internally using [Podman](/concepts/workspace/podman-sidecar) (e.g. for building or running containers inside the workspace) require the CA cert to be configured separately, as podman does not use the system trust store by default. Provide the CA certificate via the `cert` field of `provisioner.privateRegistry`:
 
 ```yaml
 provisioner:
@@ -114,7 +114,7 @@ provisioner:
     host: registry.example.com
     username: my-user
     password: my-password
-    caCert: |
+    cert: |
       -----BEGIN CERTIFICATE-----
       ...
       -----END CERTIFICATE-----
