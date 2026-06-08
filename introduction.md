@@ -3,6 +3,8 @@ sidebar_position: 2
 title: Introduction
 ---
 
+import Link from '@docusaurus/Link';
+
 # Introduction
 
 k8shell is a platform built around a simple idea: developer workspaces run in Kubernetes. Developers can have direct access to backends, databases, and internal services — the same resources available to apps in test or production. 
@@ -20,39 +22,39 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
 **Introduction** — covers the open-source license, Early Access program, how to get help, and roadmap.
 
 <div class="service-grid">
-  <a class="service-card" href="/licensing">Licensing</a>
-  <a class="service-card" href="/support">Support</a>
-  <a class="service-card" href="/roadmap">Roadmap</a>
-  <a class="service-card" href="/comparison">Comparison</a>
+  <Link className="service-card" to="/licensing">Licensing</Link>
+  <Link className="service-card" to="/support">Support</Link>
+  <Link className="service-card" to="/roadmap">Roadmap</Link>
+  <Link className="service-card" to="/comparison">Comparison</Link>
 </div>
 
 **Overview** — explains how k8shell works: the architecture, core services, security model, and workspace lifecycle. Start here to understand the platform before going deeper.
 
 <div class="service-grid">
-  <a class="service-card" href="/concepts/overview">Overview</a>
-  <a class="service-card" href="/concepts/overview/security">Security</a>
-  <a class="service-card" href="/concepts/overview/blueprint">Blueprint</a>
-  <a class="service-card" href="/concepts/overview/workspace">Workspace</a>
-  <a class="service-card" href="/concepts/overview/user-string">User String</a>
+  <Link className="service-card" to="/concepts/overview">Overview</Link>
+  <Link className="service-card" to="/concepts/overview/security">Security</Link>
+  <Link className="service-card" to="/concepts/overview/blueprint">Blueprint</Link>
+  <Link className="service-card" to="/concepts/overview/workspace">Workspace</Link>
+  <Link className="service-card" to="/concepts/overview/user-string">User String</Link>
 </div>
 
 **Services** — documentation for each k8shell service and how they interact:
 
 <div class="service-grid">
-  <a class="service-card" href="/concepts/ssh-proxy">SSH Proxy</a>
-  <a class="service-card" href="/concepts/identity">Identity</a>
-  <a class="service-card" href="/concepts/provisioner">Provisioner</a>
-  <a class="service-card" href="/concepts/k8shelld">k8shelld</a>
-  <a class="service-card" href="/concepts/api-server">API Server</a>
-  <a class="service-card" href="/concepts/session">Session</a>
-  <a class="service-card" href="/concepts/ssh-shield">SSH Shield</a>
-  <a class="service-card" href="/concepts/worktrace">Worktrace</a>
+  <Link className="service-card" to="/concepts/ssh-proxy">SSH Proxy</Link>
+  <Link className="service-card" to="/concepts/identity">Identity</Link>
+  <Link className="service-card" to="/concepts/provisioner">Provisioner</Link>
+  <Link className="service-card" to="/concepts/k8shelld">k8shelld</Link>
+  <Link className="service-card" to="/concepts/api-server">API Server</Link>
+  <Link className="service-card" to="/concepts/session">Session</Link>
+  <Link className="service-card" to="/concepts/ssh-shield">SSH Shield</Link>
+  <Link className="service-card" to="/concepts/worktrace">Worktrace</Link>
 </div>
 
 **Installation** — step-by-step guides for deploying k8shell. 
 
 <div class="service-grid">
-  <a class="service-card" href="/installation/k8shell-oss">k8shell OSS</a>
-  <a class="service-card" href="/installation/k8shell-oss/quickstart">Quickstart</a>
-  <a class="service-card" href="">k8shell Platform</a>
+  <Link className="service-card" to="/installation/k8shell-oss">k8shell OSS</Link>
+  <Link className="service-card" to="/installation/k8shell-oss/quickstart">Quickstart</Link>
+  <Link className="service-card" to="">k8shell Platform</Link>
 </div>
