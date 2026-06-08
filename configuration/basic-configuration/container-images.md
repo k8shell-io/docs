@@ -97,5 +97,5 @@ provisioner:
 The provisioner passes these credentials when pulling images for workspace pods. `defaultRegistry` and `privateRegistry` are independent — you can set one without the other, or point them at different registries.
 
 :::tip Secrets in production
-In production deployments, avoid placing registry credentials directly in `values.yaml`. Use the `provisioner.defaultRegistry` secret fields via the Vault Secrets chart or another secrets management mechanism. See [Common Fields](../helm-charts/common-fields#secret-fields) for the secret field reference.
+In production deployments, avoid placing registry credentials directly in `values.yaml`. Use the `provisioner.privateRegistry` secret fields via the Vault Secrets chart or another secrets management mechanism. See [Common Fields](../helm-charts/common-fields#secret-fields) for the secret field reference.
 :::
