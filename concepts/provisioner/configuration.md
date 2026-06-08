@@ -69,7 +69,25 @@ rows:
 
 ### Default registry
 
-The default registry is the container registry the Provisioner uses for workspace images. When `username` and `password` are both set, the Provisioner automatically creates an `imagePullSecret` in each workspace namespace and references it in the pod spec.
+When a blueprint `image` field contains a relative path (no hostname), the Provisioner resolves it against `defaultRegistry.host`. Fully qualified image references are used as-is and are unaffected by this setting.
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 220px
+  - header: Default
+    width: 100px
+  - header: Description
+rows:
+  - - "\`host\`"
+    - "required"
+    - "Registry hostname prepended to relative image paths, e.g. \`registry.example.com\`."
+`} />
+
+### Private registry
+
+The private registry is the container registry the Provisioner uses for workspace images. When `username` and `password` are both set, the Provisioner automatically creates an `imagePullSecret` in each workspace namespace and references it in the pod spec.
+
 <StandardInlineTable data={`
 columns:
   - header: Field

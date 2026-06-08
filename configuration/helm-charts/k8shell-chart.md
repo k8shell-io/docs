@@ -329,7 +329,21 @@ rows:
 
 #### provisioner.defaultRegistry
 
-Default container registry for workspace image pulls.
+Default container registry for workspace images.
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 220px
+  - header: Description
+rows:
+  - - "\`host\`"
+    - "Default registry hostname. See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
+`} />
+
+#### provisioner.privateRegistry
+
+Private container registry for workspace image pulls.
 
 <StandardInlineTable data={`
 columns:
@@ -338,15 +352,15 @@ columns:
   - header: Description
 rows:
   - - "\`enabled\`"
-    - "Enable a default container registry for workspace image pulls. Default: \`true\`"
+    - "Enable a private container registry for workspace image pulls. Default: \`false\`"
   - - "\`host\`"
-    - "Default registry hostname. See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
+    - "Private registry hostname. See [secret fields](./common-fields#secret-fields). Default: \`{}\`"
   - - "\`username\`"
-    - "Default registry username. Default: \`{}\`"
+    - "Private registry username. Default: \`{}\`"
   - - "\`password\`"
-    - "Default registry password. Default: \`{}\`"
+    - "Private registry password. Default: \`{}\`"
   - - "\`cert\`"
-    - "CA certificate for the default registry (for private registries with self-signed TLS). Default: \`{}\`"
+    - "CA certificate for the private registry. Default: \`{}\`"
 `} />
 
 #### provisioner.shells

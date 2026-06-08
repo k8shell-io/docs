@@ -13,14 +13,14 @@ A blueprint's `image` field accepts any OCI-compatible container image. The work
 
 k8shell imposes minimal requirements on workspace images. For full functionality, the image should include:
 
-- **A shell** (`sh`, `bash`, or `zsh`) — used to run init scripts and as the user's login shell inside the workspace.
-- **`sudo`** — required when the user's blueprint has `sudo: true`. 
+- **A shell** (`sh`, `bash`, etc.) — used to run init scripts and as the user's login shell inside the workspace.
+- **`sudo`** — required when the user has `sudo: true`. 
 
 Beyond that, the image can be any base you choose — a minimal distro, a language runtime, or a fully pre-configured development environment.
 
 ## k8shell images
 
-For convenience, k8shell publishes a set of ready-to-use workspace images at `ghcr.io/k8shell-io/images`:
+For convenience, k8shell publishes a set of ready-to-use workspace images at `ghcr.io/k8shell-io/images`. See [Images Repository](https://github.com/k8shell-io/images) for details.
 
 <StandardInlineTable data={`
 columns:
@@ -99,3 +99,25 @@ The provisioner passes these credentials when pulling images for workspace pods.
 :::tip Secrets in production
 In production deployments, avoid placing registry credentials directly in `values.yaml`. Use the `provisioner.privateRegistry` secret fields via the Vault Secrets chart or another secrets management mechanism. See [Common Fields](../helm-charts/common-fields#secret-fields) for the secret field reference.
 :::
+
+### Self-signed registry certificate
+
+When the private registry uses a self-signed or internally issued TLS certificate, two separate trust configurations are required:
+
+**Kubernetes nodes** — the CA certificate must be installed on every node that runs workspace pods so that the container runtime can pull images. This is a node-level operating system configuration; the exact steps depend on the Linux distribution and container runtime in use. Typically this means adding the CA cert to the system trust store and restarting the container runtime.
+
+**Workspace sidecars (podman)** — workspaces that pull images internally using [Podman](/concepts/workspace/podman-sidecar) (e.g. for building or running containers inside the workspace) require the CA cert to be configured separately, as podman does not use the system trust store by default. Provide the CA certificate via the `caCert` field of `provisioner.privateRegistry`:
+
+```yaml
+provisioner:
+  privateRegistry:
+    host: registry.example.com
+    username: my-user
+    password: my-password
+    caCert: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+```
+
+The provisioner injects the certificate into workspace pods so that podman inside the workspace can pull from the registry without certificate errors.
