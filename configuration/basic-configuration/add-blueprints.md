@@ -1,9 +1,9 @@
 ---
 sidebar_position: 3
-title: Adding Blueprints
+title: Add Blueprints
 ---
 
-# Adding Blueprints
+# Add Blueprints
 
 Blueprints define how workspaces are created — which container image to use, what resources to allocate, which init scripts to run, and more. The provisioner loads blueprints from Kubernetes ConfigMaps, allowing them to be managed independently of the chart and updated without a Helm release.
 

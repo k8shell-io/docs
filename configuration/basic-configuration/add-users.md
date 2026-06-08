@@ -1,9 +1,9 @@
 ---
 sidebar_position: 2
-title: Adding Users
+title: Add Users
 ---
 
-# Adding Users
+# Add Users
 
 Users can be provisioned directly by the k8shell chart by specifying them under the `users` key in `values.yaml`. On each chart reconciliation, the user list is synced into the identity service — users present in the list are created or updated, and users absent from it are not automatically removed.
 
