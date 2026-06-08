@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-title: Expose SSH Proxy
+title: Exposing SSH Proxy
 ---
 
-# Expose SSH Proxy
+# Exposing SSH Proxy
 
 SSH Proxy is the sole external entry point for all user connections into k8shell. Exposing it correctly is the most infrastructure-specific part of any deployment. The right approach depends on where the cluster is running and what network topology is in use.
 

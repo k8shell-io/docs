@@ -1,9 +1,9 @@
 ---
 sidebar_position: 5
-title: Configure Storage
+title: Configuring Storage
 ---
 
-# Configure Storage
+# Configuring Storage
 
 Workspace storage is backed by Kubernetes PersistentVolumeClaims. The available storage options depend entirely on the CSI drivers installed in your cluster — k8shell does not manage storage infrastructure itself, it creates PVCs using whichever storage classes are available.
 
@@ -110,6 +110,7 @@ When workspace users have specific UIDs/GIDs, configure NFS uid/gid squashing on
 With the two blueprint storage entries above — `home` using `openebs-zfs` and `shared-repo` using `nfs-workspaces` — the Provisioner creates the following PVCs in the workspace namespace when user `john` provisions workspace `john-3qqewe`:
 
 ```
+kubectl get pvc -n k8shell-workspaces
 NAME                      STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS     AGE
 pvc-john-3qqewe-home      Bound    pvc-c96...   10Gi       RWO            openebs-zfs      18d
 pvc-shared-acme           Bound    pvc-b94...   50Gi       RWX            nfs-workspaces   9d
