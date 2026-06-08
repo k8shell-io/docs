@@ -1,9 +1,9 @@
 ---
 sidebar_position: 5
-title: Configuring Storage
+title: Configure Storage
 ---
 
-# Configuring Storage
+# Configure Storage
 
 Workspace storage is backed by Kubernetes PersistentVolumeClaims. The available storage options depend entirely on the CSI drivers installed in your cluster — k8shell does not manage storage infrastructure itself, it creates PVCs using whichever storage classes are available.
 
