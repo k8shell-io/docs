@@ -44,7 +44,7 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
   <Link className="service-card" to="/concepts/ssh-proxy">SSH Proxy</Link>
   <Link className="service-card" to="/concepts/identity">Identity</Link>
   <Link className="service-card" to="/concepts/provisioner">Provisioner</Link>
-  <Link className="service-card" to="/concepts/k8shelld">k8shelld</Link>
+  <Link className="service-card" to="/concepts/workspace">Workspace</Link>
   <Link className="service-card" to="/concepts/api-server">API Server</Link>
   <Link className="service-card" to="/concepts/session">Session</Link>
   <Link className="service-card" to="/concepts/ssh-shield">SSH Shield</Link>
