@@ -108,7 +108,7 @@ storages:
     fsOwnerGid: 1000
     readonly: false
     claimSpec:
-      storageClassName: openebs-zfspv
+      storageClassName: openebs-zfs
       accessModes:
         - ReadWriteOnce
       resources:
@@ -127,7 +127,7 @@ storages:
     fsOwnerGid: 0
     readonly: false
     claimSpec:
-      storageClassName: openebs-zfspv
+      storageClassName: openebs-zfs
       accessModes:
         - ReadWriteOnce
       resources:
@@ -137,4 +137,4 @@ storages:
 
 `fsOwnerUid` and `fsOwnerGid` tell the init container to chown the volume root before the sidecar starts — ensuring Podman can write to the volume. Without this, Podman cannot write to the volume.
 
-Using a node-local storage class (like `zfs-localpv` or `openebs-zfspv`) is recommended here. Image layer writes are I/O-intensive and benefit from local disk, and `ReadWriteOnce` access is all that is needed since the volume is used by a single pod at a time. See [Storage](./storage.md) for more detail on node-local storage.
+Using a node-local storage class (like `openebs-zfs`) is recommended here. Image layer writes are I/O-intensive and benefit from local disk, and `ReadWriteOnce` access is all that is needed since the volume is used by a single pod at a time. See [Storage](./storage.md) for more detail on node-local storage.

@@ -23,19 +23,15 @@ storages:
     path: !cel "'/home/' + user.username"
     readonly: false
     claimSpec:
-      storageClassName: zfs-csi-k8shell-test
+      storageClassName: openebs-zfs
       accessModes:
         - ReadWriteMany
       resources:
         requests:
           storage: 10Gi
-    claimSpecAnnotations:
-      zfs-csi.k8shell.io/squash: "all_squash"
-      zfs-csi.k8shell.io/squash-uid: !cel "user.uid"
-      zfs-csi.k8shell.io/squash-gid: !cel "user.gid"
 ```
 
-The `path` field here uses a CEL expression to compute `/home/<username>` at provisioning time. `claimSpecAnnotations` are passed directly to the PVC and are storage-class-specific — in this example they configure uid/gid squashing for an NFS-backed ZFS CSI driver.
+The `path` field here uses a CEL expression to compute `/home/<username>` at provisioning time. In the above example, we use `openebs-zfs` storage class that defines a node-local ZFS volume provisioner, binding each workspace PVC to a ZFS dataset on the node where the pod is scheduled.
 
 ### Shared storage
 
@@ -64,6 +60,10 @@ storages:
 ```
 
 Because the same PVC is mounted by multiple pods concurrently, the storage class must support `ReadWriteMany`. 
+
+:::info 
+The `zfs-csi-k8shell-test` storage class uses the `zfs-csi-k8shell` driver, a CSI driver developed specifically for k8shell. It provisions NFS-backed storage from a ZFS storage server, exposing ZFS datasets over NFS and presenting them as Kubernetes PersistentVolumes. We plan to release it as open source.
+:::
 
 ### Memory storage
 

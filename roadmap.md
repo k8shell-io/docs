@@ -127,6 +127,23 @@ rows:
     - "Near-term"
 `} />
 
+### Open source
+
+The following components are already built and in use within k8shell but have not yet been publicly released. We plan to release them as open source.
+
+<StandardInlineTable data={`
+columns:
+  - header: Component
+    width: 180px
+  - header: Description
+  - header: Horizon
+    width: 110px
+rows:
+  - - "ZFS CSI driver and API Server"
+    - "The \`zfs-csi-k8shell\` CSI driver provisions NFS-backed storage from a ZFS storage API server. It is already used internally to back shared workspace storage. We plan to release it as open source."
+    - "Near-term"
+`} />
+
 ## Horizon definitions
 
 <StandardInlineTable data={`
