@@ -1,0 +1,8 @@
+{
+  "label": "Authz Service",
+  "position": 4,
+  "link": {
+    "type": "doc",
+    "id": "concepts/authz/index"
+  }
+}

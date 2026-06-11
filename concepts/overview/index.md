@@ -31,6 +31,7 @@ Components shown in yellow are purpose-built k8shell services. Components shown 
 ## Core Platform Services
 
 * **Identity** – Authenticates and authorizes users against external providers (OAuth, OIDC). JWT issuer.
+* **Authz** – Applies OPA policies across onboarding, authentication, SSH, and provisioning.
 * **Session** – Tracks active sessions, and records sessions for audit and replay.
 * **Provisioner** – Creates and tears down workspace pods in Kubernetes based on workspace blueprints.
 * **k8shelld** – In-workspace daemon exposing gRPC services for shell, PTY, port forwarding, SFTP.

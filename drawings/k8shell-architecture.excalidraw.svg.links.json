@@ -2,6 +2,7 @@
   "SSH Proxy": "/concepts/ssh-proxy/",
   "API Server": "/concepts/api-server/",
   "Identity": "/concepts/identity/",
+  "Authz": "/concepts/authz/",
   "Session": "/concepts/session/",
   "Provisioner": "/concepts/provisioner/",
   "k8shelld": "/concepts/workspace/",
