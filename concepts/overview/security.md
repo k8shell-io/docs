@@ -9,7 +9,7 @@ Security is a first-class concern in k8shell. The platform is built for environm
 **Application security** — built into k8shell services and configuration:
 
 - [**Authentication**](#ssh-public-key-authentication) — SSH public key authentication
-- [**JWT tokens and RBAC**](#user-authentication-and-authorization--jwt-and-rbac) — short-lived, role-scoped user credentials
+- [**JWT tokens and policy enforcement**](#user-authentication-and-authorization--jwt-and-policy-enforcement) — short-lived user credentials with OPA-evaluated access policies
 - [**No credentials stored in workspaces**](#no-credentials-stored-in-workspaces) — credential helpers and SSH agent forwarding supported
 - [**Least-privileged workspace containers**](#least-privileged-workspace-containers) — workspaces run without elevated privileges
 - [**Detection of malicious activities**](#detection-of-malicious-activities--worktrace) — eBPF-based observation of workspace activity for threat detection
@@ -26,13 +26,13 @@ Security is a first-class concern in k8shell. The platform is built for environm
 
 SSH user authentication is handled via public key cryptography. The key comparison is delegated to an Identity Provider, which holds the user's registered public keys. Support for the [password authentication is planned](/roadmap#authentication). 
 
-## User authentication and authorization — JWT and RBAC
+## User authentication and authorization — JWT and policy enforcement
 
-The Identity service issues a short-lived JWT when a user is onboarded into the system. The token carries the user's identity and role claims, is propagated into the workspace, and is passed as a bearer token in requests made by the user or the workspace to the API Server.
+The Identity service handles authentication: it issues a short-lived JWT on login carrying the user's identity and role claims. The token is propagated into the workspace and passed as a bearer token on all subsequent requests.
 
-The API Server validates the JWT on every request and enforces a role-based access control (RBAC) policy before forwarding to internal services. Access decisions — which blueprints a user can provision, which workspaces they can manage, which administrative functions they can invoke — are all governed by the roles encoded in the token.
+Authorization is handled by the Authorization service, which evaluates [OPA](https://www.openpolicyagent.org) Rego policies on every action against three inputs: **action**, **resource**, and **context**. This covers identity management, SSH access, and workspace provisioning. Policies return an allow/deny decision together with any **obligations** — settings the calling service must enforce, such as session recording, sudo privileges, or container privileged mode.
 
-RBAC policies and identity provider integration are covered in detail in the [Identity service](../identity/index.md) documentation.
+For details see the [Identity service](../identity/index.md) and [Authorization service](../authz/index.md) documentation.
 
 ## No credentials stored in workspaces
 
