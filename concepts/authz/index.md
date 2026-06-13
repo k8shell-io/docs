@@ -1,4 +1,10 @@
-# Authorization Service
+---
+sidebar_label: Authz
+sidebar_custom_props:
+  earlyAccess: true
+---
+
+# Authorization Service <EarlyAccessBadge />
 
 The Authorization service is the central policy enforcement point for the platform. It uses [Open Policy Agent (OPA)](https://www.openpolicyagent.org/) to evaluate access decisions based on declarative policies written in Rego, decoupling authorization logic from individual services.
 
