@@ -7,7 +7,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # Roadmap
 
-k8shell already covers a broad set of functionality — SSH-based workspace access, blueprint-driven provisioning, identity and credential management, session auditing, workload injection, and more. As the platform matures, we are looking at expanding k8shell with new capabilities that address more advanced developer and operator workflows, tighter AI agent integration, and richer ecosystem support.
+k8shell already covers a broad set of functionality - SSH-based workspace access, blueprint-driven provisioning, identity and credential management, session auditing, workload injection, and more. As the platform matures, we are looking at expanding k8shell with new capabilities that address more advanced developer and operator workflows, tighter AI agent integration, and richer ecosystem support.
 
 This page gives a brief overview of the areas we are actively exploring in the near future. Timelines and scope may shift as we learn from early adopters and the community.
 
@@ -29,7 +29,7 @@ columns:
   - header: Horizon
     width: 110px
 rows:
-  - - "MCP server — workspace lifecycle"
+  - - "MCP server - workspace lifecycle"
     - "A first-class MCP server that allows AI coding agents to spawn, access, and terminate workspaces on demand via the Model Context Protocol."
     - "Near-term"
 `} />
@@ -65,10 +65,10 @@ columns:
     width: 110px
 rows:
   - - "Micro-VM workspaces"
-    - "Provision workspaces inside micro-VMs (e.g. Firecracker) for hardware-level isolation — suitable for untrusted workloads, AI agents, and multi-tenant environments with strict security requirements."
+    - "Provision workspaces inside micro-VMs (e.g. Firecracker) for hardware-level isolation -suitable for untrusted workloads, AI agents, and multi-tenant environments with strict security requirements."
     - "Mid-term"
   - - "Namespace isolation profiles"
-    - "Configurable isolation tiers — shared namespace, dedicated namespace, or dedicated node — selectable per blueprint or per team."
+    - "Configurable isolation tiers -shared namespace, dedicated namespace, or dedicated node - selectable per blueprint or per team."
     - "Mid-term"
   - - "Multi-cloud workspace placement"
     - "Schedule workspaces across clusters in different cloud providers or regions, with placement rules defined per blueprint or team."
@@ -103,10 +103,10 @@ columns:
     width: 110px
 rows:
   - - "DevContainer support"
-    - "Support the DevContainer specification as an alternative way to define a workspace environment. DevContainer configuration will map to a subset of the k8shell blueprint spec — allowing teams already using DevContainers in their repositories to adopt k8shell without rewriting their environment definitions."
+    - "Support the DevContainer specification as an alternative way to define a workspace environment. DevContainer configuration will map to a subset of the k8shell blueprint spec - allowing teams already using DevContainers in their repositories to adopt k8shell without rewriting their environment definitions."
     - "Near-term"
   - - "Cloud firewall API support"
-    - "SSH Shield currently requires a Linux host and uses \`nftables\` to block offending IPs. Planned support for cloud provider firewall APIs — AWS Security Groups, GCP Firewall Rules, and Azure NSGs — will allow SSH Shield to operate without a dedicated Linux entry point, blocking traffic at the network perimeter instead."
+    - "SSH Shield currently requires a Linux host and uses \`nftables\` to block offending IPs. Planned support for cloud provider firewall APIs - AWS Security Groups, GCP Firewall Rules, and Azure NSGs - will allow SSH Shield to operate without a dedicated Linux entry point, blocking traffic at the network perimeter instead."
     - "Mid-term"
 `} />
 
@@ -153,9 +153,9 @@ columns:
   - header: Meaning
 rows:
   - - "**Near-term**"
-    - "Active development or in Early Access — expected within the next one to two releases."
+    - "Active development or in Early Access - expected within the next one to two releases."
   - - "**Mid-term**"
-    - "Planned and scoped — expected within the next two to four releases."
+    - "Planned and scoped - expected within the next two to four releases."
   - - "**Long-term**"
-    - "Exploratory — direction set, implementation not yet scheduled."
+    - "Exploratory - direction set, implementation not yet scheduled."
 `} />

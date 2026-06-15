@@ -9,7 +9,7 @@ hide_title: true
 
 k8shell is a Kubernetes-native platform for provisioning and accessing workspaces over SSH, through a browser-based Console, or via API.
 
-We believe k8shell should be the platform for developing modern microservice architectures — and a place where AI coding agents run isolated, controlled, and without access to resources they don't need.
+We believe k8shell should be the platform for developing modern microservice architectures - and a place where AI coding agents run isolated, controlled, and without access to resources they don't need.
 
 ## 10,000 foot view
 
