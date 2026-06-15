@@ -5,9 +5,9 @@ title: SSH Domain
 
 # SSH Domain
 
-The SSH domain controls individual SSH channel types and requests. Each contract maps to a distinct SSH operation — interactive shell, command execution, file transfer, TCP/Unix forwarding, or agent forwarding. The SSH Proxy is the caller for contracts in this domain.
+The SSH domain controls individual SSH channel types and requests. Each contract maps to a distinct SSH operation — interactive shell, command execution, file transfer, TCP/Unix forwarding, or agent forwarding.
 
-All contracts share the same resource shape. Context fields differ per contract.
+All contracts share the same resource shape. Context fields differ per contract. Each action below indicates the service that calls it.
 
 ## Contracts
 
@@ -18,22 +18,24 @@ All contracts include **Subject**, see [Subject claims](./policy-domains.md#subj
 <StandardInlineTable data={`
 columns:
   - header: Field
-    width: 160px
+    width: 200px
   - header: Description
 rows:
   - - "\`id\`"
     - "Workspace name. Required."
   - - "\`type\`"
-    - "Resource type. The value is \`workspace\`"
-  - - "\`owner\`"
+    - "Resource type. The value is \`workspace\`."
+  - - "\`attributes.owner\`"
     - "Username of the workspace owner. Required."
-  - - "\`blueprint\`"
+  - - "\`attributes.blueprint\`"
     - "Blueprint the workspace was launched from. Optional."
 `} />
 
 **Obligations** — none for all contracts; allow/deny only.
 
 ### `ssh:shell`
+
+<CallerBadge services="SSH Proxy" />
 
 An interactive PTY session — a session channel with a shell request. The most common SSH operation.
 
@@ -52,6 +54,8 @@ rows:
 `} />
 
 ### `ssh:exec`
+
+<CallerBadge services="SSH Proxy" />
 
 A non-interactive command execution — a session channel with an exec request. Also covers SCP transfers, which use exec internally.
 
@@ -77,11 +81,15 @@ rows:
 
 ### `ssh:sftp`
 
+<CallerBadge services="SSH Proxy" />
+
 An SFTP subsystem request on a session channel. Evaluated separately from exec so policies can allow file transfer without permitting arbitrary command execution.
 
 No contract-specific context fields.
 
 ### `ssh:direct-tcpip`
+
+<CallerBadge services="SSH Proxy" />
 
 A client-initiated TCP port forward (`direct-tcpip` channel). Allows the SSH client to tunnel TCP connections through the workspace.
 
@@ -101,6 +109,8 @@ rows:
 
 ### `ssh:direct-streamlocal`
 
+<CallerBadge services="SSH Proxy" />
+
 A Unix domain socket forward (`direct-streamlocal@openssh.com` channel). Used to proxy connections to Unix sockets inside the workspace, such as Docker or container runtime sockets.
 
 **Context**
@@ -116,6 +126,8 @@ rows:
 `} />
 
 ### `ssh:agent-forward`
+
+<CallerBadge services="SSH Proxy" />
 
 SSH agent forwarding (`auth-agent-req@openssh.com` session request). Allows the SSH client's agent to be used for authentication from within the workspace.
 

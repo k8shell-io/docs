@@ -15,9 +15,9 @@ The diagram below shows a high-level architecture of the Authz service and its i
 The following sequence outlines the high-level interaction points for the Authz service.
 
 :::NumberedList
-* **Identity Integration.** The Identity service consults Authz to decide whether user onboarding and authentication are permitted and to enforce obligations such as sudo permissions and role assignments.
-* **SSH Access Control.** The SSH Proxy consults Authz to decide whether a session may proceed, which SSH channel types are permitted, and whether session recording is required.
-* **API Authorization.** The API Server consults Authz to decide whether an incoming request is permitted based on the authenticated user identity and the requested operation.
-* **Provisioning Gates.** The Provisioner consults Authz to decide whether a user or role is authorized to trigger workspace provisioning and enforce workspace configurations. 
+* **SSH Access Control.** The SSH Proxy enforces Authz policies on every incoming session, controlling which channel types are permitted and whether session recording is required.
+* **API Authorization.** The API Server enforces Authz policies on every incoming request, gating operations based on the authenticated user identity and the requested action.
+* **Identity Integration.** The Identity service enforces Authz policies on user onboarding and authentication, applying obligations such as sudo permissions and role assignments.
+* **Provisioning Gates.** The Provisioner enforces Authz policies before workspace provisioning, applying blueprint patches and configuration constraints returned as obligations.
 :::
 

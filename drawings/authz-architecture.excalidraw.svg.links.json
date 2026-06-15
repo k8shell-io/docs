@@ -2,5 +2,9 @@
   "SSH Proxy": "/concepts/ssh-proxy/",
   "API Server": "/concepts/api-server/",
   "Identity": "/concepts/identity/",
-  "Provisioner": "/concepts/provisioner/"
+  "Provisioner": "/concepts/provisioner/",
+  "user": "/concepts/authz/domain-user/",
+  "workspace": "/concepts/authz/domain-workspace/",
+  "ssh": "/concepts/authz/domain-ssh/",
+  "session": "/concepts/authz/domain-session/"
 }

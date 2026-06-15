@@ -5,13 +5,15 @@ title: User Domain
 
 # User Domain
 
-The user domain covers identity lifecycle decisions — who may be admitted to the platform, how they authenticate, and what user data they can read. The Identity service is the sole caller for contracts in this domain.
+The user domain covers identity lifecycle decisions — who may be admitted to the platform, how they authenticate, and what user data they can read. Each action below indicates the service that calls it.
 
 ## Contracts
 
 All contracts include **Subject**, see [Subject claims](./policy-domains.md#subject-claims).
 
 ### `user:onboard`
+
+<CallerBadge services="Identity" />
 
 Evaluated when a user logs in for the first time via an identity provider. The decision controls whether onboarding is permitted at all, and the obligations carry the initial account configuration the backend must apply.
 
@@ -20,14 +22,16 @@ Evaluated when a user logs in for the first time via an identity provider. The d
 <StandardInlineTable data={`
 columns:
   - header: Field
-    width: 160px
+    width: 180px
   - header: Description
 rows:
   - - "\`id\`"
     - "Username being onboarded. Required."
-  - - "\`idp\`"
+  - - "\`type\`"
+    - "Resource type. The value is \`user\`."
+  - - "\`attributes.idp\`"
     - "Identity provider name (e.g. \`idp.k8shell.io/github\`). Required."
-  - - "\`org\`"
+  - - "\`attributes.org\`"
     - "Organization name, if the provider reports one. Optional."
 `} />
 
@@ -49,6 +53,8 @@ rows:
 
 ### `user:auth`
 
+<CallerBadge services="Identity" />
+
 Evaluated on every SSH authentication attempt, before a session is opened. The decision controls whether the authentication method and key are accepted.
 
 **Resource**
@@ -56,14 +62,16 @@ Evaluated on every SSH authentication attempt, before a session is opened. The d
 <StandardInlineTable data={`
 columns:
   - header: Field
-    width: 160px
+    width: 180px
   - header: Description
 rows:
   - - "\`id\`"
     - "Username authenticating. Required."
-  - - "\`idp\`"
+  - - "\`type\`"
+    - "Resource type. The value is \`user\`."
+  - - "\`attributes.idp\`"
     - "Identity provider the user was onboarded from. Required."
-  - - "\`org\`"
+  - - "\`attributes.org\`"
     - "Organization name, if the provider reports one. Optional."
 `} />
 
@@ -85,6 +93,8 @@ rows:
 
 ### `user:read`
 
+<CallerBadge services="API Server" />
+
 Evaluated when a caller requests access to a specific category of user data. Policies can restrict which data types a user may read about themselves or others.
 
 **Resource**
@@ -92,11 +102,13 @@ Evaluated when a caller requests access to a specific category of user data. Pol
 <StandardInlineTable data={`
 columns:
   - header: Field
-    width: 160px
+    width: 180px
   - header: Description
 rows:
   - - "\`id\`"
     - "Username whose data is being requested. Required."
+  - - "\`type\`"
+    - "Resource type. The value is \`user\`."
 `} />
 
 **Context**
@@ -114,6 +126,8 @@ rows:
 **Obligations** — none; allow/deny only.
 
 ### `user:list`
+
+<CallerBadge services="API Server" />
 
 Evaluated when a caller requests the full list of platform users. There is no resource id or context — the decision is based solely on the subject's identity.
 
