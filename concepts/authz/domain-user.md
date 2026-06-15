@@ -48,7 +48,7 @@ rows:
   - - "\`roles\`"
     - "JSON array of role name strings. Roles to assign on the user record."
   - - "\`blueprints\`"
-    - "Comma-separated blueprint names or \`*\` for all. Blueprints the user is permitted to use."
+    - "JSON array of blueprint names or \`*\` for all. Blueprints the user is permitted to use."
 `} />
 
 ### `user:auth`
