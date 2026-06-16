@@ -25,7 +25,7 @@ The single service that covers all Identity operations.
 
 #### Token issuance
 
-**`IssueUserToken`** — issues a signed JWT for the given username and source (provider name). The token is returned as a compact JWT string and is not persisted. The caller is responsible for caching it for its TTL duration. See [JWT Issuer](./jwt-issuer.md) for the full set of claims embedded in the token.
+**`IssueUserToken`** — issues a signed JWT for the given username and source (provider name). The token is returned as a compact JWT string and is not persisted. The caller is responsible for caching it for its TTL duration. See [Tokens](./tokens.md) for the full set of claims embedded in the token.
 
 #### Onboarding
 

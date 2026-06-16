@@ -33,7 +33,7 @@ Web flow is used by API Server that provide OAuth capability for the Console App
 * The API Server calls `OnboardUserWebFlow`, specifying the IdP and a redirect URI. Identity forwards the request to the IdP, which returns an authorization URL.
 * The API Server redirects the user's browser to the authorization URL. The user authenticates and consents on the IDP's site.
 * The IdP redirects the browser back to the API Server's redirect URI with an authorization code and an opaque state token. The API Server calls `CompleteUserWebFlow`, passing the code and state. 
-* Identity decodes the state to identify the IdP, calls the IdP to exchange the code for the user's profile, resolves or creates the user record in the database, issues a [JWT](./jwt-issuer.md), and provisions a dynamic [Git credential](./credential-helpers.md).
+* Identity decodes the state to identify the IdP, calls the IdP to exchange the code for the user's profile, resolves or creates the user record in the database, issues a [JWT](./tokens.md), and provisions a dynamic [Git credential](./credential-helpers.md).
 :::
 
 ## OAuth scopes

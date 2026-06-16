@@ -206,7 +206,7 @@ rows:
 
 ## JWT issuer
 
-Configures the JWT tokens that Identity issues to authenticated users. Issued tokens are used by the API Server, SSH Proxy, and other k8shell services to verify user identity. See [JWT Issuer](./jwt-issuer.md) for details on token contents and signing.
+Configures the JWT tokens that Identity issues to authenticated users. Issued tokens are used by the API Server, SSH Proxy, and other k8shell services to verify user identity. See [Tokens](./tokens.md) for details on token contents and signing.
 
 <StandardInlineTable data={`
 columns:

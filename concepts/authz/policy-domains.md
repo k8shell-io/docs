@@ -43,7 +43,7 @@ The k8shell uses the **attribute-based authorization model (ABAC)**. Policies ev
 
 ## Subject claims
 
-The subject is derived from the JWT issued by the [Identity service](../identity/jwt-issuer.md) and is identical across all contracts.
+The subject is derived from the JWT issued by the [Identity service](../identity/tokens.md) and is identical across all contracts.
 
 <StandardInlineTable data={`
 columns:
