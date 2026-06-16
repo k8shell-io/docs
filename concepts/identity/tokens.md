@@ -150,10 +150,6 @@ columns:
 rows:
   - - "\`user:list\`"
     - "List users."
-  - - "\`user:onboard\`"
-    - "Onboard a new user."
-  - - "\`user:auth\`"
-    - "Authenticate a user via SSH."
   - - "\`user:read:profile\`"
     - "Read a user's profile."
   - - "\`user:read:sessions\`"
@@ -164,7 +160,7 @@ rows:
     - "Read a user's workspace blueprints."
 `} />
 
-Wildcard shortcuts: `user:*` (all user actions), `user:read:*` (all readable data types).
+Wildcard shortcut: `user:read:*` (all readable data types).
 
 #### `session`
 
@@ -179,30 +175,6 @@ rows:
 `} />
 
 Wildcard shortcut: `session:*` (all session actions).
-
-#### `ssh`
-
-<StandardInlineTable data={`
-columns:
-  - header: Scope
-    width: 240px
-  - header: Description
-rows:
-  - - "\`ssh:shell\`"
-    - "Open an interactive SSH shell."
-  - - "\`ssh:exec\`"
-    - "Execute a command over SSH."
-  - - "\`ssh:sftp\`"
-    - "Access files over SFTP."
-  - - "\`ssh:direct-tcpip\`"
-    - "Forward TCP connections over SSH."
-  - - "\`ssh:direct-streamlocal\`"
-    - "Forward Unix socket connections over SSH."
-  - - "\`ssh:agent-forward\`"
-    - "Forward an SSH agent."
-`} />
-
-Wildcard shortcut: `ssh:*` (all SSH actions).
 
 ### Authorization
 
