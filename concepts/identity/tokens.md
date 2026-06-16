@@ -113,7 +113,7 @@ columns:
   - header: Description
 rows:
   - - "\`workspace:provision\`"
-    - "Provision a workspace (called by the Provisioner service on behalf of the user)."
+    - "Provision a workspace."
   - - "\`workspace:list\`"
     - "List workspaces."
   - - "\`workspace:create\`"
@@ -149,7 +149,7 @@ columns:
   - header: Description
 rows:
   - - "\`user:list\`"
-    - "List users (admin only by policy)."
+    - "List users."
   - - "\`user:onboard\`"
     - "Onboard a new user."
   - - "\`user:auth\`"
@@ -199,7 +199,7 @@ rows:
   - - "\`ssh:direct-streamlocal\`"
     - "Forward Unix socket connections over SSH."
   - - "\`ssh:agent-forward\`"
-    - "Forward an SSH agent (admin/sudo only by policy)."
+    - "Forward an SSH agent."
 `} />
 
 Wildcard shortcut: `ssh:*` (all SSH actions).
