@@ -61,6 +61,32 @@ rows:
     - "Name of the session to record: \`shell\`, \`exec\`, \`direct-tcpip\`, or \`sftp\`. Use \`none\` to disable recording."
 `} />
 
+### `session:list`
+
+<CallerBadge services="API Server" />
+
+Evaluated when a caller requests a list of sessions. The scope of the listing is determined by which resource fields are present.
+
+**Resource** — workspace to filter by.
+
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 200px
+  - header: Description
+rows:
+  - - "\`id\`"
+    - "Workspace name. Optional — omit to list across workspaces."
+  - - "\`type\`"
+    - "Resource type. The value is \`workspace\`."
+  - - "\`attributes.owner\`"
+    - "Username of the workspace owner. Optional — omit to list sessions for all owners; required when \`id\` is set."
+`} />
+
+**Context** — none.
+
+**Obligations** — none; allow or deny only.
+
 ## Example policy
 
 ```rego

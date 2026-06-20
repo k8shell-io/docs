@@ -71,7 +71,7 @@ rows:
 
 <CallerBadge services="API Server" />
 
-Evaluated when a user requests the list of workspaces for a given owner. There is no specific workspace yet, so `id` is empty.
+Evaluated when a user requests a list of workspaces. There is no specific workspace, so `id` is always empty. When `owner` is omitted, all workspaces are listed (admin use).
 
 **Resource**
 
@@ -86,7 +86,7 @@ rows:
   - - "\`type\`"
     - "Resource type. The value is \`workspace\`."
   - - "\`attributes.owner\`"
-    - "Owner username whose workspaces are being listed. Required."
+    - "Owner username to filter by. Optional — omit to list all workspaces."
 `} />
 
 No contract-specific context fields. **Obligations** — none; allow/deny only.
@@ -315,6 +315,6 @@ obligations["patch:/resources/memory"] := "2Gi" if {
 This example demonstrates the following patterns:
 
 - **Admins** (usernames in `common.admin_users`) may perform any workspace action.
-- **All user-facing actions** carry `resource.owner`, so a single allow rule on `input.resource.owner == input.subject.username` covers the full set. For `workspace:list` and `workspace:create`, `resource.id` is empty — the owner is always in `resource.owner`.
+- **All user-facing actions** carry `resource.owner`, so a single allow rule on `input.resource.owner == input.subject.username` covers the full set. For `workspace:list` and `workspace:create`, `resource.id` is empty. Note that for `workspace:list`, `resource.owner` is optional — when absent, the request targets all workspaces and should typically be restricted to admins.
 - **`workspace:provision`** is called by the Provisioner service but the subject is still the user from the JWT — so the same `resource.owner` check applies. Only the workspace owner can provision their own workspace.
 - **Patch obligations** use JSON Pointer keys (e.g. `patch:/resources/cpu`) to mutate specific fields in the blueprint before provisioning proceeds. Admins are exempt and receive the blueprint unmodified.

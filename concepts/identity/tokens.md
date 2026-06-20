@@ -170,8 +170,8 @@ columns:
     width: 240px
   - header: Description
 rows:
-  - - "\`session:start\`"
-    - "Start a terminal session."
+  - - "\`session:list\`"
+    - "List sessions."
 `} />
 
 Wildcard shortcut: `session:*` (all session actions).
