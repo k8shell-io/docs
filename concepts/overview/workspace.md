@@ -60,7 +60,7 @@ For more details, see [API](../workspace/api.md).
 Because credentials flow through the API Server rather than being injected as secrets or environment variables, the workspace container never holds long-lived credentials at rest.
 :::
 
-For more details, see [Internal API](../workspace/kbox.md).
+For more details, see [Internal API](/user-guide/kbox-cli).
 
 ## Apps
 

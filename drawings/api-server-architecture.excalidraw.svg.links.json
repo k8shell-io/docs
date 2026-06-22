@@ -3,7 +3,7 @@
   "API Server": "/concepts/api-server/",
   "Identity": "/concepts/identity/",
   "Authz": "/concepts/authz/",
-  "k8shell CLI": "/concepts/k8shell-cli/",
+  "k8shell CLI": "/user-guide/k8shell-cli/",
   "Provisioner": "/concepts/provisioner/",
   "Session": "/concepts/session/",
   "k8shelld": "/concepts/workspace/"

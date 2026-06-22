@@ -65,7 +65,7 @@ The gRPC server listens on a pod-internal address and uses TLS when cert-manager
 
 ## Internal API
 
-The internal API is a REST API over a Unix socket at `/var/run/k8shelld.sock`. This is the interface used by [`kbox`](./kbox.md), the workspace CLI, and any other local processes that need programmatic access to workspace state or operations.
+The internal API is a REST API over a Unix socket at `/var/run/k8shelld.sock`. This is the interface used by [`kbox`](/user-guide/kbox-cli), the workspace CLI, and any other local processes that need programmatic access to workspace state or operations.
 
 ### Access
 

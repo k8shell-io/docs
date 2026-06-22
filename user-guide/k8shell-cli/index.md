@@ -4,6 +4,39 @@ The `k8shell` CLI is the primary command-line tool for interacting with a k8shel
 
 <!-- picture goes here -->
 
+## Commands
+
+```
+k8shell connects to a k8shell server and provides commands for managing
+its resources.
+
+Run 'k8shell --help' on any command to see its available options.
+
+Usage:
+  k8shell [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  context     Manage contexts
+  help        Help about any command
+  login       Login via browser and save credentials to a context
+  session     Manage sessions
+  user        Manage users
+  workspace   Manage workspaces
+
+Flags:
+      --config string    config file (default: ~/.config/k8shell/config.yaml)
+  -c, --context string   override the active context
+      --debug            print request and response headers to stderr
+  -h, --help             help for k8shell
+      --insecure         skip TLS certificate verification
+      --json             output as JSON
+      --no-ansi          disable ANSI color output
+  -w, --wrap             allow lines to wrap beyond terminal width
+
+Use "k8shell [command] --help" for more information about a command.
+```
+
 ## Logging in
 
 `k8shell` authenticates using a [Personal Access Token (PAT)](/concepts/identity/tokens#personal-access-token-pat). Rather than creating a PAT manually, the CLI requests one automatically: it contacts the server, presents the available [identity providers](/concepts/identity/providers), and opens a browser so you complete the OAuth flow. Once login succeeds, the PAT is created on the server and saved to a local context.

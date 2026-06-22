@@ -73,7 +73,7 @@ Base path: `/api/v1/workspaces`
 
 **`GET /:workspace_name`** — Returns the full details of a single workspace.
 
-**`DELETE /:workspace_name`** — [Deletes a workspace](/concepts/workspace/kbox#kbox-shutdown) and all its resources or a workspace pod (soft shutown)
+**`DELETE /:workspace_name`** — [Deletes a workspace](/user-guide/kbox-cli/lifecycle#kbox-shutdown) and all its resources or a workspace pod (soft shutown)
 
 **`GET /:workspace_name/sysinfo`** — Returns system information for a workspace (CPU, memory, disk).
 

@@ -25,8 +25,8 @@ Components shown in yellow are purpose-built k8shell services. Components shown 
 
 * **[SSH Proxy](../ssh-proxy/)** – Authenticates users via Identity, forwards SSH to workspace's k8shelld gRPC interface.
 * **[API Server](../api-server/)** – REST API gateway for CLI, Console, and automation. Routes requests to backend services.
-* **Console** – Web UI for managing workspaces, sessions, and users. Includes an integrated CloudShell.
-* **[k8shell CLI](../k8shell-cli/)** – Command-line tool for operating and managing the k8shell platform.
+* **[Console](../../user-guide/console/)** – Web UI for managing workspaces, sessions, and users.
+* **[k8shell CLI](../../user-guide/k8shell-cli/)** – Command-line tool for operating and managing the k8shell platform.
 
 ## Core Platform Services
 

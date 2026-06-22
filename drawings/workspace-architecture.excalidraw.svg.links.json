@@ -3,5 +3,5 @@
   "API Server": "/concepts/api-server/",
   "Podman": "/concepts/workspace/podman-sidecar/",
   "k8shelld": "/concepts/workspace/",
-  "kbox CLI": "/concepts/workspace/kbox/"
+  "kbox CLI": "/user-guide/kbox-cli/"
 }

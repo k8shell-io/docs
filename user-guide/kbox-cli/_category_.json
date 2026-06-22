@@ -1,0 +1,8 @@
+{
+  "label": "kbox CLI",
+  "position": 10,
+  "link": {
+    "type": "doc",
+    "id": "user-guide/kbox-cli/index"
+  }
+}
