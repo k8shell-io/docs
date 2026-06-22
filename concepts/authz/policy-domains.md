@@ -14,7 +14,7 @@ columns:
   - header: Description
 rows:
   - - "**User**"
-    - "Controls user lifecycle events — initial onboarding (with sudo, role, and blueprint obligations), authentication method checks, and read or list access to user data."
+    - "Controls user lifecycle events — initial onboarding (with sudo, role, and blueprint obligations), authentication method checks, read or list access to user data, and Personal Access Token lifecycle."
   - - "**SSH**"
     - "Controls each SSH channel type individually after a session has been admitted, letting policies allow or deny specific operations such as exec, file transfer, or TCP forwarding."
   - - "**Session**"

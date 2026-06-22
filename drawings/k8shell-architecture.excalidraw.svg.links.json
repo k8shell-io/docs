@@ -8,5 +8,6 @@
   "k8shelld": "/concepts/workspace/",
   "SSH Shield": "/concepts/ssh-shield/",
   "nfgate": "/concepts/ssh-shield/nfgate/",
-  "Worktrace": "/concepts/worktrace/"
+  "Worktrace": "/concepts/worktrace/",
+  "k8shell CLI": "/concepts/k8shell-cli/"
 }

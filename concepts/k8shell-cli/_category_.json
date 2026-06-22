@@ -1,0 +1,8 @@
+{
+  "label": "k8shell CLI",
+  "position": 8,
+  "link": {
+    "type": "doc",
+    "id": "concepts/k8shell-cli/index"
+  }
+}
