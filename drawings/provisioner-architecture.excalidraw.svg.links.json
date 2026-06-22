@@ -2,5 +2,6 @@
   "SSH Proxy": "/concepts/ssh-proxy/",
   "API Server": "/concepts/api-server/",
   "Identity": "/concepts/identity/",
+  "Authz": "/concepts/authz/",
   "Provisioner": "/concepts/provisioner/"
 }

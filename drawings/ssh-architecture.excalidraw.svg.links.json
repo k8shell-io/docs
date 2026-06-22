@@ -3,6 +3,7 @@
   "SSH Shield": "/concepts/ssh-shield/",
   "Provisioner": "/concepts/provisioner/",
   "Identity": "/concepts/identity/",
+  "Authz": "/concepts/authz/",
   "k8shelld": "/concepts/workspace/",
   "SSH Proxy": "/concepts/ssh-proxy/"
 }
