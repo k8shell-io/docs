@@ -2,7 +2,7 @@
 sidebar_label: Users and Sessions
 ---
 
-# Users & Sessions
+# Users and Sessions
 
 ## Users
 
@@ -64,15 +64,15 @@ k8shell session list --user alice
 ```
 
 ```
-SESSION_ID    USERNAME  WORKSPACE         CLIENT_IP    CHANNELS  START             END               BYTES_IN  BYTES_OUT
-dfjc7-16-pj   bruckins  bruckins-aa9095a  10.42.2.127  af,pt,sh  2026-06-17 09:14  2026-06-17 09:14  9 B       781 B
-ws-jegav5bt   bruckins  bruckins-99db5ed  10.42.2.127            2026-06-17 09:38  2026-06-17 09:39  0 B       0 B
-ws-wpovcy7x   bruckins  bruckins-99db5ed  10.42.2.127            2026-06-17 09:39  2026-06-17 09:40  6 B       713 B
-ws-6dbjwmr6   bruckins  bruckins-aa9095a  10.42.2.127  pt,sh     2026-06-17 10:01  2026-06-17 10:01  0 B       0 B
-ws-y7nmppi3   bruckins  bruckins-aa9095a  10.42.2.127  pt,sh     2026-06-17 10:01  2026-06-17 10:03  9 B       1003 B
-ws-6wemwi6k   bruckins  bruckins-99db5ed  10.42.2.127  pt,sh     2026-06-17 22:39  2026-06-17 22:40  19 B      3.4 KB
-dfjc7-85-dv   bruckins  bruckins-aa9095a  10.42.2.127  af,pt,sh  2026-06-17 22:43  2026-06-17 22:43  0 B       0 B
-dfjc7-104-cs  bruckins  bruckins-aa9095a  10.42.2.127  af,ex     2026-06-17 22:44  2026-06-17 22:44  0 B       0 B
+SESSION_ID    USERNAME  WORKSPACE      CLIENT_IP    CHANNELS  START             END               BYTES_IN  BYTES_OUT
+dfjc7-16-pj   alice     alice-aa9095a  10.42.2.127  af,pt,sh  2026-06-17 09:14  2026-06-17 09:14  9 B       781 B
+ws-jegav5bt   alice     alice-99db5ed  10.42.2.127            2026-06-17 09:38  2026-06-17 09:39  0 B       0 B
+ws-wpovcy7x   alice     alice-99db5ed  10.42.2.127            2026-06-17 09:39  2026-06-17 09:40  6 B       713 B
+ws-6dbjwmr6   alice     alice-aa9095a  10.42.2.127  pt,sh     2026-06-17 10:01  2026-06-17 10:01  0 B       0 B
+ws-y7nmppi3   alice     alice-aa9095a  10.42.2.127  pt,sh     2026-06-17 10:01  2026-06-17 10:03  9 B       1003 B
+ws-6wemwi6k   alice     alice-99db5ed  10.42.2.127  pt,sh     2026-06-17 22:39  2026-06-17 22:40  19 B      3.4 KB
+dfjc7-85-dv   alice     alice-aa9095a  10.42.2.127  af,pt,sh  2026-06-17 22:43  2026-06-17 22:43  0 B       0 B
+dfjc7-104-cs  alice     alice-aa9095a  10.42.2.127  af,ex     2026-06-17 22:44  2026-06-17 22:44  0 B       0 B
 ```
 
 <StandardInlineTable data={`
@@ -90,7 +90,7 @@ rows:
   - - "CLIENT_IP"
     - "IP address of the connecting client."
   - - "CHANNELS"
-    - "Open SSH channels (comma-separated)."
+    - "Open SSH channels (comma-separated): \`af\` agent forwarding, \`pt\` pty, \`sh\` shell, \`ex\` exec, \`sftp\` sftp."
   - - "START"
     - "Session start time (local time)."
   - - "END"

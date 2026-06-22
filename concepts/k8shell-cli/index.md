@@ -1,12 +1,12 @@
 # k8shell CLI
 
-The `k8shell` CLI is the primary command-line tool for interacting with a k8shell server. It lets you authenticate, manage workspaces, inspect users, and review session history — all from the terminal. The CLI stores its configuration in `~/.config/k8shell/config.yaml` and supports multiple named contexts so you can switch between different server environments without re-authenticating.
+The `k8shell` CLI is the primary command-line tool for interacting with a k8shell [api-server](../api-server/). It lets you authenticate, manage workspaces, inspect users, and review session history — all from the terminal. The CLI stores its configuration in `~/.config/k8shell/config.yaml` and supports multiple named contexts so you can switch between different server environments without re-authenticating.
 
 <!-- picture goes here -->
 
 ## Logging in
 
-`k8shell` authenticates using a [Personal Access Token (PAT)](/concepts/identity/tokens#personal-access-token-pat). Rather than creating a PAT manually, the CLI requests one automatically: it contacts the server, presents the available identity providers, and opens a browser so you complete the OAuth flow. Once login succeeds, the PAT is created on the server and saved to a local context.
+`k8shell` authenticates using a [Personal Access Token (PAT)](/concepts/identity/tokens#personal-access-token-pat). Rather than creating a PAT manually, the CLI requests one automatically: it contacts the server, presents the available [identity providers](/concepts/identity/providers), and opens a browser so you complete the OAuth flow. Once login succeeds, the PAT is created on the server and saved to a local context.
 
 ```
 $ k8shell login --server https://app.k8shell.io
@@ -16,8 +16,12 @@ Available login providers:
 Select provider [1]: 1
 Opening browser for login...
 Waiting for login to complete... done.
-Logged in as bruckins. Context "app.k8shell.io" saved and set as active.
+Logged in as bruckins. Context "app.k8shell.io-e2edc0ff" saved and set as active.
 ```
+
+:::info
+By default, the CLI enforces one context per server — running `k8shell login` for a server that already has a context will fail with an error. Use `--ignore` to bypass this restriction, which allows multiple contexts for the same server (for example, different usernames on the same instance).
+:::
 
 ## Contexts
 
@@ -49,7 +53,7 @@ Contexts are stored in `~/.config/k8shell/config.yaml`:
 ```yaml
 current-context: app.k8shell.io
 contexts:
-  - name: app.k8shell.io
+  - name: app.k8shell.io-e2edc0ff
     server: https://app.k8shell.io
     token: k8sh_AQlQvU04ENnZTaB8PCBguOrIeHVMyEp0JdO4FHB8RRE
     username: bruckins
