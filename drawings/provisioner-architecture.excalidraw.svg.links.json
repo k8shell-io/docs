@@ -1,7 +1,7 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "API Server": "/concepts/api-server/",
-  "Identity": "/concepts/identity/",
-  "Authz": "/concepts/authz/",
-  "Provisioner": "/concepts/provisioner/"
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "API Server": "/architecture/api-server/",
+  "Identity": "/architecture/identity/",
+  "Authz": "/architecture/authz/",
+  "Provisioner": "/architecture/provisioner/"
 }

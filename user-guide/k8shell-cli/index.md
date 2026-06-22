@@ -39,7 +39,7 @@ Use "k8shell [command] --help" for more information about a command.
 
 ## Logging in
 
-`k8shell` authenticates using a [Personal Access Token (PAT)](/concepts/identity/tokens#personal-access-token-pat). Rather than creating a PAT manually, the CLI requests one automatically: it contacts the server, presents the available [identity providers](/concepts/identity/providers), and opens a browser so you complete the OAuth flow. Once login succeeds, the PAT is created on the server and saved to a local context.
+`k8shell` authenticates using a [Personal Access Token (PAT)](/architecture/identity/tokens#personal-access-token-pat). Rather than creating a PAT manually, the CLI requests one automatically: it contacts the server, presents the available [identity providers](/architecture/identity/providers), and opens a browser so you complete the OAuth flow. Once login succeeds, the PAT is created on the server and saved to a local context.
 
 ```
 $ k8shell login --server https://app.k8shell.io
@@ -93,7 +93,7 @@ contexts:
     tokenHash: 38c57dcaa2302f293cb0149380c89db98f3f9c90caa1f28df60f9f46349a2152
 ```
 
-`username` is retrieved automatically after login or `context add` via the [profile API endpoint](/concepts/api-server/api#users). `tokenHash` is a SHA-256 hash of the server name and username, used internally to identify the context.
+`username` is retrieved automatically after login or `context add` via the [profile API endpoint](/architecture/api-server/api#users). `tokenHash` is a SHA-256 hash of the server name and username, used internally to identify the context.
 
 ## Global flags
 

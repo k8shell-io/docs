@@ -1,9 +1,9 @@
 {
-  "Session": "/concepts/session/",
-  "SSH Shield": "/concepts/ssh-shield/",
-  "Provisioner": "/concepts/provisioner/",
-  "Identity": "/concepts/identity/",
-  "Authz": "/concepts/authz/",
-  "k8shelld": "/concepts/workspace/",
-  "SSH Proxy": "/concepts/ssh-proxy/"
+  "Session": "/architecture/session/",
+  "SSH Shield": "/architecture/ssh-shield/",
+  "Provisioner": "/architecture/provisioner/",
+  "Identity": "/architecture/identity/",
+  "Authz": "/architecture/authz/",
+  "k8shelld": "/architecture/workspace/",
+  "SSH Proxy": "/architecture/ssh-proxy/"
 }

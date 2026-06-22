@@ -1,9 +1,9 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "API Server": "/concepts/api-server/",
-  "Identity": "/concepts/identity/",
-  "Authz": "/concepts/authz/",
-  "Provisioner": "/concepts/provisioner/",
-  "GitHub IdP": "/concepts/identity/providers/",
-  "GitLab IdP": "/concepts/identity/providers/"
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "API Server": "/architecture/api-server/",
+  "Identity": "/architecture/identity/",
+  "Authz": "/architecture/authz/",
+  "Provisioner": "/architecture/provisioner/",
+  "GitHub IdP": "/architecture/identity/providers/",
+  "GitLab IdP": "/architecture/identity/providers/"
 }

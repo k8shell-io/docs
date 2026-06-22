@@ -23,7 +23,7 @@ Pass `--delete` to perform a full workspace deletion, which removes the pod and 
 
 **Injected workspaces**
 
-For workspaces [injected into an existing workload](/concepts/workspace/deployment-models), soft shutdown is not available. `kbox shutdown --delete` must be used, which triggers an eject — removing the injected sidecar and all supporting resources via a rolling update on the target workload.
+For workspaces [injected into an existing workload](/architecture/workspace/deployment-models), soft shutdown is not available. `kbox shutdown --delete` must be used, which triggers an eject — removing the injected sidecar and all supporting resources via a rolling update on the target workload.
 
 ## kbox logs
 

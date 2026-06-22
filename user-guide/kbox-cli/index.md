@@ -5,7 +5,7 @@ sidebar_position: 1
 
 # kbox CLI
 
-`kbox` is the in-workspace command-line interface. It communicates exclusively with [`k8shelld`](/concepts/workspace/), the in-workspace daemon, through the [Internal API](/concepts/workspace/api#internal-api) — a REST API served over a Unix socket at `/var/run/k8shelld.sock`. Because the socket is only accessible from within the [workspace](/concepts/workspace/) container, `kbox` can only run from an active workspace session; it cannot be used remotely.
+`kbox` is the in-workspace command-line interface. It communicates exclusively with [`k8shelld`](/architecture/workspace/), the in-workspace daemon, through the [Internal API](/architecture/workspace/api#internal-api) — a REST API served over a Unix socket at `/var/run/k8shelld.sock`. Because the socket is only accessible from within the [workspace](/architecture/workspace/) container, `kbox` can only run from an active workspace session; it cannot be used remotely.
 
 Each subcommand maps to one or more REST endpoints. `kbox` handles JSON formatting, provides human-readable output, and gives a consistent interface for workspace operations without requiring any authentication tokens — access to the socket already implies shell access.
 
@@ -46,7 +46,7 @@ The socket path defaults to `/var/run/k8shelld.sock` and can be overridden with 
 
 ## System tool wrappers
 
-Several standard Linux utilities have workspace-aware replacements installed during the [bootstrap phase](/concepts/workspace/init-bootstrap):
+Several standard Linux utilities have workspace-aware replacements installed during the [bootstrap phase](/architecture/workspace/init-bootstrap):
 
 - **`uptime`** — delegates to `kbox uptime`, which reads cgroup and `/proc` data via the Internal API rather than kernel uptime.
 - **`last`** — delegates to `kbox last`, which queries the API Server for session history instead of reading `/var/log/wtmp`.

@@ -1,0 +1,8 @@
+{
+  "label": "API Server",
+  "position": 7,
+  "link": {
+    "type": "doc",
+    "id": "architecture/api-server/index"
+  }
+}

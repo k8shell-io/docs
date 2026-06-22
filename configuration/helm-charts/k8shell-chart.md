@@ -220,7 +220,7 @@ rows:
 
 #### identity.kubernetes
 
-Kubernetes integration for service account token issuance. See [credential helpers](/concepts/identity/credential-helpers#kubernetes-credentials).
+Kubernetes integration for service account token issuance. See [credential helpers](/architecture/identity/credential-helpers#kubernetes-credentials).
 
 <StandardInlineTable data={`
 columns:

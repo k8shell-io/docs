@@ -7,7 +7,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # GitHub IdP Chart
 
-The `idp-github` Helm chart deploys the GitHub identity provider service, which allows users to authenticate to k8shell using their GitHub credentials. It integrates with a GitHub OAuth application to verify identity and maps GitHub users to k8shell users via a configurable CEL template. For more details see [Identity Providers](/concepts/identity/providers).
+The `idp-github` Helm chart deploys the GitHub identity provider service, which allows users to authenticate to k8shell using their GitHub credentials. It integrates with a GitHub OAuth application to verify identity and maps GitHub users to k8shell users via a configurable CEL template. For more details see [Identity Providers](/architecture/identity/providers).
 
 ## Configuration reference
 

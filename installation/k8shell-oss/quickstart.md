@@ -103,7 +103,7 @@ ssh -p 2222 -i ~/.ssh/id_ed25519 admin~ubuntu@127.0.0.1
 ```
 
 :::tip Username format
-k8shell uses `user~workspace` as the SSH username. `admin~ubuntu` means: authenticate as `admin` and connect to the `ubuntu` workspace. See [User String](/concepts/overview/user-string) for more details.
+k8shell uses `user~workspace` as the SSH username. `admin~ubuntu` means: authenticate as `admin` and connect to the `ubuntu` workspace. See [User String](/architecture/overview/user-string) for more details.
 :::
 
 ## Next steps

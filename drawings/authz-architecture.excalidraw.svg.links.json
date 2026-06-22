@@ -1,10 +1,10 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "API Server": "/concepts/api-server/",
-  "Identity": "/concepts/identity/",
-  "Provisioner": "/concepts/provisioner/",
-  "user": "/concepts/authz/domain-user/",
-  "workspace": "/concepts/authz/domain-workspace/",
-  "ssh": "/concepts/authz/domain-ssh/",
-  "session": "/concepts/authz/domain-session/"
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "API Server": "/architecture/api-server/",
+  "Identity": "/architecture/identity/",
+  "Provisioner": "/architecture/provisioner/",
+  "user": "/architecture/authz/domain-user/",
+  "workspace": "/architecture/authz/domain-workspace/",
+  "ssh": "/architecture/authz/domain-ssh/",
+  "session": "/architecture/authz/domain-session/"
 }

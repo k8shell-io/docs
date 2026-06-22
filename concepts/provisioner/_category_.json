@@ -1,8 +1,0 @@
-{
-  "label": "Provisioner Service",
-  "position": 4,
-  "link": {
-    "type": "doc",
-    "id": "concepts/provisioner/index"
-  }
-}

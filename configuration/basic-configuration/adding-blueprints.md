@@ -45,7 +45,7 @@ blueprints:
 
 Every blueprint must reference a `template`. The built-in `base` template is the standard starting point. For more complex setups you can define your own template blueprints — set `isTemplate: true` on a blueprint and use its name as the `template` value in others. This lets you build a reusable hierarchy where shared configuration is defined once and inherited by multiple concrete blueprints. 
 
-See [Blueprint](/concepts/overview/blueprint) for general concepts and [Blueprint Reference](/concepts/provisioner/blueprint) for the full field reference.
+See [Blueprint](/architecture/overview/blueprint) for general concepts and [Blueprint Reference](/architecture/provisioner/blueprint) for the full field reference.
 
 ### Container Images
 

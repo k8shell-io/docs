@@ -83,7 +83,7 @@ Creating workspace john-37abff3 (job e84cca96-4a4c-4301-b4dc-aa4f1f87c8ed)
 [2026-06-22 06:15:46] [john-37abff3] Running: Workspace is ready, provisioned in 3s
 ```
 
-Events are Kubernetes events emitted as workspace resources are created and containers start. The provisioner writes them to the KV store during provisioning (see [job tracking](/concepts/provisioner/provisioning-flow#job-tracking)); they can be retrieved after the fact via `workspace job-events`, subject to the KV storage retention policy.
+Events are Kubernetes events emitted as workspace resources are created and containers start. The provisioner writes them to the KV store during provisioning (see [job tracking](/architecture/provisioner/provisioning-flow#job-tracking)); they can be retrieved after the fact via `workspace job-events`, subject to the KV storage retention policy.
 
 ## Shutting down a workspace
 

@@ -7,7 +7,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # GitLab IdP Chart
 
-The `idp-gitlab` Helm chart deploys the GitLab identity provider service, which allows users to authenticate to k8shell using their GitLab credentials. It integrates with a GitLab OAuth application to verify identity and maps GitLab users to k8shell users via a configurable CEL template. For more details see [Identity Providers](/concepts/identity/providers).
+The `idp-gitlab` Helm chart deploys the GitLab identity provider service, which allows users to authenticate to k8shell using their GitLab credentials. It integrates with a GitLab OAuth application to verify identity and maps GitLab users to k8shell users via a configurable CEL template. For more details see [Identity Providers](/architecture/identity/providers).
 
 ## Configuration reference
 

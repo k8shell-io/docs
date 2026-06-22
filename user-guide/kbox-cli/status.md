@@ -59,7 +59,7 @@ rows:
 
 **Storage** — one row per mounted filesystem, sorted by mount point. Each row shows used / total (percentage) and, where available, the filesystem type, source device, and whether the mount is read-only.
 
-**Podman** — present only when the [Podman sidecar](/concepts/workspace/podman-sidecar) is available. Shows the socket path, API version, Podman version, graph driver, graph root, run root, container counts (total / running / paused / stopped), and per-category disk usage (images, container layers, volumes, build cache, total).
+**Podman** — present only when the [Podman sidecar](/architecture/workspace/podman-sidecar) is available. Shows the socket path, API version, Podman version, graph driver, graph root, run root, container counts (total / running / paused / stopped), and per-category disk usage (images, container layers, volumes, build cache, total).
 
 ## kbox uptime
 

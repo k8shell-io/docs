@@ -21,7 +21,7 @@ Two ephemeral types are also available and require no storage class:
 
 - **EmptyDir** — an ephemeral volume backed by node disk, persisting across container restarts within the same pod but lost when the pod is deleted.
 
-See [Storage](/concepts/workspace/storage) for the full field reference and examples for all four types.
+See [Storage](/architecture/workspace/storage) for the full field reference and examples for all four types.
 
 ## Storage class examples
 

@@ -7,7 +7,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 # SSH Shield Chart
 
-The `ssh-shield` Helm chart deploys the SSH Shield service, which protects the k8shell SSH entry point from brute-force attacks by monitoring authentication failures published over NATS and blocking offending IP addresses at the firewall level. For more details see [SSH Shield](/concepts/ssh-shield).
+The `ssh-shield` Helm chart deploys the SSH Shield service, which protects the k8shell SSH entry point from brute-force attacks by monitoring authentication failures published over NATS and blocking offending IP addresses at the firewall level. For more details see [SSH Shield](/architecture/ssh-shield).
 
 ## Configuration reference
 
@@ -111,7 +111,7 @@ Map of firewall plugin configurations keyed by plugin type. Each entry is render
 
 #### plugins.nfgate
 
-The `nfgate` plugin delegates IP blocking to an [nfgate](/concepts/ssh-shield/nfgate) service, which installs rules directly into an `nftables` set on the Linux host.
+The `nfgate` plugin delegates IP blocking to an [nfgate](/architecture/ssh-shield/nfgate) service, which installs rules directly into an `nftables` set on the Linux host.
 
 <StandardInlineTable data={`
 columns:

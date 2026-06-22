@@ -1,10 +1,10 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "API Server": "/concepts/api-server/",
-  "Identity": "/concepts/identity/",
-  "Authz": "/concepts/authz/",
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "API Server": "/architecture/api-server/",
+  "Identity": "/architecture/identity/",
+  "Authz": "/architecture/authz/",
   "k8shell CLI": "/user-guide/k8shell-cli/",
-  "Provisioner": "/concepts/provisioner/",
-  "Session": "/concepts/session/",
-  "k8shelld": "/concepts/workspace/"
+  "Provisioner": "/architecture/provisioner/",
+  "Session": "/architecture/session/",
+  "k8shelld": "/architecture/workspace/"
 }

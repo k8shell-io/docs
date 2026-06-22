@@ -1,5 +1,5 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "SSH Shield": "/concepts/ssh-shield/",
-  "nfgate": "/concepts/ssh-shield/nfgate/"
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "SSH Shield": "/architecture/ssh-shield/",
+  "nfgate": "/architecture/ssh-shield/nfgate/"
 }

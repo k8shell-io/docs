@@ -9,7 +9,7 @@ import StandardInlineTable from '@site/src/components/StandardInlineTable';
 
 The Podman sidecar is an optional second container added to the workspace pod alongside the main workspace container. It runs a Podman daemon that users can reach via a shared socket, giving them the ability to pull, build, and run containers as part of their development workflow — without modifying the main workspace image.
 
-See [Podman Sidecar](/concepts/workspace/podman-sidecar) for the full concept reference and field documentation.
+See [Podman Sidecar](/architecture/workspace/podman-sidecar) for the full concept reference and field documentation.
 
 ## Modes of operation
 
@@ -88,7 +88,7 @@ The `containers.conf` override is required to switch Podman to the `cgroupfs` cg
 - A compromised or malicious workload running inside the sidecar can potentially escape to the node.
 
 :::warning
-`privileged: true` grants the sidecar root-level access to the node kernel. Use only when the use case explicitly requires full isolation and when access is controlled via roles. The [Worktrace](/concepts/worktrace) service can be used to monitor workspace activity and detect anomalous behaviour indicative of a container escape.
+`privileged: true` grants the sidecar root-level access to the node kernel. Use only when the use case explicitly requires full isolation and when access is controlled via roles. The [Worktrace](/architecture/worktrace) service can be used to monitor workspace activity and detect anomalous behaviour indicative of a container escape.
 :::
 
 ## Docker credential helpers

@@ -1,8 +1,0 @@
-{
-  "label": "SSH Proxy Service",
-  "position": 2,
-  "link": {
-    "type": "doc",
-    "id": "concepts/ssh-proxy/index"
-  }
-}

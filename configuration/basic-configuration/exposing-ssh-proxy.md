@@ -51,7 +51,7 @@ stream {
 This listens on the standard SSH port (22) on the edge host and forwards connections to the SSH Proxy Service with a PROXY protocol header prepended to each connection.
 
 :::tip PROXY protocol and brute-force protection
-When SSH Proxy is configured to accept the PROXY protocol (`sshProxy.proxyProtocol: true`), it extracts the real client IP from the header and makes it available to SSH Shield and nfgate. This is what enables accurate IP-based blocking of brute-force attackers. See [SSH Shield](/concepts/ssh-shield/).
+When SSH Proxy is configured to accept the PROXY protocol (`sshProxy.proxyProtocol: true`), it extracts the real client IP from the header and makes it available to SSH Shield and nfgate. This is what enables accurate IP-based blocking of brute-force attackers. See [SSH Shield](/architecture/ssh-shield/).
 :::
 
 If PROXY protocol is not needed (e.g. SSH Shield is not deployed), a simple `iptables` DNAT rule is sufficient:

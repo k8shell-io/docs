@@ -1,0 +1,8 @@
+{
+  "label": "Identity Service",
+  "position": 3,
+  "link": {
+    "type": "doc",
+    "id": "architecture/identity/index"
+  }
+}

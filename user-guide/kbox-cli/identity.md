@@ -7,7 +7,7 @@ sidebar_position: 5
 
 ## kbox identity
 
-`kbox identity` displays the JWT identity claims associated with the current workspace session. It queries `GET /identity` on the Internal API, which returns the raw claims from the token issued by the [Identity service](/concepts/identity/) when the workspace was provisioned.
+`kbox identity` displays the JWT identity claims associated with the current workspace session. It queries `GET /identity` on the Internal API, which returns the raw claims from the token issued by the [Identity service](/architecture/identity/) when the workspace was provisioned.
 
 ```
 kbox identity [--json]
@@ -25,7 +25,7 @@ kbox user name     # print just the username
 kbox user email    # print just the email address
 ```
 
-The `name` and `email` subcommands are used by the [init bootstrap](/concepts/workspace/init-bootstrap) to configure Git credentials automatically.
+The `name` and `email` subcommands are used by the [init bootstrap](/architecture/workspace/init-bootstrap) to configure Git credentials automatically.
 
 ## kbox credentials
 

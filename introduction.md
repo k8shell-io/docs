@@ -31,24 +31,24 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
 **Overview** — explains how k8shell works: the architecture, core services, security model, and workspace lifecycle. Start here to understand the platform before going deeper.
 
 <div class="service-grid">
-  <Link className="service-card" to="/concepts/overview">Overview</Link>
-  <Link className="service-card" to="/concepts/overview/security">Security</Link>
-  <Link className="service-card" to="/concepts/overview/blueprint">Blueprint</Link>
-  <Link className="service-card" to="/concepts/overview/workspace">Workspace</Link>
-  <Link className="service-card" to="/concepts/overview/user-string">User String</Link>
+  <Link className="service-card" to="/architecture/overview">Overview</Link>
+  <Link className="service-card" to="/architecture/overview/security">Security</Link>
+  <Link className="service-card" to="/architecture/overview/blueprint">Blueprint</Link>
+  <Link className="service-card" to="/architecture/overview/workspace">Workspace</Link>
+  <Link className="service-card" to="/architecture/overview/user-string">User String</Link>
 </div>
 
 **Services** — documentation for each k8shell service and how they interact:
 
 <div class="service-grid">
-  <Link className="service-card" to="/concepts/ssh-proxy">SSH Proxy</Link>
-  <Link className="service-card" to="/concepts/identity">Identity</Link>
-  <Link className="service-card" to="/concepts/provisioner">Provisioner</Link>
-  <Link className="service-card" to="/concepts/workspace">Workspace</Link>
-  <Link className="service-card" to="/concepts/api-server">API Server</Link>
-  <Link className="service-card" to="/concepts/session">Session</Link>
-  <Link className="service-card" to="/concepts/ssh-shield">SSH Shield</Link>
-  <Link className="service-card" to="/concepts/worktrace">Worktrace</Link>
+  <Link className="service-card" to="/architecture/ssh-proxy">SSH Proxy</Link>
+  <Link className="service-card" to="/architecture/identity">Identity</Link>
+  <Link className="service-card" to="/architecture/provisioner">Provisioner</Link>
+  <Link className="service-card" to="/architecture/workspace">Workspace</Link>
+  <Link className="service-card" to="/architecture/api-server">API Server</Link>
+  <Link className="service-card" to="/architecture/session">Session</Link>
+  <Link className="service-card" to="/architecture/ssh-shield">SSH Shield</Link>
+  <Link className="service-card" to="/architecture/worktrace">Worktrace</Link>
 </div>
 
 **Installation** — step-by-step guides for deploying k8shell. 

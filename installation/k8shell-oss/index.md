@@ -17,13 +17,13 @@ columns:
   - header: Role
 rows:
   - - "**SSH Proxy**"
-    - "Terminates inbound SSH connections, authenticates users using identity service, and forwards SSH channels to running workspaces. [Learn more](/concepts/ssh-proxy)"
+    - "Terminates inbound SSH connections, authenticates users using identity service, and forwards SSH channels to running workspaces. [Learn more](/architecture/ssh-proxy)"
   - - "**Identity**"
-    - "Authenticates users via local credentials — SSH public key. [Learn more](/concepts/identity)"
+    - "Authenticates users via local credentials — SSH public key. [Learn more](/architecture/identity)"
   - - "**Provisioner**"
-    - "Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/concepts/provisioner)"
+    - "Creates and tears down workspaces in a target namespace based on workspace blueprints. [Learn more](/architecture/provisioner)"
   - - "**k8shelld**"
-    - "Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/concepts/workspace)"
+    - "Workspace control plane; runs as PID 1 of the main workspace container. [Learn more](/architecture/workspace)"
 `} />
 
 The full k8shell platform adds API Server, Session, Console, SSH Shield, Worktrace, and more.

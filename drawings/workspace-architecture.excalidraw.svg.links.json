@@ -1,7 +1,7 @@
 {
-  "SSH Proxy": "/concepts/ssh-proxy/",
-  "API Server": "/concepts/api-server/",
-  "Podman": "/concepts/workspace/podman-sidecar/",
-  "k8shelld": "/concepts/workspace/",
+  "SSH Proxy": "/architecture/ssh-proxy/",
+  "API Server": "/architecture/api-server/",
+  "Podman": "/architecture/workspace/podman-sidecar/",
+  "k8shelld": "/architecture/workspace/",
   "kbox CLI": "/user-guide/kbox-cli/"
 }
