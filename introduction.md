@@ -56,5 +56,21 @@ Follow the [Quick Start](/installation/k8shell-oss/quickstart) to get a working 
 <div class="service-grid">
   <Link className="service-card" to="/installation/k8shell-oss">k8shell OSS</Link>
   <Link className="service-card" to="/installation/k8shell-oss/quickstart">Quickstart</Link>
-  <Link className="service-card" to="">k8shell Platform</Link>
 </div>
+
+**Configuration** — Helm Charts reference and guides for configuring k8shell. 
+
+<div class="service-grid">
+  <Link className="service-card" to="/configuration/helm-charts">Helm Charts</Link>
+  <Link className="service-card" to="/configuration/basic-configuration">Basic Configuration</Link>
+</div>
+
+**User Guide** — How to connect to and work within k8shell workspaces via Console, CLI, and SSH. 
+
+<div class="service-grid">
+  <Link className="service-card" to="/user-guide/console">Console</Link>
+  <Link className="service-card" to="/user-guide/k8shell-cli">k8shell CLI</Link>
+  <Link className="service-card" to="/user-guide/ssh">SSH</Link>
+  <Link className="service-card" to="/user-guide/kbox-cli">kbox CLI</Link>
+</div>
+

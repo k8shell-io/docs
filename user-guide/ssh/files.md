@@ -1,9 +1,9 @@
 ---
-sidebar_label: Files
+sidebar_label: File Transfer
 sidebar_position: 3
 ---
 
-# Files
+# File Transfer
 
 ## SFTP
 

@@ -41,6 +41,10 @@ You can combine port forwarding with an interactive session or a remote command 
 
 Each forwarded port opens a `direct-tcpip` channel. Multiple `-L` flags can be specified in a single command to forward multiple ports simultaneously.
 
+:::info
+When forwarding to a host outside the workspace pod, connectivity is subject to the network policy configured on the blueprint. See [Blueprint — Network](/architecture/provisioner/blueprint#network) for details.
+:::
+
 ## Unix socket forwarding
 
 Forward a local Unix socket through the SSH connection to a Unix domain socket inside the workspace:
