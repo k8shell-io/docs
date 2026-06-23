@@ -95,6 +95,66 @@ k8shell workspace shutdown my-workspace
 k8shell workspace shutdown my-workspace --delete
 ```
 
+## Connecting via SSH
+
+`k8shell workspace ssh` opens an SSH session to a running workspace. Identify the workspace with either `--pod` (workspace name) or `--repo` (repository in `owner/name` format):
+
+```bash
+# connect by workspace name
+k8shell workspace ssh --pod my-workspace
+
+# connect by repository
+k8shell workspace ssh --repo my-org/my-repo
+
+# pass extra flags to ssh (after --)
+k8shell workspace ssh --pod my-workspace -- -L 8080:localhost:8080
+
+# print the connection string without connecting
+k8shell workspace ssh --pod my-workspace --print
+```
+
+Use `--no-lookup` to skip the workspace API call and derive the server from the context URL directly — useful if the API is unavailable. `--b64` base64-encodes the userstring in the connection string.
+
+## Opening in VS Code
+
+`k8shell workspace code` launches VS Code with the Remote - SSH extension connected to a workspace:
+
+```bash
+# open by workspace name
+k8shell workspace code --pod my-workspace
+
+# open to a specific folder
+k8shell workspace code --pod my-workspace --path /home/user/project
+
+# open by repository (optionally pin to a ref)
+k8shell workspace code --repo my-org/my-repo --ref main
+
+# print the remote URI instead of launching VS Code
+k8shell workspace code --pod my-workspace --print
+```
+
+The userstring in the remote URI is always base64-encoded because VS Code does not accept raw userstrings in remote URIs.
+
+## Copying files with SCP
+
+`k8shell workspace scp` copies files from a workspace to your local machine:
+
+```bash
+# copy from workspace root to current directory
+k8shell workspace scp --pod my-workspace
+
+# copy from a specific remote path to a local directory
+k8shell workspace scp --pod my-workspace --path /home/user/data ./local-data
+
+# copy by repository
+k8shell workspace scp --repo my-org/my-repo --path /output
+
+# print the SCP string without running it
+k8shell workspace scp --pod my-workspace --print
+```
+
+The optional positional argument sets the local destination (default: `.`). Use `--b64` to base64-encode the userstring in the SCP string.
+
 ## Streaming job events
 
 During or after workspace creation, you can stream the underlying Kubernetes job events:
