@@ -9,6 +9,7 @@ k8shell can be accessed through several user-facing tools, each suited to a diff
 
 - **[Console](./console/)** <EarlyAccessBadge inline /> — browser-based interface for launching workspaces, opening terminal sessions, and accessing workspace applications. No local tooling required.
 - **[k8shell CLI](./k8shell-cli/)** — command-line tool for managing the platform from your local machine. Covers the full lifecycle of workspaces, users, sessions, and contexts against the [API Server](/architecture/api-server/).
+- **[SSH](./ssh)** — connect to a workspace directly with any standard SSH client. Covers interactive shells, remote exec, agent forwarding, SFTP, port forwarding, and Unix socket forwarding.
 
 k8shell also provides an in-workspace CLI for accessing platform services from within a workspace session:
 
