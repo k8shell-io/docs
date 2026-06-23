@@ -7,6 +7,11 @@ title: API Reference
 
 The API Server exposes a REST API over HTTP. All endpoints are versioned under `/api/v1`. The browser-based Console and CLI are the primary callers.
 
+:::tip Go SDK
+[k8shell-go](https://github.com/k8shell-io/k8shell-go) is the official Go client for this API. If you are building automation or tooling in Go, use it instead of calling the REST endpoints directly.
+:::
+
+
 ## Authentication
 
 All endpoints except those under `/api/v1/auth` and `/api/v1/healthcheck` require a valid session. Requests must carry either a session cookie (web clients) or a bearer token (CLI and automation). Unauthenticated requests are rejected with `401 Unauthorized`. See [Authentication](./authentication.md) for details.
