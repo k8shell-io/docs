@@ -10,12 +10,21 @@ Detection rules are the primary mechanism for identifying known attack signature
 
 Every rule carries four required fields:
 
-| Field | Description |
-|-------|-------------|
-| `id` | Unique identifier used to reference the rule in attack path definitions and threat records. |
-| `confidence` | A value between 0 and 1 representing how strongly a match indicates malicious intent. Used in composite confidence scoring for correlated threats. |
-| `report` | When `true`, a rule match produces an immediate threat alert in addition to the suspect event sent to the correlation pipeline. Set to `false` for events that are only meaningful in combination with other rules. |
-| `global` | When `true`, the rule is evaluated against all events regardless of pod context — used for Docker-in-Docker inner container events that carry no Kubernetes metadata. See [Global rules](#global-rules) below. |
+<StandardInlineTable data={`
+columns:
+  - header: Field
+    width: 160px
+  - header: Description
+rows:
+  - - "\`id\`"
+    - "Unique identifier used to reference the rule in attack path definitions and threat records."
+  - - "\`confidence\`"
+    - "A value between 0 and 1 representing how strongly a match indicates malicious intent. Used in composite confidence scoring for correlated threats."
+  - - "\`report\`"
+    - "When \`true\`, a rule match produces an immediate threat alert in addition to the suspect event sent to the correlation pipeline. Set to \`false\` for events that are only meaningful in combination with other rules."
+  - - "\`global\`"
+    - "When \`true\`, the rule is evaluated against all events regardless of pod context — used for Docker-in-Docker inner container events that carry no Kubernetes metadata. See [Global rules](#global-rules) below."
+`} />
 
 A rule must contain exactly one pattern block: `process`, `file`, or `syscall`.
 

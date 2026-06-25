@@ -10,11 +10,24 @@ The behavioral pipeline provides anomaly detection as a complement to the rule-b
 
 The pipeline maintains a global frequency counter across all workspace activity for three feature types:
 
-| Feature type | What is counted | Normalization |
-|---|---|---|
-| Process binaries | Executed binary names | Exact binary name |
-| File paths | Files accessed via `fd_install` | Truncated to three path components (e.g. `/usr/lib/python3`) |
-| System calls | System call names | Exact syscall name |
+<StandardInlineTable data={`
+columns:
+  - header: Feature type
+    width: 180px
+  - header: What is counted
+    width: 220px
+  - header: Normalization
+rows:
+  - - "Process binaries"
+    - "Executed binary names"
+    - "Exact binary name"
+  - - "File paths"
+    - "Files accessed via \`fd_install\`"
+    - "Truncated to three path components (e.g. \`/usr/lib/python3\`)"
+  - - "System calls"
+    - "System call names"
+    - "Exact syscall name"
+`} />
 
 All three counters share a single frequency map updated from the same event stream. The global scope — spanning all workspaces on the node — provides a larger sample than per-workspace counters would, at the cost of reduced per-user specificity.
 
