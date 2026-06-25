@@ -7,4 +7,4 @@ sidebar_custom_props:
 
 # Console <EarlyAccessBadge />
 
-The CloudShell Console is the browser-based interface for managing your workspaces, launching terminals, and accessing workspace applications. The docs will follow.
+The CloudShell Console is the browser-based interface for managing your workspaces, launching terminals, and accessing workspace applications. 
