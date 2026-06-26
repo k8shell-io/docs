@@ -48,6 +48,12 @@ It then:
 The SSH server key must be stable across pod restarts and redeployments — if it changes, existing SSH clients will see a host key mismatch. Generating it inside the Helm chart would produce a new key on every fresh install. Instead, the key is generated once, stored locally, and injected into the cluster as Kubernetes Secret. The same key can then be reused across upgrades and reinstalls.
 :::
 
+:::note RBAC permissions required to run the Helm chart
+The Helm chart creates a `Role` and `RoleBinding` in the workspace target namespace (`k8shell-workspaces` by default) to grant the Provisioner the permissions it needs to manage workspace pods and associated resources. See [Provisioner RBAC — Standalone pod provisioning](/architecture/provisioner/configuration#standalone-pod-provisioning) for the full permission set.
+
+This means the Kubernetes user or service account bound to your current `kubectl` context must have `create` rights for `Role` and `RoleBinding` in that namespace. On a fresh cluster this is typically satisfied by a `cluster-admin` context. On a restricted cluster, ensure those rights are granted before running the script, otherwise the chart install will fail at the RBAC step.
+:::
+
 ### Options
 
 <StandardInlineTable data={`
