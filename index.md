@@ -14,8 +14,9 @@ We believe k8shell should be the platform for developing modern microservice arc
 ## 10,000 foot view
 
 * **Workspaces on demand:** Provision secure, ephemeral or persistent workspaces inside Kubernetes.  
-* **Access via SSH:** No custom protocols, no plugins—just plain SSH. Works with any IDE, CLI, or terminal.  
 * **Security:**  OPA, TLS, pluggable identity providers, session auditing with eBPF, zero-trust ready.  
+* **Access via SSH:** No custom protocols, no plugins—just plain SSH. Works with any IDE, CLI, or terminal.  
+* **Browser-based Console:** Web terminal, file transfer, and workspace app access.  
 * **Blueprint-driven provisioning:** Reproducible workspaces: base images, volumes, networks, init scripts.  
 * **Integration with Kubernetes:** Token-based credential helpers, affinity, and resource isolation. 
 * **Persistence and storage:** Ephemeral or long-lived workspaces. Attach PVCs or object storage.  
