@@ -5,6 +5,42 @@ title: Welcome
 hide_title: true
 ---
 
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "k8shell",
+      "url": "https://k8shell.io",
+      "description": "Kubernetes-native platform for provisioning and accessing developer workspaces over SSH, browser-based Console, or API. Supports blueprint-driven provisioning, pluggable identity providers, session auditing, and multi-tenancy.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux",
+      "softwareVersion": "OSS",
+      "license": "https://github.com/k8shell-io/k8shell/blob/main/LICENSE",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "sameAs": [
+        "https://github.com/k8shell-io",
+        "https://discord.gg/bKpF3T8Tb"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "name": "k8shell",
+      "url": "https://k8shell.io",
+      "logo": "https://k8shell.io/img/k8shell-logo-full.svg",
+      "sameAs": [
+        "https://github.com/k8shell-io",
+        "https://x.com/k8shell_io",
+        "https://www.linkedin.com/company/k8shell"
+      ]
+    }
+  ]
+})}</script>
+
 # Welcome
 
 k8shell is a Kubernetes-native platform for provisioning and accessing workspaces over SSH, through a browser-based Console, or via API.
