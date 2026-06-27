@@ -1,5 +1,6 @@
 ---
 sidebar_label: API Server
+title: API Server
 sidebar_custom_props:
   earlyAccess: true
 ---

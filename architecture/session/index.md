@@ -1,5 +1,6 @@
 ---
 sidebar_label: Session
+title: Session Service
 sidebar_custom_props:
   earlyAccess: true
 ---

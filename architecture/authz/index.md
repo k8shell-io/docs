@@ -1,5 +1,6 @@
 ---
 sidebar_label: Authz
+title: Authorization Service
 sidebar_custom_props:
   earlyAccess: true
 ---

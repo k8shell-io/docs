@@ -1,5 +1,6 @@
 ---
 sidebar_label: SSH Shield
+title: SSH Shield
 sidebar_custom_props:
   earlyAccess: true
 ---
