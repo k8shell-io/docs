@@ -5,89 +5,40 @@ sidebar_position: 3
 
 # Workspaces
 
+A [workspace](/architecture/overview/workspace) is an isolated cloud development environment provisioned for a specific user. Each workspace is created from an origin — either a [blueprint](/architecture/overview/blueprint) (a predefined configuration set by your administrator) or a Git repository — and comes preloaded with dependencies, applications, and a terminal. You can run applications, manage files, and connect to services running inside the workspace, all from the browser.
+
 ## Listing Workspaces
 
-![workspace list](./img/workspace-dashboard.png)
+Navigate to the homepage by clicking the application logo in the top-left corner. Your workspaces are listed here.
 
-- Go to the homepage by clicking the application logo in the top left corner.
-- You can see your workspaces and perform actions:
-  - To delete a workspace, click the red trash can icon and confirm.
-  - To view workspace installation logs, click the file icon in the `Actions` column.
+![workspace list](./img/workspaces-list.webp)
 
-## Creating a New Workspace
+Available actions per workspace:
 
-- On the homepage, click the `Create new workspace` button.
-- Choose the correct origin for the workspace.
+- Click the workspace to open its dashboard.
+- Click the file icon in the `Actions` column to view installation logs.
+- Click the red trash can icon to delete the workspace.
 
-### Blueprint
+## Workspace Dashboard
 
-> This origin contains blueprints available to you. A blueprint defines workspace parameters, preinstalled dependencies, and network permissions. Blueprints are predefined by the system administrator. If you don't see a blueprint you should have access to, contact your administrator.
+Click a workspace to open its dashboard. Use the tabs to switch between **Applications**, **Terminal and files**, and **Technical details**. A quick resource overview is shown below the heading on every workspace page.
 
-![blueprint](./img/blueprint_en.png)
-
-- Choose a blueprint from the dropdown menu.
-- Click `Create workspace`.
-
-### Git Repository
-
-> This origin lets you create a workspace pre-loaded with a specified Git repository.
-
-![git](./img/git_en.png)
-
-- Fill out the form:
-  - **Repository name** — the only mandatory field. Enter the repository name from Git.
-  - **Repository owner** — the group or username that owns the repository. Leave blank if the repository is under your own Git namespace.
-  - **Reference** — a commit SHA, tag, or branch name. Defaults to `main` if left blank.
-  - **Pull Request ID** — the ID of a pull request (merge request) from the Git provider (GitLab, GitHub).
-- Click `Create workspace`.
-
-## Interacting with a Workspace
-
-- On the homepage, click the workspace `Origin` to open its detail page.
-- Use the tabs to switch between **Applications**, **Terminal and files**, and **Technical details**.
-- A quick resource overview is shown below the heading on every workspace page.
+![workspace dashboard](./img/workspace-dashboard.webp)
 
 ### Applications
 
-- Select the `Applications` tab.
+Preinstalled [applications](/architecture/workspace/apps) are listed with available actions. If you launched a process on a port inside the workspace (e.g. a web server), click `Connect to port` and enter the port number to open it in the browser.
 
-  ![workspace detail](./img/detail_en.png)
+![workspace apps](./img/workspace-apps.webp)
 
-- Preinstalled applications are listed in the table with available actions.
-- If you launched an application running on a port inside the workspace (e.g. a web server), connect to it by pressing `Connect to port` and specifying the port number.
+Application connectivity is handled by the [reverse proxy](/architecture/api-server/access#reverse-proxy) in the API Server, which routes browser traffic to in-workspace processes. The example below shows VS Code accessed this way.
+
+![vscode app](./img/vscode-app.webp)
 
 ### Terminal and Files
 
-- Select the `Terminal and files` tab.
+![terminal and files](./img/workspace-terminal.webp)
 
-  ![terminal and files](./img/terminal_en.png)
+Click the terminal pane to focus it. Supported shortcuts: `Ctrl+C` ends a running program, `Ctrl+D` ends the session.
 
-#### Terminal
-
-- Click the terminal pane to focus it (the cursor starts blinking).
-- Supported Linux shortcuts:
-  - `Ctrl+C` — end a running program
-  - `Ctrl+D` — end the session
-
-#### File Explorer
-
-- The file explorer lets you upload and download files.
-- The current working directory is shown at the top of the explorer.
-  - When no directory is selected, topbar actions (new directory, upload) apply to the current working directory.
-  - Double-click a directory, or right-click and select `Set as work directory`, to make it the current working directory.
-  - Click the arrow icon next to the current working directory to navigate up.
-- Create a new directory with the topbar button:
-  - No selection → created in the current working directory.
-  - A directory selected → created inside that directory.
-- Upload files by:
-  - Dragging them directly onto a directory.
-  - Dragging them into the empty space below to upload to the current working directory.
-  - Pressing the upload button (with or without a directory selected) to open a dialog where you can drop or choose files.
-- Right-click a file or directory and choose `Delete` to remove it.
-- Toggle hidden files with the topbar button.
-
-### Workspace Status and Technical Details
-
-- Select the `Technical details` tab to view the workspace status and technical information.
-
-  ![ws status](./img/status_en.png)
+The file explorer lets you upload and download files. The current working directory is shown at the top; double-click a directory or right-click and select `Set as work directory` to change it, and use the arrow icon to navigate up. Topbar buttons let you create a new directory (inside the selected directory, or in the current working directory if nothing is selected) and upload files. You can also upload by dragging files onto a directory or into the empty space below. Right-click any file or directory and choose `Delete` to remove it. Toggle hidden files with the topbar button.
